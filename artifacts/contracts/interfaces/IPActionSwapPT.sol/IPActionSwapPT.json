@@ -1,0 +1,529 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IPActionSwapPT",
+  "sourceName": "contracts/interfaces/IPActionSwapPT.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "netPtToAccount",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "netSyToAccount",
+          "type": "int256"
+        }
+      ],
+      "name": "SwapPtAndSy",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "netPtToAccount",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "netTokenToAccount",
+          "type": "int256"
+        }
+      ],
+      "name": "SwapPtAndToken",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "exactPtIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "minSyOut",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapExactPtForSy",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netSyOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "exactPtIn",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "tokenOut",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minTokenOut",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "tokenRedeemSy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "bulk",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "euphratesSwap",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum SwapType",
+                  "name": "swapType",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "address",
+                  "name": "extRouter",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "extCalldata",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "needScale",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct SwapData",
+              "name": "swapData",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TokenOutput",
+          "name": "output",
+          "type": "tuple"
+        }
+      ],
+      "name": "swapExactPtForToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netTokenOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "exactSyIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "minPtOut",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessPtOut",
+          "type": "tuple"
+        }
+      ],
+      "name": "swapExactSyForPt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netPtOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "minPtOut",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessPtOut",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "tokenIn",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "netTokenIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "tokenMintSy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "bulk",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "euphratesSwap",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum SwapType",
+                  "name": "swapType",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "address",
+                  "name": "extRouter",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "extCalldata",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "needScale",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct SwapData",
+              "name": "swapData",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TokenInput",
+          "name": "input",
+          "type": "tuple"
+        }
+      ],
+      "name": "swapExactTokenForPt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netPtOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "exactSyOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxPtIn",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessPtIn",
+          "type": "tuple"
+        }
+      ],
+      "name": "swapPtForExactSy",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netPtIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "exactPtOut",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxSyIn",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapSyForExactPt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "netSyIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "netSyFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

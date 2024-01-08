@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IPInterestManagerYTV3",
+  "sourceName": "contracts/interfaces/IPInterestManagerYTV3.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "userInterest",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "lastInterestIndex",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "accruedInterest",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastPYIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,82 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IPPtOracle",
+  "sourceName": "contracts/interfaces/IPPtOracle.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint16",
+          "name": "newBlockCycleNumerator",
+          "type": "uint16"
+        }
+      ],
+      "name": "SetBlockCycleNumerator",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "duration",
+          "type": "uint32"
+        }
+      ],
+      "name": "getOracleState",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "increaseCardinalityRequired",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint16",
+          "name": "cardinalityRequired",
+          "type": "uint16"
+        },
+        {
+          "internalType": "bool",
+          "name": "oldestObservationSatisfied",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "duration",
+          "type": "uint32"
+        }
+      ],
+      "name": "getPtToAssetRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "ptToAssetRate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

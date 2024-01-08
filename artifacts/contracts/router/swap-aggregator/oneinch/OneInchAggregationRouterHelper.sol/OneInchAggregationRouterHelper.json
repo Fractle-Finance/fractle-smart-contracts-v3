@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "OneInchAggregationRouterHelper",
+  "sourceName": "contracts/router/swap-aggregator/oneinch/OneInchAggregationRouterHelper.sol",
+  "abi": [],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

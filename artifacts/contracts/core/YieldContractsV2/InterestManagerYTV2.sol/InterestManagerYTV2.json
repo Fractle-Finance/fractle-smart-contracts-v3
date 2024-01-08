@@ -1,0 +1,66 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "InterestManagerYTV2",
+  "sourceName": "contracts/core/YieldContractsV2/InterestManagerYTV2.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "globalInterestIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lastInterestBlock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "userInterest",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "index",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "accrued",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pyIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
