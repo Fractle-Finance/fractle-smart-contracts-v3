@@ -55,6 +55,8 @@ interface IPYieldToken is IERC20Metadata, IRewardManager, IPInterestManagerYT {
 
     function PT() external view returns (address);
 
+    function sAPR() external view returns(uint256);
+
     function factory() external view returns (address);
 
     function expiry() external view returns (uint256);

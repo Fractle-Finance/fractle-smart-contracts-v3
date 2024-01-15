@@ -41,6 +41,8 @@ contract EuphratesYieldTokenV3 is
     address public immutable PT;
     address public immutable factory;
     uint256 public immutable expiry;
+    uint256 public immutable sAPR;//sAPR is for FPT
+    uint256 public immutable lifecircle;//total days this YT lives, normal number without decimals
 
     bool public immutable doCacheIndexSameBlock;
 
@@ -83,13 +85,16 @@ contract EuphratesYieldTokenV3 is
         uint8 __decimals,
         uint256 _expiry,
         uint256 _sAPR,
+        uint256 _lifecircle,
         bool _doCacheIndexSameBlock
-    ) EuphratesERC20(_name, _symbol, __decimals) {
+    ) EuphratesERC20(_name, _symbol, __decimals)
+      InterestManagerYTV3(_sAPR) {
         SY = _SY;
         PT = _PT;
         expiry = _expiry;
         factory = _factory;
         sAPR = _sAPR;
+        lifecircle = _lifecircle;
         doCacheIndexSameBlock = _doCacheIndexSameBlock;
     }
 

@@ -56,10 +56,14 @@ interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
     function SY() external view returns (address);
 
     function PT() external view returns (address);
-
+ 
     function factory() external view returns (address);
 
     function expiry() external view returns (uint256);
+
+    function sAPR() external view returns(uint256);
+
+    function lifecircle() external view returns(uint256);
 
     function isExpired() external view returns (bool);
 

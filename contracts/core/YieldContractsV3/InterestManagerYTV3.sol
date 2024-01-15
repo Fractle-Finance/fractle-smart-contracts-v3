@@ -41,17 +41,31 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
 
     uint256 public globalInterestIndexFPT;
 
-    uint256 public lastInterestDayIndex;//ticked by chain link automization hosting
+    //"day index" is index of day, 1,2,3,...,N
+    //last interest day index is the day index of prev interest updating day.
+    //it will be 0,1,2,3,....,N
+    uint256 internal _lastInterestDayIndex;
 
-    uint256 public lastInterestUpdatedDayIndexByOracle;
+    //ticked by chain link automization hosting, +=1 when pyindex grows
+    //no matter there are transactions in the market or not
+    //it will be 0,1,2,3,....,N
+    uint256 internal _lastGlobalInterestUpdatedDayIndexByOracle;
 
-    uint256 public sAPR;//sAPR is for FPT, wei decimal
+    uint256 internal sAPRForFPT;//sAPR is for FPT, wei decimal
 
     mapping(address => UserInterest) public userInterest;
 
     mapping(address => UserInterestFPT) public userInterestFPT;
 
     uint256 internal constant INITIAL_INTEREST_INDEX = 1;
+
+    constructor(uint256 _sAPR){
+        sAPRForFPT = _sAPR;
+    }
+
+    function lastGlobalInterestUpdatedDayIndexByOracle() public view returns(uint256){
+        return _lastGlobalInterestUpdatedDayIndexByOracle;
+    }
 
     function _updateAndDistributeInterest(address user) internal virtual {
         _updateAndDistributeInterestForTwo(user, address(0));
@@ -166,12 +180,12 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             //要判断accrued中多少给FPT，多少给DYT。需要先看距离上次扰动，过了多少“天”
             //"天数"的前进是由oracle监听SY index而得的。是一个完全外部性的东西，即使PFT DYT完全静止，它也会往前走
             if (totalShares != 0){
-                uint256 delatDay = lastInterestUpdatedDayIndexByOracle - lastInterestDayIndex; // normal number without decimals
-                uint256 accruedForFPT = sAPR * delatDay;
-                uint256 accruedForDYT = accrued - accruedForFPT;
+                uint256 delatDay = lastGlobalInterestUpdatedDayIndexByOracle - lastInterestDayIndex; // normal number without decimals
+                uint256 accruedForFPT = sAPRForFPT * delatDay;
+                uint256 accruedForDYT = accrued > accruedForFPT ? accrued-accruedForFPT : 0;
                 index += accruedForDYT.divDown(totalShares);
                 indexFPT += accruedForFPT.divDown(totalShares);
-                lastInterestDayIndex = lastInterestUpdatedDayIndexByOracle;
+                lastInterestDayIndex = lastGlobalInterestUpdatedDayIndexByOracle;
             }
 
             globalInterestIndex = index;

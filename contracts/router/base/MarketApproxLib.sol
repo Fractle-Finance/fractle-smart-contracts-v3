@@ -47,9 +47,10 @@ library MarketApproxPtInLib {
         PYIndex index,
         uint256 minSyOut,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     ) internal pure returns (uint256 /*netPtIn*/, uint256 /*netSyOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             // no limit on min
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
@@ -341,10 +342,11 @@ library MarketApproxPtOutLib {
         MarketState memory market,
         PYIndex index,
         uint256 exactSyIn,
-        uint256 blockTime,
-        ApproxParams memory approx
+        uint256 blockTime,//daily,newest interest day index
+        ApproxParams memory approx,
+        uint256 sAPR
     ) internal pure returns (uint256 /*netPtOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             // no limit on min
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));

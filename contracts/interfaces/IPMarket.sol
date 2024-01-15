@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./IPPrincipalToken.sol";
-import "./IPYieldToken.sol";
+import "./IPYieldTokenV3.sol";
 import "./IStandardizedYield.sol";
 import "./IPGauge.sol";
 import "../core/Market/MarketMathCore.sol";
@@ -84,6 +84,8 @@ interface IPMarket is IERC20Metadata, IPGauge {
     function isExpired() external view returns (bool);
 
     function expiry() external view returns (uint256);
+
+    function sAPR() external view returns (uint256);
 
     function observations(
         uint256 index

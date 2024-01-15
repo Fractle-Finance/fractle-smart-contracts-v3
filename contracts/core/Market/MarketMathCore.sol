@@ -7,6 +7,7 @@ import "../libraries/math/LogExpMath.sol";
 import "../StandardizedYield/PYIndex.sol";
 import "../libraries/MiniHelpers.sol";
 import "../libraries/Errors.sol";
+import "../../router/base/MarketApproxLib.sol";
 
 struct MarketState {
     int256 totalPt;
@@ -16,6 +17,7 @@ struct MarketState {
     /// immutable variables ///
     int256 scalarRoot;
     uint256 expiry;
+    uint256 lifecircle;//new,from yt
     /// fee data ///
     uint256 lnFeeRateRoot;
     uint256 reserveFeePercent; // base 100
@@ -89,13 +91,17 @@ library MarketMathCore {
         MarketState memory market,
         PYIndex index,
         uint256 exactPtToMarket,
-        uint256 blockTime
+        ApproxParams calldata guessNewImpliedRate,//new
+        uint256 sAPR,//new
+        uint256 blockTime//daily,newest interest day
     ) internal pure returns (uint256 netSyToAccount, uint256 netSyFee, uint256 netSyToReserve) {
         (int256 _netSyToAccount, int256 _netSyFee, int256 _netSyToReserve) = executeTradeCore(
             market,
             index,
             exactPtToMarket.neg(),
-            blockTime
+            guessNewImpliedRate,//new
+            sAPR,//new
+            blockTime//daily
         );
 
         netSyToAccount = _netSyToAccount.Uint();
@@ -107,13 +113,17 @@ library MarketMathCore {
         MarketState memory market,
         PYIndex index,
         uint256 exactPtToAccount,
-        uint256 blockTime
+        ApproxParams calldata guessNewImpliedRate,//new
+        uint256 sAPR,//new
+        uint256 blockTime//daily newest interest day
     ) internal pure returns (uint256 netSyToMarket, uint256 netSyFee, uint256 netSyToReserve) {
         (int256 _netSyToAccount, int256 _netSyFee, int256 _netSyToReserve) = executeTradeCore(
             market,
             index,
             exactPtToAccount.Int(),
-            blockTime
+            guessNewImpliedRate,//new
+            sAPR,//new
+            blockTime//daily
         );
 
         netSyToMarket = _netSyToAccount.neg().Uint();
@@ -202,19 +212,21 @@ library MarketMathCore {
         MarketState memory market,
         PYIndex index,
         int256 netPtToAccount,
-        uint256 blockTime
+        ApproxParams calldata guessNewImpliedRate,//new
+        uint256 sAPR,//new
+        uint256 blockTime//daily
     ) internal pure returns (int256 netSyToAccount, int256 netSyFee, int256 netSyToReserve) {
         /// ------------------------------------------------------------
         /// CHECKS
         /// ------------------------------------------------------------
-        if (MiniHelpers.isExpired(market.expiry, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
         if (market.totalPt <= netPtToAccount)
             revert Errors.MarketInsufficientPtForTrade(market.totalPt, netPtToAccount);
 
         /// ------------------------------------------------------------
         /// MATH
         /// ------------------------------------------------------------
-        MarketPreCompute memory comp = getMarketPreCompute(market, index, blockTime);
+        MarketPreCompute memory comp = getMarketPreCompute(market, index, sAPR, blockTime);
 
         (netSyToAccount, netSyFee, netSyToReserve) = calcTrade(
             market,
@@ -233,20 +245,24 @@ library MarketMathCore {
             netPtToAccount,
             netSyToAccount,
             netSyToReserve,
-            blockTime
+            guessNewImpliedRate,//new
+            sAPR,//new
+            blockTime//daily，day index
         );
     }
 
     function getMarketPreCompute(
         MarketState memory market,
         PYIndex index,
-        uint256 blockTime
+        uint256 sAPR,//new
+        uint256 blockTime//daily
     ) internal pure returns (MarketPreCompute memory res) {
-        if (MiniHelpers.isExpired(market.expiry, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
 
-        uint256 timeToExpiry = market.expiry - blockTime;
+        //uint256 timeToExpiry = market.expiry - blockTime;
+        uint256 timeToExpiry = market.lifecircle - blockTime;//how many days left before expiry
 
-        res.rateScalar = _getRateScalar(market, timeToExpiry);
+        res.rateScalar = _getRateScalar(market, timeToExpiry*DAY);
         res.totalAsset = index.syToAsset(market.totalSy);
 
         if (market.totalPt == 0 || res.totalAsset == 0)
@@ -257,7 +273,8 @@ library MarketMathCore {
             market.lastLnImpliedRate,
             res.totalAsset,
             res.rateScalar,
-            timeToExpiry
+            sAPR,//new
+            timeToExpiry//daily
         );
         res.feeRate = _getExchangeRateFromImpliedRate(market.lnFeeRateRoot, timeToExpiry);
     }
@@ -306,19 +323,23 @@ library MarketMathCore {
         int256 netPtToAccount,
         int256 netSyToAccount,
         int256 netSyToReserve,
-        uint256 blockTime
+        ApproxParams calldata guessNewImpliedRate,//new
+        uint256 sAPR,//new
+        uint256 blockTime//daily
     ) internal pure {
-        uint256 timeToExpiry = market.expiry - blockTime;
+        uint256 timeToExpiry = market.lifecircle - blockTime;//daily,how many days left before expiry,n
 
         market.totalPt = market.totalPt.subNoNeg(netPtToAccount);
         market.totalSy = market.totalSy.subNoNeg(netSyToAccount + netSyToReserve);
-
+        //_getLnImpliedRate now is a validation method,not a calculation function
         market.lastLnImpliedRate = _getLnImpliedRate(
             market.totalPt,
             index.syToAsset(market.totalSy),
             comp.rateScalar,
             comp.rateAnchor,
-            timeToExpiry
+            guessNewImpliedRate,//new
+            sAPR,//new
+            timeToExpiry//daily,n in e**(-rn/365)
         );
 
         if (market.lastLnImpliedRate == 0) revert Errors.MarketZeroLnImpliedRate();
@@ -326,12 +347,14 @@ library MarketMathCore {
 
     function _getRateAnchor(
         int256 totalPt,
-        uint256 lastLnImpliedRate,
+        uint256 lastLnImpliedRate,//1e18 decimal
         int256 totalAsset,
         int256 rateScalar,
-        uint256 timeToExpiry
+        uint256 sAPR,//new
+        uint256 timeToExpiry//daily,how many days left before expiry
     ) internal pure returns (int256 rateAnchor) {
-        int256 newExchangeRate = _getExchangeRateFromImpliedRate(lastLnImpliedRate, timeToExpiry);
+        //int256 newExchangeRate = _getExchangeRateFromImpliedRate(lastLnImpliedRate, timeToExpiry);
+        int256 newExchangeRate = _getFPTExchangeRateFromImpliedRate(lastLnImpliedRate, sAPR, timeToExpiry);
 
         if (newExchangeRate < PMath.IONE) revert Errors.MarketExchangeRateBelowOne(newExchangeRate);
 
@@ -351,26 +374,71 @@ library MarketMathCore {
         int256 totalAsset,
         int256 rateScalar,
         int256 rateAnchor,
+        ApproxParams calldata guessNewImpliedRate,//new
+        uint256 sAPR,//new
         uint256 timeToExpiry
     ) internal pure returns (uint256 lnImpliedRate) {
         // This will check for exchange rates < PMath.IONE
         int256 exchangeRate = _getExchangeRate(totalPt, totalAsset, rateScalar, rateAnchor, 0);
 
         // exchangeRate >= 1 so its ln >= 0
-        uint256 lnRate = exchangeRate.ln().Uint();
+        //uint256 lnRate = exchangeRate.ln().Uint();
+        //this should never be a calculation method, it should be a validation method
+        //lnImpliedRate = (lnRate * IMPLIED_RATE_TIME) / timeToExpiry;
 
-        lnImpliedRate = (lnRate * IMPLIED_RATE_TIME) / timeToExpiry;
+        //use guessNewImpliedRate to estimate
+        if (guessNewImpliedRate.guessOffchain == 0) {
+            guessNewImpliedRate.guessMax = PMath.ONE;
+            guessNewImpliedRate.guessMin = 0;
+        }
+
+        for (uint256 iter = 0; iter < guessNewImpliedRate.maxIteration; ++iter) {
+            uint256 guess = nextGuessImpliedRate(guessNewImpliedRate, iter);
+            int256 exchangeRateFromImpliedRate = _getFPTExchangeRateFromImpliedRate(guess, sAPR, timeToExpiry);
+
+            if (exchangeRateFromImpliedRate.Uint() >= exchangeRate.Uint()) {
+                if (PMath.isAGreaterApproxB(exchangeRateFromImpliedRate.Uint(), exchangeRate.Uint(), guessNewImpliedRate.eps))
+                    return guess;
+                guessNewImpliedRate.guessMax = guess;
+            } else {
+                guessNewImpliedRate.guessMin = guess;
+            }
+        }
+
+        revert Errors.ApproxFail();
+    }
+
+    function nextGuessImpliedRate(ApproxParams memory approx, uint256 iter) internal pure returns (uint256) {
+        if (iter == 0 && approx.guessOffchain != 0) return approx.guessOffchain;
+        if (approx.guessMin <= approx.guessMax) return (approx.guessMin + approx.guessMax) / 2;
+        revert Errors.ApproxFail();
     }
 
     /// @notice Converts an implied rate to an exchange rate given a time to expiry. The
     /// formula is E = e^rt
     function _getExchangeRateFromImpliedRate(
-        uint256 lnImpliedRate,
-        uint256 timeToExpiry
+        uint256 lnImpliedRate,//1e18 decimal
+        uint256 timeToExpiry//days left before expiry
     ) internal pure returns (int256 exchangeRate) {
-        uint256 rt = (lnImpliedRate * timeToExpiry) / IMPLIED_RATE_TIME;
+        uint256 rt = (lnImpliedRate * timeToExpiry * DAY) / IMPLIED_RATE_TIME;
 
         exchangeRate = LogExpMath.exp(rt.Int());
+    }
+
+    function _getFPTExchangeRateFromImpliedRate(
+        uint256 lnImpliedRate,//1e18 decimal
+        uint256 sAPR,//1e18 decimal
+        uint256 timeToExpiry//daily,how many days left before expiry
+    ) internal pure returns(int256 exchangeRate){
+        int256 price;//1e18 decimal
+        int256 multiplier = (sAPR/365).Int();//1e18 decimal
+        uint256 rdiv365 = lnImpliedRate/365;//1e18 decimal,r/365
+        uint256 rndiv365 = timeToExpiry*rdiv365;//1e18 decimal,rn/365
+        int256 x = LogExpMath.exp(rdiv365.neg());//e**(-r/365),1e18 decimal
+        int256 xn = LogExpMath.exp(rndiv365.neg());//e**(-rn/365),1e18 decimal
+        int256 sumSequence = (PMath.IONE - xn).divDown(PMath.IONE - x).mulDown(x);//x(1-xn)/(1-x),1e18 decimal
+        price = multiplier.mulDown(sumSequence) + xn;//1e18 decimal
+        exchangeRate = PMath.IONE.divDown(price);//1e18 decimal
     }
 
     function _getExchangeRate(
@@ -404,7 +472,7 @@ library MarketMathCore {
 
     function _getRateScalar(
         MarketState memory market,
-        uint256 timeToExpiry
+        uint256 timeToExpiry//days left * 86400
     ) internal pure returns (int256 rateScalar) {
         rateScalar = (market.scalarRoot * IMPLIED_RATE_TIME.Int()) / timeToExpiry.Int();
         if (rateScalar <= 0) revert Errors.MarketRateScalarBelowZero(rateScalar);
@@ -414,19 +482,20 @@ library MarketMathCore {
         MarketState memory market,
         PYIndex index,
         int256 initialAnchor,
-        uint256 blockTime
+        ApproxParams calldata guessInitialImpliedRate,
+        uint256 sAPR
     ) internal pure {
         /// ------------------------------------------------------------
         /// CHECKS
         /// ------------------------------------------------------------
-        if (MiniHelpers.isExpired(market.expiry, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
 
         /// ------------------------------------------------------------
         /// MATH
         /// ------------------------------------------------------------
         int256 totalAsset = index.syToAsset(market.totalSy);
-        uint256 timeToExpiry = market.expiry - blockTime;
-        int256 rateScalar = _getRateScalar(market, timeToExpiry);
+        uint256 timeToExpiry = market.lifecircle;//market.expiry - blockTime;
+        int256 rateScalar = _getRateScalar(market, timeToExpiry*DAY);
 
         /// ------------------------------------------------------------
         /// WRITE
@@ -436,7 +505,10 @@ library MarketMathCore {
             totalAsset,
             rateScalar,
             initialAnchor,
+            guessInitialImpliedRate,
+            sAPR,
             timeToExpiry
         );
     }
 }
+
