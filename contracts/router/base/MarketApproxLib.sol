@@ -86,9 +86,10 @@ library MarketApproxPtInLib {
         PYIndex index,
         uint256 exactSyIn,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     ) internal pure returns (uint256 /*netYtOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             approx.guessMin = PMath.max(approx.guessMin, index.syToAsset(exactSyIn));
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
@@ -131,13 +132,14 @@ library MarketApproxPtInLib {
         PYIndex index,
         uint256 totalPtIn,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     )
         internal
         pure
         returns (uint256 /*netPtSwap*/, uint256 /*netSyFromSwap*/, uint256 /*netSyFee*/)
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             // no limit on min
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
@@ -223,13 +225,14 @@ library MarketApproxPtInLib {
         PYIndex index,
         uint256 exactPtIn,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     )
         internal
         pure
         returns (uint256 /*netYtOut*/, uint256 /*totalPtToSwap*/, uint256 /*netSyFee*/)
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             approx.guessMin = PMath.max(approx.guessMin, exactPtIn);
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
@@ -383,9 +386,10 @@ library MarketApproxPtOutLib {
         PYIndex index,
         uint256 minSyOut,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     ) internal pure returns (uint256 /*netYtIn*/, uint256 /*netSyOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             // no limit on min
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
@@ -417,6 +421,7 @@ library MarketApproxPtOutLib {
         uint256 totalSyIn;
         uint256 blockTime;
         ApproxParams approx;
+        uint256 sAPR;
     }
 
     /**
@@ -432,15 +437,16 @@ library MarketApproxPtOutLib {
         PYIndex _index,
         uint256 _totalSyIn,
         uint256 _blockTime,
-        ApproxParams memory _approx
+        ApproxParams memory _approx,
+        uint256 sAPR
     )
         internal
         pure
         returns (uint256 /*netPtFromSwap*/, uint256 /*netSySwap*/, uint256 /*netSyFee*/)
     {
-        Args6 memory a = Args6(_market, _index, _totalSyIn, _blockTime, _approx);
+        Args6 memory a = Args6(_market, _index, _totalSyIn, _blockTime, _approx, _sapr);
 
-        MarketPreCompute memory comp = a.market.getMarketPreCompute(a.index, a.blockTime);
+        MarketPreCompute memory comp = a.market.getMarketPreCompute(a.index, a.sAPR, a.blockTime);
         if (a.approx.guessOffchain == 0) {
             // no limit on min
             a.approx.guessMax = PMath.min(a.approx.guessMax, calcMaxPtOut(comp, a.market.totalPt));
@@ -507,13 +513,14 @@ library MarketApproxPtOutLib {
         PYIndex index,
         uint256 exactYtIn,
         uint256 blockTime,
-        ApproxParams memory approx
+        ApproxParams memory approx,
+        uint256 sAPR
     )
         internal
         pure
         returns (uint256 /*netPtOut*/, uint256 /*totalPtSwapped*/, uint256 /*netSyFee*/)
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
         if (approx.guessOffchain == 0) {
             approx.guessMin = PMath.max(approx.guessMin, exactYtIn);
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
