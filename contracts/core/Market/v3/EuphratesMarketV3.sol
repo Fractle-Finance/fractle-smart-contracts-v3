@@ -6,9 +6,10 @@ import "../../../interfaces/IPMarketFactory.sol";
 import "../../../interfaces/IPMarketSwapCallback.sol";
 import "../../erc20/EuphratesERC20.sol";
 
-import "./EuphratesGaugeV2.sol";
+import "./EuphratesGaugeV3.sol";
 import "../OracleLib.sol";
 import "../../../router/base/MarketApproxLib.sol";
+
 
 /**
 Invariance to maintain:
@@ -102,7 +103,7 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
         address receiver,
         uint256 netSyDesired,
         uint256 netPtDesired,
-        ApproxParams calldata guessInitialImpliedRate, //set all 0 if not init the pool
+        ApproxParams calldata guessInitialImpliedRate //set all 0 if not init the pool
     )
         external
         nonReentrant
@@ -221,7 +222,7 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
     function swapSyForExactPt(
         address receiver,
         uint256 exactPtOut,
-        ApproxParams calldata guessNewImpliedRate;
+        ApproxParams calldata guessNewImpliedRate,
         bytes calldata data
     ) external nonReentrant notExpired returns (uint256 netSyIn, uint256 netSyFee) {
         MarketState memory market = readState(msg.sender);

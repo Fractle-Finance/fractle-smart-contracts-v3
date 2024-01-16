@@ -16,7 +16,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
     using PMath for int256;
     using PMath for uint256;
     using PYIndexLib for PYIndex;
-    using PYIndexLib for IPYieldToken;
+    using PYIndexLib for IPYieldTokenV3;
 
     address internal immutable marketFactory;
 
@@ -61,7 +61,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         int256 /*syToAccount*/,
         bytes calldata data
     ) internal {
-        (address receiver, uint256 minYtOut, IPYieldToken YT) = _decodeSwapExactSyForYt(data);
+        (address receiver, uint256 minYtOut, IPYieldTokenV3 YT) = _decodeSwapExactSyForYt(data);
 
         uint256 ptOwed = ptToAccount.abs();
         uint256 netPyOut = YT.mintPY(msg.sender, receiver);
@@ -82,7 +82,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
             address receiver,
             uint256 maxSyToPull,
             IStandardizedYield SY,
-            IPYieldToken YT
+            IPYieldTokenV3 YT
         ) = _decodeSwapSyForExactYt(data);
 
         /// ------------------------------------------------------------
@@ -118,7 +118,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         int256 syToAccount,
         bytes calldata data
     ) internal {
-        (address receiver, uint256 minSyOut, IPYieldToken YT) = _decodeSwapYtForSy(data);
+        (address receiver, uint256 minSyOut, IPYieldTokenV3 YT) = _decodeSwapYtForSy(data);
         PYIndex pyIndex = YT.newIndex();
 
         uint256 syOwed = syToAccount.neg().Uint();
@@ -146,7 +146,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
             address receiver,
             uint256 exactPtIn,
             uint256 minYtOut,
-            IPYieldToken YT
+            IPYieldTokenV3 YT
         ) = _decodeSwapExactPtForYt(data);
         uint256 netPtOwed = ptToAccount.abs();
 
@@ -166,7 +166,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
             uint256 exactYtIn,
             uint256 minPtOut,
             IPPrincipalToken PT,
-            IPYieldToken YT
+            IPYieldTokenV3 YT
         ) = _decodeSwapExactYtForPt(data);
 
         uint256 netSyOwed = syToAccount.abs();

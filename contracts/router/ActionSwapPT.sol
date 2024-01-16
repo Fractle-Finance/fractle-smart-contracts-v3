@@ -79,7 +79,7 @@ contract ActionSwapPT is IPActionSwapPT, ActionBaseMintRedeem {
         // fail-safe
         if (netSyOut < exactSyOut) assert(false);
 
-        emit SwapPtAndSy(msg.sender, market, receiver, netPtIn.neg(), exactSyOut.Int());
+        //emit SwapPtAndSy(msg.sender, market, receiver, netPtIn.neg(), exactSyOut.Int());
     }
 
     /**
@@ -186,14 +186,14 @@ contract ActionSwapPT is IPActionSwapPT, ActionBaseMintRedeem {
             blockTime
         );
 
-        emit SwapPtAndToken(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            netPtOut.Int(),
-            input.netTokenIn.neg()
-        );
+        // emit SwapPtAndToken(
+        //     msg.sender,
+        //     market,
+        //     input.tokenIn,
+        //     receiver,
+        //     netPtOut.Int(),
+        //     input.netTokenIn.neg()
+        // );
     }
 
     /**

@@ -117,7 +117,8 @@ interface IPActionAddRemoveLiq {
         address market,
         uint256 netSyDesired,
         uint256 netPtDesired,
-        uint256 minLpOut
+        uint256 minLpOut,
+        ApproxParams calldata guessInitialImpliedRate
     ) external returns (uint256 netLpOut, uint256 netSyUsed, uint256 netPtUsed);
 
     function addLiquidityDualTokenAndPt(
@@ -125,48 +126,50 @@ interface IPActionAddRemoveLiq {
         address market,
         TokenInput calldata input,
         uint256 netPtDesired,
-        uint256 minLpOut
+        uint256 minLpOut,
+        ApproxParams calldata guessInitialImpliedRate
     ) external payable returns (uint256 netLpOut, uint256 netTokenUsed, uint256 netPtUsed);
 
-    function addLiquiditySinglePt(
-        address receiver,
-        address market,
-        uint256 netPtIn,
-        uint256 minLpOut,
-        ApproxParams calldata guessPtSwapToSy
-    ) external returns (uint256 netLpOut, uint256 netSyFee);
+    // function addLiquiditySinglePt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netPtIn,
+    //     uint256 minLpOut,
+    //     ApproxParams calldata guessPtSwapToSy
+    // ) external returns (uint256 netLpOut, uint256 netSyFee);
 
     function addLiquiditySingleSy(
         address receiver,
         address market,
         uint256 netSyIn,
         uint256 minLpOut,
-        ApproxParams calldata guessPtReceivedFromSy
+        ApproxParams calldata guessPtReceivedFromSy,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netLpOut, uint256 netSyFee);
 
-    function addLiquiditySingleToken(
-        address receiver,
-        address market,
-        uint256 minLpOut,
-        ApproxParams calldata guessPtReceivedFromSy,
-        TokenInput calldata input
-    ) external payable returns (uint256 netLpOut, uint256 netSyFee);
+    // function addLiquiditySingleToken(
+    //     address receiver,
+    //     address market,
+    //     uint256 minLpOut,
+    //     ApproxParams calldata guessPtReceivedFromSy,
+    //     TokenInput calldata input
+    // ) external payable returns (uint256 netLpOut, uint256 netSyFee);
 
-    function addLiquiditySingleSyKeepYt(
-        address receiver,
-        address market,
-        uint256 netSyIn,
-        uint256 minLpOut,
-        uint256 minYtOut
-    ) external returns (uint256 netLpOut, uint256 netYtOut);
+    // function addLiquiditySingleSyKeepYt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netSyIn,
+    //     uint256 minLpOut,
+    //     uint256 minYtOut
+    // ) external returns (uint256 netLpOut, uint256 netYtOut);
 
-    function addLiquiditySingleTokenKeepYt(
-        address receiver,
-        address market,
-        uint256 minLpOut,
-        uint256 minYtOut,
-        TokenInput calldata input
-    ) external returns (uint256 netLpOut, uint256 netYtOut);
+    // function addLiquiditySingleTokenKeepYt(
+    //     address receiver,
+    //     address market,
+    //     uint256 minLpOut,
+    //     uint256 minYtOut,
+    //     TokenInput calldata input
+    // ) external returns (uint256 netLpOut, uint256 netYtOut);
 
     function removeLiquidityDualSyAndPt(
         address receiver,
@@ -184,25 +187,26 @@ interface IPActionAddRemoveLiq {
         uint256 minPtOut
     ) external returns (uint256 netTokenOut, uint256 netPtOut);
 
-    function removeLiquiditySinglePt(
-        address receiver,
-        address market,
-        uint256 netLpToRemove,
-        uint256 minPtOut,
-        ApproxParams calldata guessPtOut
-    ) external returns (uint256 netPtOut, uint256 netSyFee);
+    // function removeLiquiditySinglePt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netLpToRemove,
+    //     uint256 minPtOut,
+    //     ApproxParams calldata guessPtOut
+    // ) external returns (uint256 netPtOut, uint256 netSyFee);
 
     function removeLiquiditySingleSy(
         address receiver,
         address market,
         uint256 netLpToRemove,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyOut, uint256 netSyFee);
 
-    function removeLiquiditySingleToken(
-        address receiver,
-        address market,
-        uint256 netLpToRemove,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut, uint256 netSyFee);
+    // function removeLiquiditySingleToken(
+    //     address receiver,
+    //     address market,
+    //     uint256 netLpToRemove,
+    //     TokenOutput calldata output
+    // ) external returns (uint256 netTokenOut, uint256 netSyFee);
 }

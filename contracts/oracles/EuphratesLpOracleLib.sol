@@ -28,9 +28,14 @@ library EuphratesLpOracleLib {
     ) private view returns (uint256 lpToAssetRateRaw) {
         MarketState memory state = market.readState(address(0));
 
+        uint256 sAPR = market.sAPR();
+        (, , IPYieldTokenV3 YT) = market.readTokens();
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();
+
         MarketPreCompute memory comp = state.getMarketPreCompute(
             PYIndex.wrap(pyIndex),
-            block.timestamp
+            sAPR,
+            blockTime
         );
 
         int256 totalHypotheticalAsset;

@@ -374,9 +374,9 @@ library MarketMathCore {
         int256 totalAsset,
         int256 rateScalar,
         int256 rateAnchor,
-        ApproxParams calldata guessNewImpliedRate,//new
+        ApproxParams memory guessNewImpliedRate,//new
         uint256 sAPR,//new
-        uint256 timeToExpiry
+        uint256 timeToExpiry//n
     ) internal pure returns (uint256 lnImpliedRate) {
         // This will check for exchange rates < PMath.IONE
         int256 exchangeRate = _getExchangeRate(totalPt, totalAsset, rateScalar, rateAnchor, 0);
@@ -484,11 +484,11 @@ library MarketMathCore {
         int256 initialAnchor,
         ApproxParams calldata guessInitialImpliedRate,
         uint256 sAPR
-    ) internal pure {
+    ) internal view {
         /// ------------------------------------------------------------
         /// CHECKS
         /// ------------------------------------------------------------
-        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.expiry, block.timestamp)) revert Errors.MarketExpired();
 
         /// ------------------------------------------------------------
         /// MATH

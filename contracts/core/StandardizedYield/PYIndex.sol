@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
-import "../../interfaces/IPYieldToken.sol";
+import "../../interfaces/IPYieldTokenV3.sol";
 import "../../interfaces/IPPrincipalToken.sol";
 
 import "./SYUtils.sol";
@@ -12,7 +12,7 @@ library PYIndexLib {
     using PMath for uint256;
     using PMath for int256;
 
-    function newIndex(IPYieldToken YT) internal returns (PYIndex) {
+    function newIndex(IPYieldTokenV3 YT) internal returns (PYIndex) {
         return PYIndex.wrap(YT.pyIndexCurrent());
     }
 

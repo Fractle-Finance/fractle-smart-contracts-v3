@@ -38,7 +38,7 @@ library EuphratesPtOracleLib {
         view
         returns (uint256 syIndex, uint256 pyIndex)
     {
-        (IStandardizedYield SY, , IPYieldToken YT) = market.readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = market.readTokens();
 
         syIndex = SY.exchangeRate();
         uint256 pyIndexStored = YT.pyIndexStored();

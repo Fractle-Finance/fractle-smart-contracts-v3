@@ -22,8 +22,10 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
     using MarketMathCore for MarketState;
     using MarketApproxPtInLib for MarketState;
     using MarketApproxPtOutLib for MarketState;
-    using PYIndexLib for IPYieldToken;
+    using PYIndexLib for IPYieldTokenV3;
     using PYIndexLib for PYIndex;
+
+    ApproxParams internal EMPTY_APPROX; 
 
     /**
      * @notice Adds liquidity to the SY/PT market, granting LP tokens in return
@@ -37,7 +39,8 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         address market,
         uint256 netSyDesired,
         uint256 netPtDesired,
-        uint256 minLpOut
+        uint256 minLpOut,
+        ApproxParams calldata guessInitialImpliedRate//only used when init a pool,set all 0 if not init
     ) external returns (uint256 netLpOut, uint256 netSyUsed, uint256 netPtUsed) {
         (IStandardizedYield SY, IPPrincipalToken PT, ) = IPMarket(market).readTokens();
 
@@ -56,7 +59,7 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         _transferFrom(IERC20(SY), msg.sender, market, netSyUsed);
         _transferFrom(IERC20(PT), msg.sender, market, netPtUsed);
 
-        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyUsed, netPtUsed);
+        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyUsed, netPtUsed,guessInitialImpliedRate);
 
         // fail-safe
         if (netLpOut < minLpOut) assert(false);
@@ -80,7 +83,8 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         address market,
         TokenInput calldata input,
         uint256 netPtDesired,
-        uint256 minLpOut
+        uint256 minLpOut,
+        ApproxParams calldata guessInitialImpliedRate
     ) external payable returns (uint256 netLpOut, uint256 netTokenUsed, uint256 netPtUsed) {
         (IStandardizedYield SY, IPPrincipalToken PT, ) = IPMarket(market).readTokens();
 
@@ -105,66 +109,66 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
 
         // SY has been minted and transferred to the market
         _transferFrom(IERC20(PT), msg.sender, market, netPtUsed);
-        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyUsed, netPtUsed);
+        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyUsed, netPtUsed,guessInitialImpliedRate);
 
         // fail-safe
         if (netLpOut < minLpOut) assert(false);
 
-        emit AddLiquidityDualTokenAndPt(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            netTokenUsed,
-            netPtUsed,
-            netLpOut
-        );
+        // emit AddLiquidityDualTokenAndPt(
+        //     msg.sender,
+        //     market,
+        //     input.tokenIn,
+        //     receiver,
+        //     netTokenUsed,
+        //     netPtUsed,
+        //     netLpOut
+        // );
     }
 
-    /**
-     * @notice Swaps partial PT to SY, then use them to add liquidity to SY/PT pair
-     * @param netPtIn amount of PT to be transferred in from caller
-     * @param guessPtSwapToSy approximate info for the swap
-     * @return netLpOut actual LP output, will not be lower than `minLpOut`
-     * @return netSyFee amount of SY fee incurred from the swap
-     * @dev Reverts if market is expired
-     */
-    function addLiquiditySinglePt(
-        address receiver,
-        address market,
-        uint256 netPtIn,
-        uint256 minLpOut,
-        ApproxParams calldata guessPtSwapToSy
-    ) external returns (uint256 netLpOut, uint256 netSyFee) {
-        (, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Swaps partial PT to SY, then use them to add liquidity to SY/PT pair
+    //  * @param netPtIn amount of PT to be transferred in from caller
+    //  * @param guessPtSwapToSy approximate info for the swap
+    //  * @return netLpOut actual LP output, will not be lower than `minLpOut`
+    //  * @return netSyFee amount of SY fee incurred from the swap
+    //  * @dev Reverts if market is expired
+    //  */
+    // function addLiquiditySinglePt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netPtIn,
+    //     uint256 minLpOut,
+    //     ApproxParams calldata guessPtSwapToSy
+    // ) external returns (uint256 netLpOut, uint256 netSyFee) {
+    //     (, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
 
-        // calculate the amount of PT to swap
-        MarketState memory state = IPMarket(market).readState(address(this));
+    //     // calculate the amount of PT to swap
+    //     MarketState memory state = IPMarket(market).readState(address(this));
 
-        (uint256 netPtSwap, , ) = state.approxSwapPtToAddLiquidity(
-            YT.newIndex(),
-            netPtIn,
-            block.timestamp,
-            guessPtSwapToSy
-        );
+    //     (uint256 netPtSwap, , ) = state.approxSwapPtToAddLiquidity(
+    //         YT.newIndex(),
+    //         netPtIn,
+    //         block.timestamp,
+    //         guessPtSwapToSy
+    //     );
 
-        // execute the swap
-        _transferFrom(IERC20(PT), msg.sender, market, netPtIn);
+    //     // execute the swap
+    //     _transferFrom(IERC20(PT), msg.sender, market, netPtIn);
 
-        uint256 netSyReceived;
-        (netSyReceived, netSyFee) = IPMarket(market).swapExactPtForSy(
-            market,
-            netPtSwap,
-            EMPTY_BYTES
-        );
+    //     uint256 netSyReceived;
+    //     (netSyReceived, netSyFee) = IPMarket(market).swapExactPtForSy(
+    //         market,
+    //         netPtSwap,
+    //         EMPTY_BYTES
+    //     );
 
-        // execute the addLiquidity
-        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyReceived, netPtIn - netPtSwap);
+    //     // execute the addLiquidity
+    //     (netLpOut, , ) = IPMarket(market).mint(receiver, netSyReceived, netPtIn - netPtSwap);
 
-        if (netLpOut < minLpOut) revert Errors.RouterInsufficientLpOut(netLpOut, minLpOut);
+    //     if (netLpOut < minLpOut) revert Errors.RouterInsufficientLpOut(netLpOut, minLpOut);
 
-        emit AddLiquiditySinglePt(msg.sender, market, receiver, netPtIn, netLpOut);
-    }
+    //     emit AddLiquiditySinglePt(msg.sender, market, receiver, netPtIn, netLpOut);
+    // }
 
     /**
      * @notice Swaps partial SY to PT, then use them to add liquidity to SY/PT pair
@@ -174,14 +178,16 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
      * @return netSyFee amount of SY fee incurred from the swap
      * @dev Reverts if market is expired
      */
+     // no need to set guess initial r here, since this function cannot be called when init
     function addLiquiditySingleSy(
         address receiver,
         address market,
         uint256 netSyIn,
         uint256 minLpOut,
-        ApproxParams calldata guessPtReceivedFromSy
+        ApproxParams calldata guessPtReceivedFromSy,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netLpOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         // transfer SY to market
         _transferFrom(IERC20(SY), msg.sender, market, netSyIn);
@@ -193,124 +199,125 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
             YT,
             netSyIn,
             minLpOut,
-            guessPtReceivedFromSy
+            guessPtReceivedFromSy,
+            guessNewImpliedRate
         );
 
         emit AddLiquiditySingleSy(msg.sender, market, receiver, netSyIn, netLpOut);
     }
 
-    /**
-     * @notice Adds liquidity using a single token input. The input token is first swapped through
-     * Kyberswap to a SY-mintable token, the rest is the same as `addLiquiditySingleSy()`
-     * @param guessPtReceivedFromSy approximate PT output for the SY-to-PT swap
-     * @param input data for input token, see {`./kyberswap/KyberSwapHelper.sol`}
-     * @return netLpOut actual LP output, will not be lower than `minLpOut`
-     * @return netSyFee amount of SY fee incurred from the swap
-     * @dev Reverts if market is expired
-     */
-    function addLiquiditySingleToken(
-        address receiver,
-        address market,
-        uint256 minLpOut,
-        ApproxParams calldata guessPtReceivedFromSy,
-        TokenInput calldata input
-    ) external payable returns (uint256 netLpOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Adds liquidity using a single token input. The input token is first swapped through
+    //  * Kyberswap to a SY-mintable token, the rest is the same as `addLiquiditySingleSy()`
+    //  * @param guessPtReceivedFromSy approximate PT output for the SY-to-PT swap
+    //  * @param input data for input token, see {`./kyberswap/KyberSwapHelper.sol`}
+    //  * @return netLpOut actual LP output, will not be lower than `minLpOut`
+    //  * @return netSyFee amount of SY fee incurred from the swap
+    //  * @dev Reverts if market is expired
+    //  */
+    // function addLiquiditySingleToken(
+    //     address receiver,
+    //     address market,
+    //     uint256 minLpOut,
+    //     ApproxParams calldata guessPtReceivedFromSy,
+    //     TokenInput calldata input
+    // ) external payable returns (uint256 netLpOut, uint256 netSyFee) {
+    //     (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
 
-        // mint SY directly to the market
-        uint256 netSyUsed = _mintSyFromToken(market, address(SY), 1, input);
+    //     // mint SY directly to the market
+    //     uint256 netSyUsed = _mintSyFromToken(market, address(SY), 1, input);
 
-        // mint LP
-        (netLpOut, netSyFee) = _addLiquiditySingleSy(
-            receiver,
-            market,
-            YT,
-            netSyUsed,
-            minLpOut,
-            guessPtReceivedFromSy
-        );
+    //     // mint LP
+    //     (netLpOut, netSyFee) = _addLiquiditySingleSy(
+    //         receiver,
+    //         market,
+    //         YT,
+    //         netSyUsed,
+    //         minLpOut,
+    //         guessPtReceivedFromSy
+    //     );
 
-        emit AddLiquiditySingleToken(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            input.netTokenIn,
-            netLpOut
-        );
-    }
+    //     emit AddLiquiditySingleToken(
+    //         msg.sender,
+    //         market,
+    //         input.tokenIn,
+    //         receiver,
+    //         input.netTokenIn,
+    //         netLpOut
+    //     );
+    // }
 
-    /**
-     * @notice Mints partial SY to PT+YT, returns YT to user, then uses PT+SY to add liquidity
-     * @param netSyIn amount of SY to be transferred in from caller
-     * @return netLpOut actual LP output, will not be lower than `minLpOut`
-     * @return netYtOut actual YT output, will not be lower than `minYtOut`
-     * @dev Reverts if market is expired
-     */
-    function addLiquiditySingleSyKeepYt(
-        address receiver,
-        address market,
-        uint256 netSyIn,
-        uint256 minLpOut,
-        uint256 minYtOut
-    ) external returns (uint256 netLpOut, uint256 netYtOut) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Mints partial SY to PT+YT, returns YT to user, then uses PT+SY to add liquidity
+    //  * @param netSyIn amount of SY to be transferred in from caller
+    //  * @return netLpOut actual LP output, will not be lower than `minLpOut`
+    //  * @return netYtOut actual YT output, will not be lower than `minYtOut`
+    //  * @dev Reverts if market is expired
+    //  */
+    // function addLiquiditySingleSyKeepYt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netSyIn,
+    //     uint256 minLpOut,
+    //     uint256 minYtOut
+    // ) external returns (uint256 netLpOut, uint256 netYtOut) {
+    //     (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
 
-        _transferIn(address(SY), msg.sender, netSyIn);
+    //     _transferIn(address(SY), msg.sender, netSyIn);
 
-        (netLpOut, netYtOut) = _addLiquiditySingleSyKeepYt(
-            receiver,
-            market,
-            SY,
-            YT,
-            netSyIn,
-            minLpOut,
-            minYtOut
-        );
+    //     (netLpOut, netYtOut) = _addLiquiditySingleSyKeepYt(
+    //         receiver,
+    //         market,
+    //         SY,
+    //         YT,
+    //         netSyIn,
+    //         minLpOut,
+    //         minYtOut
+    //     );
 
-        emit AddLiquiditySingleSyKeepYt(msg.sender, market, receiver, netSyIn, netLpOut, netYtOut);
-    }
+    //     emit AddLiquiditySingleSyKeepYt(msg.sender, market, receiver, netSyIn, netLpOut, netYtOut);
+    // }
 
-    /**
-     * @notice Adds liquidity and returns leftover YT using a single token input. The input token
-     * is first swapped through Kyberswap to a SY-mintable token, the rest is the same as
-     * `addLiquiditySingleSyKeepYt()`
-     * @param input data for input token, see {`./kyberswap/KyberSwapHelper.sol`}
-     * @return netLpOut actual LP output, will not be lower than `minLpOut`
-     * @return netYtOut actual YT output, will not be lower than `minYtOut`
-     * @dev Reverts if market is expired
-     */
-    function addLiquiditySingleTokenKeepYt(
-        address receiver,
-        address market,
-        uint256 minLpOut,
-        uint256 minYtOut,
-        TokenInput calldata input
-    ) external returns (uint256 netLpOut, uint256 netYtOut) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Adds liquidity and returns leftover YT using a single token input. The input token
+    //  * is first swapped through Kyberswap to a SY-mintable token, the rest is the same as
+    //  * `addLiquiditySingleSyKeepYt()`
+    //  * @param input data for input token, see {`./kyberswap/KyberSwapHelper.sol`}
+    //  * @return netLpOut actual LP output, will not be lower than `minLpOut`
+    //  * @return netYtOut actual YT output, will not be lower than `minYtOut`
+    //  * @dev Reverts if market is expired
+    //  */
+    // function addLiquiditySingleTokenKeepYt(
+    //     address receiver,
+    //     address market,
+    //     uint256 minLpOut,
+    //     uint256 minYtOut,
+    //     TokenInput calldata input
+    // ) external returns (uint256 netLpOut, uint256 netYtOut) {
+    //     (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
 
-        uint256 netSyUsed = _mintSyFromToken(address(this), address(SY), 1, input);
+    //     uint256 netSyUsed = _mintSyFromToken(address(this), address(SY), 1, input);
 
-        (netLpOut, netYtOut) = _addLiquiditySingleSyKeepYt(
-            receiver,
-            market,
-            SY,
-            YT,
-            netSyUsed,
-            minLpOut,
-            minYtOut
-        );
+    //     (netLpOut, netYtOut) = _addLiquiditySingleSyKeepYt(
+    //         receiver,
+    //         market,
+    //         SY,
+    //         YT,
+    //         netSyUsed,
+    //         minLpOut,
+    //         minYtOut
+    //     );
 
-        emit AddLiquiditySingleTokenKeepYt(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            input.netTokenIn,
-            netLpOut,
-            netYtOut
-        );
-    }
+    //     emit AddLiquiditySingleTokenKeepYt(
+    //         msg.sender,
+    //         market,
+    //         input.tokenIn,
+    //         receiver,
+    //         input.netTokenIn,
+    //         netLpOut,
+    //         netYtOut
+    //     );
+    // }
 
     /**
      * @notice Burns LP token to remove SY/PT liquidity
@@ -383,49 +390,49 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         );
     }
 
-    /**
-     * @notice Removes SY/PT liquidity, then swaps all resulting SY to return only PT
-     * @param netLpToRemove amount of LP to be burned from caller
-     * @param guessPtReceivedFromSy approximate info for the swap
-     * @return netPtOut total PT output, will not be lower than `minPtOut`
-     * @return netSyFee amount of SY fee incurred from the swap
-     * @dev Reverts if market is expired
-     */
-    function removeLiquiditySinglePt(
-        address receiver,
-        address market,
-        uint256 netLpToRemove,
-        uint256 minPtOut,
-        ApproxParams calldata guessPtReceivedFromSy
-    ) external returns (uint256 netPtOut, uint256 netSyFee) {
-        (, , IPYieldToken YT) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Removes SY/PT liquidity, then swaps all resulting SY to return only PT
+    //  * @param netLpToRemove amount of LP to be burned from caller
+    //  * @param guessPtReceivedFromSy approximate info for the swap
+    //  * @return netPtOut total PT output, will not be lower than `minPtOut`
+    //  * @return netSyFee amount of SY fee incurred from the swap
+    //  * @dev Reverts if market is expired
+    //  */
+    // function removeLiquiditySinglePt(
+    //     address receiver,
+    //     address market,
+    //     uint256 netLpToRemove,
+    //     uint256 minPtOut,
+    //     ApproxParams calldata guessPtReceivedFromSy
+    // ) external returns (uint256 netPtOut, uint256 netSyFee) {
+    //     (, , IPYieldToken YT) = IPMarket(market).readTokens();
 
-        // calculate the total amount of PT received from burning & selling SY
-        MarketState memory state = IPMarket(market).readState(address(this));
-        (uint256 syFromBurn, uint256 ptFromBurn) = state.removeLiquidity(netLpToRemove);
-        (uint256 ptFromSwap, ) = state.approxSwapExactSyForPt(
-            YT.newIndex(),
-            syFromBurn,
-            block.timestamp,
-            guessPtReceivedFromSy
-        );
+    //     // calculate the total amount of PT received from burning & selling SY
+    //     MarketState memory state = IPMarket(market).readState(address(this));
+    //     (uint256 syFromBurn, uint256 ptFromBurn) = state.removeLiquidity(netLpToRemove);
+    //     (uint256 ptFromSwap, ) = state.approxSwapExactSyForPt(
+    //         YT.newIndex(),
+    //         syFromBurn,
+    //         block.timestamp,
+    //         guessPtReceivedFromSy
+    //     );
 
-        if (ptFromBurn + ptFromSwap < minPtOut)
-            revert Errors.RouterInsufficientPtOut(ptFromBurn + ptFromSwap, minPtOut);
+    //     if (ptFromBurn + ptFromSwap < minPtOut)
+    //         revert Errors.RouterInsufficientPtOut(ptFromBurn + ptFromSwap, minPtOut);
 
-        // execute the burn & the swap
-        _transferFrom(IERC20(market), msg.sender, market, netLpToRemove);
+    //     // execute the burn & the swap
+    //     _transferFrom(IERC20(market), msg.sender, market, netLpToRemove);
 
-        (, ptFromBurn) = IPMarket(market).burn(market, receiver, netLpToRemove);
-        (, netSyFee) = IPMarket(market).swapSyForExactPt(receiver, ptFromSwap, EMPTY_BYTES);
+    //     (, ptFromBurn) = IPMarket(market).burn(market, receiver, netLpToRemove);
+    //     (, netSyFee) = IPMarket(market).swapSyForExactPt(receiver, ptFromSwap, EMPTY_BYTES);
 
-        netPtOut = ptFromBurn + ptFromSwap;
+    //     netPtOut = ptFromBurn + ptFromSwap;
 
-        // fail-safe
-        if (netPtOut < minPtOut) assert(false);
+    //     // fail-safe
+    //     if (netPtOut < minPtOut) assert(false);
 
-        emit RemoveLiquiditySinglePt(msg.sender, market, receiver, netLpToRemove, netPtOut);
-    }
+    //     emit RemoveLiquiditySinglePt(msg.sender, market, receiver, netLpToRemove, netPtOut);
+    // }
 
     /**
      * @notice Removes SY/PT liquidity, then converts all resulting PT to return only SY
@@ -439,79 +446,85 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         address receiver,
         address market,
         uint256 netLpToRemove,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyOut, uint256 netSyFee) {
         // transfer LP to market
         _transferFrom(IERC20(market), msg.sender, market, netLpToRemove);
 
         // burn LP, SY sent to receiver
-        (netSyOut, netSyFee) = _removeLiquiditySingleSy(receiver, market, netLpToRemove, minSyOut);
+        (netSyOut, netSyFee) = _removeLiquiditySingleSy(receiver, market, netLpToRemove, minSyOut,guessNewImpliedRate);
 
         emit RemoveLiquiditySingleSy(msg.sender, market, receiver, netLpToRemove, netSyOut);
     }
 
-    /**
-     * @notice Removes SY/PT liquidity, then converts all to desired output token.
-     * @dev inner workings of this function:
-        - Removes SY/PT liquidity to only SY (see `removeLiquiditySingleSy()`)
-        - Burns SY to redeem SY-mintable tokens
-        - (If needed) swaps resulting tokens to desired output token using Kyberswap
-     * @param netLpToRemove amount of LP to be burned from caller
-     * @param output data for desired output token, see {`./kyberswap/KyberSwapHelper.sol`}
-     * @return netTokenOut total token output, will not be lower than `output.minTokenOut`
-     * @return netSyFee amount of SY fee incurred from the swap
-     * @dev Will work even if market is expired
-     */
-    function removeLiquiditySingleToken(
-        address receiver,
-        address market,
-        uint256 netLpToRemove,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , ) = IPMarket(market).readTokens();
+    // /**
+    //  * @notice Removes SY/PT liquidity, then converts all to desired output token.
+    //  * @dev inner workings of this function:
+    //     - Removes SY/PT liquidity to only SY (see `removeLiquiditySingleSy()`)
+    //     - Burns SY to redeem SY-mintable tokens
+    //     - (If needed) swaps resulting tokens to desired output token using Kyberswap
+    //  * @param netLpToRemove amount of LP to be burned from caller
+    //  * @param output data for desired output token, see {`./kyberswap/KyberSwapHelper.sol`}
+    //  * @return netTokenOut total token output, will not be lower than `output.minTokenOut`
+    //  * @return netSyFee amount of SY fee incurred from the swap
+    //  * @dev Will work even if market is expired
+    //  */
+    // function removeLiquiditySingleToken(
+    //     address receiver,
+    //     address market,
+    //     uint256 netLpToRemove,
+    //     TokenOutput calldata output
+    // ) external returns (uint256 netTokenOut, uint256 netSyFee) {
+    //     (IStandardizedYield SY, , ) = IPMarket(market).readTokens();
 
-        // transfer LP to market, burn LP, SY sent to either SY or bulk
-        _transferFrom(IERC20(market), msg.sender, market, netLpToRemove);
+    //     // transfer LP to market, burn LP, SY sent to either SY or bulk
+    //     _transferFrom(IERC20(market), msg.sender, market, netLpToRemove);
 
-        uint256 netSyReceived;
+    //     uint256 netSyReceived;
 
-        (netSyReceived, netSyFee) = _removeLiquiditySingleSy(
-            _syOrBulk(address(SY), output),
-            market,
-            netLpToRemove,
-            1
-        );
+    //     (netSyReceived, netSyFee) = _removeLiquiditySingleSy(
+    //         _syOrBulk(address(SY), output),
+    //         market,
+    //         netLpToRemove,
+    //         1
+    //     );
 
-        // redeem SY to token
-        netTokenOut = _redeemSyToToken(receiver, address(SY), netSyReceived, output, false);
+    //     // redeem SY to token
+    //     netTokenOut = _redeemSyToToken(receiver, address(SY), netSyReceived, output, false);
 
-        emit RemoveLiquiditySingleToken(
-            msg.sender,
-            market,
-            output.tokenOut,
-            receiver,
-            netLpToRemove,
-            netTokenOut
-        );
-    }
+    //     emit RemoveLiquiditySingleToken(
+    //         msg.sender,
+    //         market,
+    //         output.tokenOut,
+    //         receiver,
+    //         netLpToRemove,
+    //         netTokenOut
+    //     );
+    // }
 
     /// @dev swaps SY to PT, then adds liquidity
     function _addLiquiditySingleSy(
         address receiver,
         address market,
-        IPYieldToken YT,
+        IPYieldTokenV3 YT,
         uint256 netSyIn,
         uint256 minLpOut,
-        ApproxParams calldata guessPtReceivedFromSy
+        ApproxParams calldata guessPtReceivedFromSy,
+        ApproxParams calldata guessNewImpliedRate
     ) internal returns (uint256 netLpOut, uint256 netSyFee) {
         MarketState memory state = IPMarket(market).readState(address(this));
+
+        uint256 sAPR = IPMarket(market).sAPR();//new
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//new
 
         // calculate the PT amount needed to add liquidity
         (uint256 netPtFromSwap, , ) = state.approxSwapSyToAddLiquidity(
             YT.newIndex(),
             netSyIn,
-            block.timestamp,
-            guessPtReceivedFromSy
+            blockTime,
+            guessPtReceivedFromSy,
+            sAPR
         );
 
         // execute the swap & the addLiquidity
@@ -519,67 +532,69 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         (netSySwapped, netSyFee) = IPMarket(market).swapSyForExactPt(
             market,
             netPtFromSwap,
+            guessNewImpliedRate,
             EMPTY_BYTES
-        );
+        );  
 
-        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyIn - netSySwapped, netPtFromSwap);
+        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyIn - netSySwapped, netPtFromSwap,EMPTY_APPROX);
 
         if (netLpOut < minLpOut) revert Errors.RouterInsufficientLpOut(netLpOut, minLpOut);
     }
 
-    /**
-     * @dev algorithm:
-        - Split SY into a SY and b SY (with a + b = netSyIn)
-        - Mint PY with a SY ---> gives (a * pyIndex / ONE) PT + YT
-        - Mint LP with (a * pyIndex / ONE) PT and b SY
+    // /**
+    //  * @dev algorithm:
+    //     - Split SY into a SY and b SY (with a + b = netSyIn)
+    //     - Mint PY with a SY ---> gives (a * pyIndex / ONE) PT + YT
+    //     - Mint LP with (a * pyIndex / ONE) PT and b SY
 
-        -> We want (a * pyIndex / ONE) / totalPt = b / totalSy
-        -> a * (1 + pyIndex * totalSy / ONE / totalPt) = netSyIn
-        -> a = (netSyIn * totalPt) / (totalPt + (pyIndex * totalSy / ONE))
-        -> a = (netSyIn * totalPt) / (totalPt + totalAsset)
-     */
-    function _addLiquiditySingleSyKeepYt(
-        address receiver,
-        address market,
-        IStandardizedYield SY,
-        IPYieldToken YT,
-        uint256 netSyIn,
-        uint256 minLpOut,
-        uint256 minYtOut
-    ) internal returns (uint256 netLpOut, uint256 netYtOut) {
-        MarketState memory state = IPMarket(market).readState(address(this));
+    //     -> We want (a * pyIndex / ONE) / totalPt = b / totalSy
+    //     -> a * (1 + pyIndex * totalSy / ONE / totalPt) = netSyIn
+    //     -> a = (netSyIn * totalPt) / (totalPt + (pyIndex * totalSy / ONE))
+    //     -> a = (netSyIn * totalPt) / (totalPt + totalAsset)
+    //  */
+    // function _addLiquiditySingleSyKeepYt(
+    //     address receiver,
+    //     address market,
+    //     IStandardizedYield SY,
+    //     IPYieldToken YT,
+    //     uint256 netSyIn,
+    //     uint256 minLpOut,
+    //     uint256 minYtOut
+    // ) internal returns (uint256 netLpOut, uint256 netYtOut) {
+    //     MarketState memory state = IPMarket(market).readState(address(this));
 
-        PYIndex pyIndex = YT.newIndex();
+    //     PYIndex pyIndex = YT.newIndex();
 
-        uint256 netSyToPt = (netSyIn * state.totalPt.Uint()) /
-            (state.totalPt.Uint() + pyIndex.syToAsset(state.totalSy.Uint()));
+    //     uint256 netSyToPt = (netSyIn * state.totalPt.Uint()) /
+    //         (state.totalPt.Uint() + pyIndex.syToAsset(state.totalSy.Uint()));
 
-        // transfer SY to mint PY
-        _transferOut(address(SY), address(YT), netSyToPt);
+    //     // transfer SY to mint PY
+    //     _transferOut(address(SY), address(YT), netSyToPt);
 
-        // the rest of SY goes to market
-        _transferOut(address(SY), market, netSyIn - netSyToPt);
+    //     // the rest of SY goes to market
+    //     _transferOut(address(SY), market, netSyIn - netSyToPt);
 
-        // PT goes to market, YT goes to receiver
-        netYtOut = YT.mintPY(market, receiver);
+    //     // PT goes to market, YT goes to receiver
+    //     netYtOut = YT.mintPY(market, receiver);
 
-        (netLpOut, , ) = IPMarket(market).mint(receiver, netSyIn - netSyToPt, netYtOut);
+    //     (netLpOut, , ) = IPMarket(market).mint(receiver, netSyIn - netSyToPt, netYtOut);
 
-        if (netLpOut < minLpOut) revert Errors.RouterInsufficientLpOut(netLpOut, minLpOut);
-        if (netYtOut < minYtOut) revert Errors.RouterInsufficientYtOut(netYtOut, minYtOut);
-    }
+    //     if (netLpOut < minLpOut) revert Errors.RouterInsufficientLpOut(netLpOut, minLpOut);
+    //     if (netYtOut < minYtOut) revert Errors.RouterInsufficientYtOut(netYtOut, minYtOut);
+    // }
 
     /// @dev removes SY/PT liquidity, then converts PT to SY
     function _removeLiquiditySingleSy(
         address receiver,
         address market,
         uint256 netLpToRemove,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) internal returns (uint256 netSyOut, uint256 netSyFee) {
         if (IPMarket(market).isExpired()) {
             netSyOut = __removeLpToSyAfterExpiry(receiver, market, netLpToRemove);
         } else {
-            (netSyOut, netSyFee) = __removeLpToSyBeforeExpiry(receiver, market, netLpToRemove);
+            (netSyOut, netSyFee) = __removeLpToSyBeforeExpiry(receiver, market, netLpToRemove,guessNewImpliedRate);
         }
 
         if (netSyOut < minSyOut) revert Errors.RouterInsufficientSyOut(netSyOut, minSyOut);
@@ -591,7 +606,7 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         address market,
         uint256 netLpToRemove
     ) internal returns (uint256 netSyOut) {
-        (, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
         (uint256 syFromBurn, ) = IPMarket(market).burn(receiver, address(YT), netLpToRemove);
         netSyOut = syFromBurn + YT.redeemPY(receiver);
     }
@@ -600,7 +615,8 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
     function __removeLpToSyBeforeExpiry(
         address receiver,
         address market,
-        uint256 netLpToRemove
+        uint256 netLpToRemove,
+        ApproxParams calldata guessNewImpliedRate
     ) internal returns (uint256 netSyOut, uint256 netSyFee) {
         (uint256 syFromBurn, uint256 ptFromBurn) = IPMarket(market).burn(
             receiver,
@@ -612,6 +628,7 @@ contract ActionAddRemoveLiq is IPActionAddRemoveLiq, ActionBaseMintRedeem {
         (syFromSwap, netSyFee) = IPMarket(market).swapExactPtForSy(
             receiver,
             ptFromBurn,
+            guessNewImpliedRate,
             EMPTY_BYTES
         );
 

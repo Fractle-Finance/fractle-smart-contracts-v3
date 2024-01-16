@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.17;
 
-import "../../interfaces/IPYieldToken.sol";
+import "../../interfaces/IPYieldTokenV3.sol";
 import "../../interfaces/IPPrincipalToken.sol";
 import "../../interfaces/IStandardizedYield.sol";
 
@@ -21,7 +21,7 @@ abstract contract CallbackHelper {
     function _encodeSwapExactSyForYt(
         address receiver,
         uint256 minYtOut,
-        IPYieldToken YT
+        IPYieldTokenV3 YT
     ) internal pure returns (bytes memory res) {
         res = new bytes(128);
         uint256 actionType = uint256(ActionType.SwapExactSyForYt);
@@ -36,7 +36,7 @@ abstract contract CallbackHelper {
 
     function _decodeSwapExactSyForYt(
         bytes calldata data
-    ) internal pure returns (address receiver, uint256 minYtOut, IPYieldToken YT) {
+    ) internal pure returns (address receiver, uint256 minYtOut, IPYieldTokenV3 YT) {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))
@@ -54,7 +54,7 @@ abstract contract CallbackHelper {
         address receiver,
         uint256 maxSyIn,
         IStandardizedYield SY,
-        IPYieldToken YT
+        IPYieldTokenV3 YT
     ) internal pure returns (bytes memory res) {
         res = new bytes(192);
         uint256 actionType = uint256(ActionType.SwapSyForExactYt);
@@ -79,7 +79,7 @@ abstract contract CallbackHelper {
             address receiver,
             uint256 maxSyIn,
             IStandardizedYield SY,
-            IPYieldToken YT
+            IPYieldTokenV3 YT
         )
     {
         assembly {
@@ -99,7 +99,7 @@ abstract contract CallbackHelper {
     function _encodeSwapYtForSy(
         address receiver,
         uint256 minSyOut,
-        IPYieldToken YT
+        IPYieldTokenV3 YT
     ) internal pure returns (bytes memory res) {
         res = new bytes(128);
         uint256 actionType = uint256(ActionType.SwapYtForSy);
@@ -114,7 +114,7 @@ abstract contract CallbackHelper {
 
     function _decodeSwapYtForSy(
         bytes calldata data
-    ) internal pure returns (address receiver, uint256 minSyOut, IPYieldToken YT) {
+    ) internal pure returns (address receiver, uint256 minSyOut, IPYieldTokenV3 YT) {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))
@@ -128,7 +128,7 @@ abstract contract CallbackHelper {
         uint256 exactYtIn,
         uint256 minPtOut,
         IPPrincipalToken PT,
-        IPYieldToken YT
+        IPYieldTokenV3 YT
     ) internal pure returns (bytes memory res) {
         res = new bytes(192);
         uint256 actionType = uint256(ActionType.SwapExactYtForPt);
@@ -153,7 +153,7 @@ abstract contract CallbackHelper {
             uint256 exactYtIn,
             uint256 minPtOut,
             IPPrincipalToken PT,
-            IPYieldToken YT
+            IPYieldTokenV3 YT
         )
     {
         assembly {
@@ -170,7 +170,7 @@ abstract contract CallbackHelper {
         address receiver,
         uint256 exactPtIn,
         uint256 minYtOut,
-        IPYieldToken YT
+        IPYieldTokenV3 YT
     ) internal pure returns (bytes memory res) {
         res = new bytes(160);
         uint256 actionType = uint256(ActionType.SwapExactPtForYt);
@@ -189,7 +189,7 @@ abstract contract CallbackHelper {
     )
         internal
         pure
-        returns (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldToken YT)
+        returns (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldTokenV3 YT)
     {
         assembly {
             // first 32 bytes is ActionType

@@ -78,4 +78,6 @@ interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
     function doTransferOutInterestFPT(address user,address SY) external returns(uint256 interestAmount);
 
     function updateAndDistributeInterestForTwoFPT(address user1, address user2) external;
+
+    function pyIndexLastUpdatedBlock() external view returns (uint128);
 }

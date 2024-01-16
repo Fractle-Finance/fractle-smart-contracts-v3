@@ -17,7 +17,7 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
     using MarketMathCore for MarketState;
     using MarketApproxPtInLib for MarketState;
     using MarketApproxPtOutLib for MarketState;
-    using PYIndexLib for IPYieldToken;
+    using PYIndexLib for IPYieldTokenV3;
 
     constructor(
         IAddressProvider provider,
@@ -48,9 +48,10 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address market,
         uint256 exactSyIn,
         uint256 minYtOut,
-        ApproxParams calldata guessYtOut
+        ApproxParams calldata guessYtOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netYtOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         _transferFrom(IERC20(SY), msg.sender, address(YT), exactSyIn);
 
@@ -60,7 +61,8 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
             YT,
             exactSyIn,
             minYtOut,
-            guessYtOut
+            guessYtOut,
+            guessNewImpliedRate
         );
 
         emit SwapYtAndSy(msg.sender, market, receiver, netYtOut.Int(), exactSyIn.neg());
@@ -81,13 +83,14 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address receiver,
         address market,
         uint256 exactYtIn,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         _transferFrom(IERC20(YT), msg.sender, address(YT), exactYtIn);
 
-        (netSyOut, netSyFee) = _swapExactYtForSy(receiver, market, SY, YT, exactYtIn, minSyOut);
+        (netSyOut, netSyFee) = _swapExactYtForSy(receiver, market, SY, YT, exactYtIn, minSyOut,guessNewImpliedRate);
 
         emit SwapYtAndSy(msg.sender, market, receiver, exactYtIn.neg(), netSyOut.Int());
     }
@@ -106,15 +109,17 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address receiver,
         address market,
         uint256 exactYtOut,
-        uint256 maxSyIn
+        uint256 maxSyIn,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyIn, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         uint256 preSyBalance = SY.balanceOf(msg.sender);
 
         (, netSyFee) = IPMarket(market).swapExactPtForSy(
             address(YT),
             exactYtOut, // exactPtIn = exactYtOut
+            guessNewImpliedRate,
             _encodeSwapSyForExactYt(msg.sender, receiver, maxSyIn, SY, YT)
         );
 
@@ -139,16 +144,21 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address market,
         uint256 exactSyOut,
         uint256 maxYtIn,
-        ApproxParams calldata guessYtIn
+        ApproxParams calldata guessYtIn,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netYtIn, uint256 netSyFee) {
         MarketState memory state = IPMarket(market).readState(address(this));
-        (, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
+
+        uint256 sAPR = IPMarket(market).sAPR();//new
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//newest interest day
 
         (netYtIn, , ) = state.approxSwapYtForExactSy(
             YT.newIndex(),
             exactSyOut,
-            block.timestamp,
-            guessYtIn
+            blockTime,
+            guessYtIn,
+            sAPR
         );
 
         if (netYtIn > maxYtIn) revert Errors.RouterExceededLimitYtIn(netYtIn, maxYtIn);
@@ -158,6 +168,7 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         (, netSyFee) = IPMarket(market).swapSyForExactPt(
             address(YT),
             netYtIn, // exactPtOut = netYtIn
+            guessNewImpliedRate,
             _encodeSwapYtForSy(receiver, exactSyOut, YT)
         );
 
@@ -174,9 +185,10 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address market,
         uint256 minYtOut,
         ApproxParams calldata guessYtOut,
-        TokenInput calldata input
+        TokenInput calldata input,
+        ApproxParams calldata guessNewImpliedRate
     ) external payable returns (uint256 netYtOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         uint256 netSyUsedToBuyYT = _mintSyFromToken(address(YT), address(SY), 1, input);
 
@@ -186,7 +198,8 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
             YT,
             netSyUsedToBuyYT,
             minYtOut,
-            guessYtOut
+            guessYtOut,
+            guessNewImpliedRate
         );
 
         emit SwapYtAndToken(
@@ -208,9 +221,10 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address receiver,
         address market,
         uint256 netYtIn,
-        TokenOutput calldata output
+        TokenOutput calldata output,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netTokenOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
         _transferFrom(IERC20(YT), msg.sender, address(YT), netYtIn);
 
@@ -222,7 +236,8 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
             SY,
             YT,
             netYtIn,
-            1
+            1,
+            guessNewImpliedRate
         );
 
         netTokenOut = _redeemSyToToken(receiver, address(SY), netSyOut, output, false);
@@ -254,19 +269,23 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address market,
         uint256 exactPtIn,
         uint256 minYtOut,
-        ApproxParams calldata guessTotalPtToSwap
+        ApproxParams calldata guessTotalPtToSwap,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netYtOut, uint256 netSyFee) {
-        (, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
+        (, IPPrincipalToken PT, IPYieldTokenV3 YT) = IPMarket(market).readTokens();
         MarketState memory state = IPMarket(market).readState(address(this));
 
         _transferFrom(IERC20(PT), msg.sender, market, exactPtIn);
 
+        uint256 sAPR = IPMarket(market).sAPR();//new
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//new
         uint256 totalPtToSwap;
         (netYtOut, totalPtToSwap, netSyFee) = state.approxSwapExactPtForYt(
             YT.newIndex(),
             exactPtIn,
-            block.timestamp,
-            guessTotalPtToSwap
+            blockTime,
+            guessTotalPtToSwap,
+            sAPR
         );
 
         if (netYtOut < minYtOut) revert Errors.RouterInsufficientYtOut(netYtOut, minYtOut);
@@ -274,6 +293,7 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         IPMarket(market).swapExactPtForSy(
             address(YT),
             totalPtToSwap,
+            guessNewImpliedRate,
             _encodeSwapExactPtForYt(receiver, exactPtIn, minYtOut, YT)
         );
 
@@ -297,19 +317,23 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address market,
         uint256 exactYtIn,
         uint256 minPtOut,
-        ApproxParams calldata guessTotalPtFromSwap
+        ApproxParams calldata guessTotalPtFromSwap,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netPtOut, uint256 netSyFee) {
-        (, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
+        (, IPPrincipalToken PT, IPYieldTokenV3 YT) = IPMarket(market).readTokens();
         MarketState memory state = IPMarket(market).readState(address(this));
 
         _transferFrom(IERC20(YT), msg.sender, address(YT), exactYtIn);
 
+        uint256 sAPR = IPMarket(market).sAPR();//new
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//new
         uint256 totalPtFromSwap;
         (netPtOut, totalPtFromSwap, netSyFee) = state.approxSwapExactYtForPt(
             YT.newIndex(),
             exactYtIn,
-            block.timestamp,
-            guessTotalPtFromSwap
+            blockTime,
+            guessTotalPtFromSwap,
+            sAPR
         );
 
         if (netPtOut < minPtOut) revert Errors.RouterInsufficientPtOut(netPtOut, minPtOut);
@@ -317,6 +341,7 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         IPMarket(market).swapSyForExactPt(
             address(this),
             totalPtFromSwap,
+            guessNewImpliedRate,
             _encodeSwapExactYtForPt(receiver, exactYtIn, minPtOut, PT, YT)
         );
 
@@ -326,18 +351,23 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
     function _swapExactSyForYt(
         address receiver,
         address market,
-        IPYieldToken YT,
+        IPYieldTokenV3 YT,
         uint256 exactSyIn,
         uint256 minYtOut,
-        ApproxParams calldata guessYtOut
+        ApproxParams calldata guessYtOut,
+        ApproxParams calldata guessNewImpliedRate
     ) internal returns (uint256 netYtOut, uint256 netSyFee) {
         MarketState memory state = IPMarket(market).readState(address(this));
+
+        uint256 sAPR = IPMarket(market).sAPR();//new
+        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//new
 
         (netYtOut, ) = state.approxSwapExactSyForYt(
             YT.newIndex(),
             exactSyIn,
-            block.timestamp,
-            guessYtOut
+            blockTime,
+            guessYtOut,
+            sAPR
         );
 
         // early-check
@@ -346,6 +376,7 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         (, netSyFee) = IPMarket(market).swapExactPtForSy(
             address(YT),
             netYtOut, // exactPtIn = netYtOut
+            guessNewImpliedRate,
             _encodeSwapExactSyForYt(receiver, minYtOut, YT)
         );
     }
@@ -354,15 +385,17 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         address receiver,
         address market,
         IStandardizedYield SY,
-        IPYieldToken YT,
+        IPYieldTokenV3 YT,
         uint256 exactYtIn,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) internal returns (uint256 netSyOut, uint256 netSyFee) {
         uint256 preSyBalance = SY.balanceOf(receiver);
 
         (, netSyFee) = IPMarket(market).swapSyForExactPt(
             address(YT),
             exactYtIn, // exactPtOut = exactYtIn
+            guessNewImpliedRate,
             _encodeSwapYtForSy(receiver, minSyOut, YT)
         );
 

@@ -26,7 +26,8 @@ interface IPActionSwapPT {
         address receiver,
         address market,
         uint256 exactPtIn,
-        uint256 minSyOut
+        uint256 minSyOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyOut, uint256 netSyFee);
 
     function swapPtForExactSy(
@@ -34,14 +35,16 @@ interface IPActionSwapPT {
         address market,
         uint256 exactSyOut,
         uint256 maxPtIn,
-        ApproxParams calldata guessPtIn
+        ApproxParams calldata guessPtIn,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netPtIn, uint256 netSyFee);
 
     function swapSyForExactPt(
         address receiver,
         address market,
         uint256 exactPtOut,
-        uint256 maxSyIn
+        uint256 maxSyIn,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netSyIn, uint256 netSyFee);
 
     function swapExactSyForPt(
@@ -49,7 +52,8 @@ interface IPActionSwapPT {
         address market,
         uint256 exactSyIn,
         uint256 minPtOut,
-        ApproxParams calldata guessPtOut
+        ApproxParams calldata guessPtOut,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netPtOut, uint256 netSyFee);
 
     function swapExactTokenForPt(
@@ -57,13 +61,15 @@ interface IPActionSwapPT {
         address market,
         uint256 minPtOut,
         ApproxParams calldata guessPtOut,
-        TokenInput calldata input
+        TokenInput calldata input,
+        ApproxParams calldata guessNewImpliedRate
     ) external payable returns (uint256 netPtOut, uint256 netSyFee);
 
     function swapExactPtForToken(
         address receiver,
         address market,
         uint256 exactPtIn,
-        TokenOutput calldata output
+        TokenOutput calldata output,
+        ApproxParams calldata guessNewImpliedRate
     ) external returns (uint256 netTokenOut, uint256 netSyFee);
 }

@@ -43,7 +43,8 @@ interface IPMarket is IERC20Metadata, IPGauge {
     function mint(
         address receiver,
         uint256 netSyDesired,
-        uint256 netPtDesired
+        uint256 netPtDesired,
+        ApproxParams calldata guessInitialImpliedRate
     ) external returns (uint256 netLpOut, uint256 netSyUsed, uint256 netPtUsed);
 
     function burn(
@@ -55,12 +56,14 @@ interface IPMarket is IERC20Metadata, IPGauge {
     function swapExactPtForSy(
         address receiver,
         uint256 exactPtIn,
+        ApproxParams calldata guessNewImpliedRate,
         bytes calldata data
     ) external returns (uint256 netSyOut, uint256 netSyFee);
 
     function swapSyForExactPt(
         address receiver,
         uint256 exactPtOut,
+        ApproxParams calldata guessNewImpliedRate,
         bytes calldata data
     ) external returns (uint256 netSyIn, uint256 netSyFee);
 
@@ -77,7 +80,7 @@ interface IPMarket is IERC20Metadata, IPGauge {
     function readTokens()
         external
         view
-        returns (IStandardizedYield _SY, IPPrincipalToken _PT, IPYieldToken _YT);
+        returns (IStandardizedYield _SY, IPPrincipalToken _PT, IPYieldTokenV3 _YT);
 
     function getRewardTokens() external view returns (address[] memory);
 
