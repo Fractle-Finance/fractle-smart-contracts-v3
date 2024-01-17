@@ -116,12 +116,9 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
 
         uint256 preSyBalance = SY.balanceOf(msg.sender);
 
-        (, netSyFee) = IPMarket(market).swapExactPtForSy(
-            address(YT),
-            exactYtOut, // exactPtIn = exactYtOut
-            guessNewImpliedRate,
-            _encodeSwapSyForExactYt(msg.sender, receiver, maxSyIn, SY, YT)
-        );
+        bytes memory encodingParams = abi.encode(msg.sender, receiver, maxSyIn, SY, YT);
+        
+        uint256 netSyFee = _trySwapExactPtForSy(market, YT, exactYtOut, guessNewImpliedRate, encodingParams, false);
 
         netSyIn = preSyBalance - SY.balanceOf(msg.sender);
 
@@ -150,28 +147,35 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
         MarketState memory state = IPMarket(market).readState(address(this));
         (, , IPYieldTokenV3 YT) = IPMarket(market).readTokens();
 
-        uint256 sAPR = IPMarket(market).sAPR();//new
-        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//newest interest day
-
         (netYtIn, , ) = state.approxSwapYtForExactSy(
             YT.newIndex(),
             exactSyOut,
-            blockTime,
+            YT.lastGlobalInterestUpdatedDayIndexByOracle(),
             guessYtIn,
-            sAPR
+            IPMarket(market).sAPR()
         );
 
         if (netYtIn > maxYtIn) revert Errors.RouterExceededLimitYtIn(netYtIn, maxYtIn);
 
         _transferFrom(IERC20(YT), msg.sender, address(YT), netYtIn);
+        
+        netSyFee = _trySwapSyForExactPt(market, YT, receiver, netYtIn, exactSyOut, guessNewImpliedRate);        
+    }
 
+    function _trySwapSyForExactPt(
+        address market, 
+        IPYieldTokenV3 YT,
+        address receiver,
+        uint256 netYtIn,
+        uint256 exactSyOut,
+        ApproxParams calldata guessNewImpliedRate
+    ) internal returns (uint256 netSyFee) {
         (, netSyFee) = IPMarket(market).swapSyForExactPt(
             address(YT),
             netYtIn, // exactPtOut = netYtIn
             guessNewImpliedRate,
             _encodeSwapYtForSy(receiver, exactSyOut, YT)
         );
-
         emit SwapYtAndSy(msg.sender, market, receiver, netYtIn.neg(), exactSyOut.Int());
     }
 
@@ -277,27 +281,47 @@ contract ActionSwapYT is ActionBaseCallback, IPActionSwapYT, ActionBaseMintRedee
 
         _transferFrom(IERC20(PT), msg.sender, market, exactPtIn);
 
-        uint256 sAPR = IPMarket(market).sAPR();//new
-        uint256 blockTime = YT.lastGlobalInterestUpdatedDayIndexByOracle();//new
         uint256 totalPtToSwap;
+
         (netYtOut, totalPtToSwap, netSyFee) = state.approxSwapExactPtForYt(
             YT.newIndex(),
             exactPtIn,
-            blockTime,
+            YT.lastGlobalInterestUpdatedDayIndexByOracle(),
             guessTotalPtToSwap,
-            sAPR
+            IPMarket(market).sAPR()
         );
 
         if (netYtOut < minYtOut) revert Errors.RouterInsufficientYtOut(netYtOut, minYtOut);
+        
+        bytes memory encodingParams = abi.encode(receiver, exactPtIn, minYtOut, YT);
 
-        IPMarket(market).swapExactPtForSy(
-            address(YT),
-            totalPtToSwap,
-            guessNewImpliedRate,
-            _encodeSwapExactPtForYt(receiver, exactPtIn, minYtOut, YT)
-        );
+        _trySwapExactPtForSy(market, YT, totalPtToSwap, guessNewImpliedRate, encodingParams, true);
 
         emit SwapPtAndYt(msg.sender, market, receiver, exactPtIn.neg(), netYtOut.Int());
+    }
+
+    function _trySwapExactPtForSy(
+        address market,
+        IPYieldTokenV3 YT,
+        uint256 amountPtToSwap,
+        ApproxParams calldata guessNewImpliedRate,
+        bytes memory encodingParams,
+        bool ptForYt
+    ) internal returns (uint256 netSyFee) {
+        bytes memory encodingResult;
+        if (ptForYt) {
+            (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldTokenV3 YT) = abi.decode(encodingParams, (address, uint256, uint256, IPYieldTokenV3));
+            encodingResult = _encodeSwapExactPtForYt(receiver, exactPtIn, minYtOut, YT);
+        } else {
+            (address sender, address receiver, uint256 maxSyIn, IStandardizedYield SY, IPYieldTokenV3 YT) = abi.decode(encodingParams, (address, address, uint256, IStandardizedYield, IPYieldTokenV3));
+            encodingResult = _encodeSwapSyForExactYt(sender, receiver, maxSyIn, SY, YT);
+        }
+        (, uint256 netSyFee) = IPMarket(market).swapExactPtForSy(
+            address(YT),
+            amountPtToSwap,
+            guessNewImpliedRate,
+            encodingResult
+        );
     }
 
     /**
