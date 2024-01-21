@@ -5,6 +5,5 @@ export * as liquidityMining from "./LiquidityMining";
 export * as core from "./core";
 export * as interfaces from "./interfaces";
 export * as mocks from "./mocks";
-export * as offchainHelpers from "./offchain-helpers";
 export * as oracles from "./oracles";
 export * as router from "./router";

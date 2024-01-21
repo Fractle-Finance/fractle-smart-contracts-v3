@@ -9,8 +9,6 @@ import type * as interfaces from "./interfaces";
 export type { interfaces };
 import type * as mocks from "./mocks";
 export type { mocks };
-import type * as offchainHelpers from "./offchain-helpers";
-export type { offchainHelpers };
 import type * as oracles from "./oracles";
 export type { oracles };
 import type * as router from "./router";

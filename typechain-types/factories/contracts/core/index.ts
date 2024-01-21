@@ -5,8 +5,6 @@ export * as bulkSeller from "./BulkSeller";
 export * as market from "./Market";
 export * as rewardManager from "./RewardManager";
 export * as standardizedYield from "./StandardizedYield";
-export * as yieldContracts from "./YieldContracts";
-export * as yieldContractsV2 from "./YieldContractsV2";
 export * as yieldContractsV3 from "./YieldContractsV3";
 export * as erc20 from "./erc20";
 export * as libraries from "./libraries";

@@ -223,41 +223,6 @@
         "Errors"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/libraries/ExcessivelySafeCall.sol": {
-      "lastModificationDate": 1705501344647,
-      "contentHash": "76523961b1b6ad40d1ea194261a4fc9c",
-      "sourceName": "contracts/LiquidityMining/CrossChainMsg/libraries/ExcessivelySafeCall.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.7.6"
-      ],
-      "artifacts": [
-        "ExcessivelySafeCall"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/libraries/LayerZeroHelper.sol": {
       "lastModificationDate": 1705501344648,
       "contentHash": "2ccea5e484ff8500f260a48cf173814f",
@@ -291,6 +256,41 @@
       ],
       "artifacts": [
         "LayerZeroHelper"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/libraries/ExcessivelySafeCall.sol": {
+      "lastModificationDate": 1705501344647,
+      "contentHash": "76523961b1b6ad40d1ea194261a4fc9c",
+      "sourceName": "contracts/LiquidityMining/CrossChainMsg/libraries/ExcessivelySafeCall.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.6"
+      ],
+      "artifacts": [
+        "ExcessivelySafeCall"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol": {
@@ -1736,6 +1736,43 @@
         "IPPrincipalToken"
       ]
     },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IStandardizedYield.sol": {
+      "lastModificationDate": 1705501344656,
+      "contentHash": "9edbc0b45fc4c9d11eb845f22d256adf",
+      "sourceName": "contracts/interfaces/IStandardizedYield.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IStandardizedYield"
+      ]
+    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPGauge.sol": {
       "lastModificationDate": 1705501344654,
       "contentHash": "8e0d773cc18bca8168cfb95bc5950c15",
@@ -1808,43 +1845,6 @@
       ],
       "artifacts": [
         "IPYieldTokenV3"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IStandardizedYield.sol": {
-      "lastModificationDate": 1705501344656,
-      "contentHash": "9edbc0b45fc4c9d11eb845f22d256adf",
-      "sourceName": "contracts/interfaces/IStandardizedYield.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IStandardizedYield"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/math/LogExpMath.sol": {
@@ -2258,41 +2258,6 @@
         "TokenHelper"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/IPSwapAggregator.sol": {
-      "lastModificationDate": 1705501344659,
-      "contentHash": "71465464249cbf47540e65064cac9760",
-      "sourceName": "contracts/router/swap-aggregator/IPSwapAggregator.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPSwapAggregator"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/kyberswap/KyberInputScalingHelper.sol": {
       "lastModificationDate": 1705501344659,
       "contentHash": "b09e002b65d3f9efe44f1e22d379fd9e",
@@ -2330,6 +2295,41 @@
       ],
       "artifacts": [
         "KyberInputScalingHelper"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/IPSwapAggregator.sol": {
+      "lastModificationDate": 1705501344659,
+      "contentHash": "71465464249cbf47540e65064cac9760",
+      "sourceName": "contracts/router/swap-aggregator/IPSwapAggregator.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPSwapAggregator"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IWETH.sol": {
@@ -2404,6 +2404,43 @@
         "IExecutorHelper"
       ]
     },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/kyberswap/ScalingDataLib.sol": {
+      "lastModificationDate": 1705501344659,
+      "contentHash": "6dfe9d79e1a4ac0dc90488aac1a5e09e",
+      "sourceName": "contracts/router/swap-aggregator/kyberswap/ScalingDataLib.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IExecutorHelper.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ScalingDataLib"
+      ]
+    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/kyberswap/IMetaAggregationRouterV2.sol": {
       "lastModificationDate": 1705501344659,
       "contentHash": "b5001a2e11d99f9907de8c0404371e23",
@@ -2442,43 +2479,6 @@
         "IMetaAggregationRouterV2"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/kyberswap/ScalingDataLib.sol": {
-      "lastModificationDate": 1705501344659,
-      "contentHash": "6dfe9d79e1a4ac0dc90488aac1a5e09e",
-      "sourceName": "contracts/router/swap-aggregator/kyberswap/ScalingDataLib.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IExecutorHelper.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ScalingDataLib"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/swap-aggregator/kyberswap/IAggregationExecutor.sol": {
       "lastModificationDate": 1705501344659,
       "contentHash": "6e77feb417690ba4d488cdabe6fa973f",
@@ -2512,6 +2512,466 @@
       ],
       "artifacts": [
         "IAggregationExecutor"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/ActionBaseMintRedeem.sol": {
+      "lastModificationDate": 1705501344658,
+      "contentHash": "ee3812b5dabaaa8c117e9a3c62ce78a7",
+      "sourceName": "contracts/router/base/ActionBaseMintRedeem.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../core/libraries/TokenHelper.sol",
+        "../../interfaces/IStandardizedYield.sol",
+        "../../interfaces/IPYieldToken.sol",
+        "../../interfaces/IPBulkSeller.sol",
+        "../../core/libraries/Errors.sol",
+        "../swap-aggregator/IPSwapAggregator.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "ActionBaseMintRedeem"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPYieldToken.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "481eaa0243265313dd7f821da5c3fd43",
+      "sourceName": "contracts/interfaces/IPYieldToken.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "./IRewardManager.sol",
+        "./IPInterestManagerYT.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPYieldToken"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPBulkSeller.sol": {
+      "lastModificationDate": 1705501344654,
+      "contentHash": "b033ae7c8ee8b47c03601b0a01ab96c7",
+      "sourceName": "contracts/interfaces/IPBulkSeller.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../core/BulkSeller/BulkSellerMathCore.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPBulkSeller"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1705501606593,
+      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPInterestManagerYT.sol": {
+      "lastModificationDate": 1705501344654,
+      "contentHash": "75816e260a1108fa48ef106122fb30ea",
+      "sourceName": "contracts/interfaces/IPInterestManagerYT.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPInterestManagerYT"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/BulkSeller/BulkSellerMathCore.sol": {
+      "lastModificationDate": 1705501344648,
+      "contentHash": "0de2ef3cdfc87a2d57b36300dc5a5c1b",
+      "sourceName": "contracts/core/BulkSeller/BulkSellerMathCore.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../libraries/TokenHelper.sol",
+        "../libraries/math/PMath.sol",
+        "../libraries/Errors.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BulkSellerMathCore"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionAddRemoveLiq.sol": {
+      "lastModificationDate": 1705501344657,
+      "contentHash": "3373c69a12f5a8eb212e06ddbba4ee24",
+      "sourceName": "contracts/router/ActionAddRemoveLiq.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./base/ActionBaseMintRedeem.sol",
+        "../interfaces/IPActionAddRemoveLiq.sol",
+        "../interfaces/IPMarket.sol",
+        "../core/libraries/Errors.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "ActionAddRemoveLiq"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionAddRemoveLiq.sol": {
+      "lastModificationDate": 1705501344653,
+      "contentHash": "01983cfa41d4d6c27383fd9636e24f23",
+      "sourceName": "contracts/interfaces/IPActionAddRemoveLiq.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../router/base/MarketApproxLib.sol",
+        "../router/base/ActionBaseMintRedeem.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPActionAddRemoveLiq"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/ActionBaseCallback.sol": {
+      "lastModificationDate": 1705501344658,
+      "contentHash": "ea531e5ad638fd4955bf0402ff1d2b83",
+      "sourceName": "contracts/router/base/ActionBaseCallback.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../..//interfaces/IPMarketFactory.sol",
+        "../..//interfaces/IPMarket.sol",
+        "../..//interfaces/IPMarketSwapCallback.sol",
+        "../..//core/libraries/Errors.sol",
+        "./MarketApproxLib.sol",
+        "./ActionBaseMintRedeem.sol",
+        "./CallbackHelper.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "ActionBaseCallback"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketFactory.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "62e109fc3c752147be3d3863ab13ce45",
+      "sourceName": "contracts/interfaces/IPMarketFactory.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPMarketFactory"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketSwapCallback.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "d792f2683157f83244ea53461aef1cb9",
+      "sourceName": "contracts/interfaces/IPMarketSwapCallback.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPMarketSwapCallback"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/CallbackHelper.sol": {
+      "lastModificationDate": 1705501344658,
+      "contentHash": "6020084d5996f26c84e64956a9bbd6f3",
+      "sourceName": "contracts/router/base/CallbackHelper.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../interfaces/IPYieldTokenV3.sol",
+        "../../interfaces/IPPrincipalToken.sol",
+        "../../interfaces/IStandardizedYield.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "CallbackHelper"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
@@ -2860,41 +3320,6 @@
         "^0.8.0"
       ],
       "artifacts": []
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1705501606593,
-      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
-      ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/StandardizedYield/implementations/EuphratesEUSDSY.sol": {
       "lastModificationDate": 1705501344650,
@@ -3248,10 +3673,10 @@
         "InterestManagerYTV3"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/CallbackHelper.sol": {
-      "lastModificationDate": 1705501344658,
-      "contentHash": "6020084d5996f26c84e64956a9bbd6f3",
-      "sourceName": "contracts/router/base/CallbackHelper.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/YieldContractsV3/EuphratesPrincipalTokenV3.sol": {
+      "lastModificationDate": 1705501344650,
+      "contentHash": "48bfb8b1e586135af8e62a6c533bcca2",
+      "sourceName": "contracts/core/YieldContractsV3/EuphratesPrincipalTokenV3.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -3276,21 +3701,24 @@
         }
       },
       "imports": [
-        "../../interfaces/IPYieldTokenV3.sol",
         "../../interfaces/IPPrincipalToken.sol",
-        "../../interfaces/IStandardizedYield.sol"
+        "../../interfaces/IPYieldTokenV3.sol",
+        "../libraries/MiniHelpers.sol",
+        "../libraries/Errors.sol",
+        "../erc20/EuphratesERC20Permit.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"
       ],
       "versionPragmas": [
         "0.8.17"
       ],
       "artifacts": [
-        "CallbackHelper"
+        "EuphratesPrincipalTokenV3"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/ActionBaseMintRedeem.sol": {
-      "lastModificationDate": 1705501344658,
-      "contentHash": "ee3812b5dabaaa8c117e9a3c62ce78a7",
-      "sourceName": "contracts/router/base/ActionBaseMintRedeem.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/YieldContractsV3/EuphratesYieldContractFactoryV3.sol": {
+      "lastModificationDate": 1705501344650,
+      "contentHash": "1fd87a7b8ab24b589312b29438710a54",
+      "sourceName": "contracts/core/YieldContractsV3/EuphratesYieldContractFactoryV3.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -3315,101 +3743,29 @@
         }
       },
       "imports": [
-        "../../core/libraries/TokenHelper.sol",
-        "../../interfaces/IStandardizedYield.sol",
-        "../../interfaces/IPYieldToken.sol",
-        "../../interfaces/IPBulkSeller.sol",
-        "../../core/libraries/Errors.sol",
-        "../swap-aggregator/IPSwapAggregator.sol",
-        "hardhat/console.sol"
+        "../../interfaces/IPYieldContractFactory.sol",
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
+        "../libraries/ExpiryUtilsLib.sol",
+        "../libraries/BaseSplitCodeFactory.sol",
+        "../libraries/MiniHelpers.sol",
+        "../libraries/Errors.sol",
+        "../libraries/BoringOwnableUpgradeable.sol",
+        "../libraries/StringLib.sol",
+        "./EuphratesPrincipalTokenV3.sol",
+        "./EuphratesYieldTokenV3.sol"
       ],
       "versionPragmas": [
         "0.8.17"
       ],
       "artifacts": [
-        "ActionBaseMintRedeem"
+        "EuphratesYieldContractFactoryV3"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPYieldToken.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "481eaa0243265313dd7f821da5c3fd43",
-      "sourceName": "contracts/interfaces/IPYieldToken.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
-        "./IRewardManager.sol",
-        "./IPInterestManagerYT.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPYieldToken"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPBulkSeller.sol": {
-      "lastModificationDate": 1705501344654,
-      "contentHash": "b033ae7c8ee8b47c03601b0a01ab96c7",
-      "sourceName": "contracts/interfaces/IPBulkSeller.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../core/BulkSeller/BulkSellerMathCore.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPBulkSeller"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPInterestManagerYT.sol": {
-      "lastModificationDate": 1705501344654,
-      "contentHash": "75816e260a1108fa48ef106122fb30ea",
-      "sourceName": "contracts/interfaces/IPInterestManagerYT.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/ExpiryUtilsLib.sol": {
+      "lastModificationDate": 1705501344651,
+      "contentHash": "0f72deebb4ed26153374f4c45e059d2d",
+      "sourceName": "contracts/core/libraries/ExpiryUtilsLib.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -3438,13 +3794,13 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "IPInterestManagerYT"
+        "ExpiryUtils"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/BulkSeller/BulkSellerMathCore.sol": {
-      "lastModificationDate": 1705501344648,
-      "contentHash": "0de2ef3cdfc87a2d57b36300dc5a5c1b",
-      "sourceName": "contracts/core/BulkSeller/BulkSellerMathCore.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/BaseSplitCodeFactory.sol": {
+      "lastModificationDate": 1705501344651,
+      "contentHash": "9358b64ee2c3d61dbbb38599728061ab",
+      "sourceName": "contracts/core/libraries/BaseSplitCodeFactory.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -3469,208 +3825,511 @@
         }
       },
       "imports": [
-        "../libraries/TokenHelper.sol",
-        "../libraries/math/PMath.sol",
+        "@openzeppelin/contracts/utils/Create2.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BaseSplitCodeFactory",
+        "CodeDeployer"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/StringLib.sol": {
+      "lastModificationDate": 1705501344652,
+      "contentHash": "bef959e05945e8d51bd5f767707c819e",
+      "sourceName": "contracts/core/libraries/StringLib.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "StringLib"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
+      "lastModificationDate": 1705501608757,
+      "contentHash": "e029f029abc1fd2d85d54fd69086f076",
+      "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EnumerableSet"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/Create2.sol": {
+      "lastModificationDate": 1705501607276,
+      "contentHash": "752ff0901adbdac182deace414d9e75f",
+      "sourceName": "@openzeppelin/contracts/utils/Create2.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Create2"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/structs/EnumerableMap.sol": {
+      "lastModificationDate": 1705501608757,
+      "contentHash": "95822db95440af83b6df65ea18862ed9",
+      "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableMap.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./EnumerableSet.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EnumerableMap"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSenderAppUpg.sol": {
+      "lastModificationDate": 1705501344647,
+      "contentHash": "71c0f061941aaaf375a2c19a65a3f76d",
+      "sourceName": "contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSenderAppUpg.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../interfaces/IPMsgSendEndpoint.sol",
+        "../../core/libraries/BoringOwnableUpgradeable.sol",
+        "../../core/libraries/Errors.sol",
+        "@openzeppelin/contracts/utils/structs/EnumerableMap.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EuphratesMsgSenderAppUpg"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMsgSendEndpoint.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "e2f3a92fc117be034a14d88073f81da4",
+      "sourceName": "contracts/interfaces/IPMsgSendEndpoint.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "IPMsgSendEndpoint"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSendEndpointUpg.sol": {
+      "lastModificationDate": 1705501344647,
+      "contentHash": "a4c92a6561c7e42fdf33fc239ff57a8c",
+      "sourceName": "contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSendEndpointUpg.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../interfaces/IPMsgSendEndpoint.sol",
+        "../../interfaces/ILayerZeroEndpoint.sol",
+        "../../core/libraries/BoringOwnableUpgradeable.sol",
+        "../../core/libraries/Errors.sol",
+        "./libraries/LayerZeroHelper.sol",
+        "@openzeppelin/contracts/utils/structs/EnumerableMap.sol",
+        "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "EuphratesMsgSendEndpointUpg"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesMarketFactoryV3.sol": {
+      "lastModificationDate": 1705501344649,
+      "contentHash": "185cef896db89ae506e20833854ae038",
+      "sourceName": "contracts/core/Market/v3/EuphratesMarketFactoryV3.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
+        "../../../interfaces/IPMarket.sol",
+        "../../../interfaces/IPYieldContractFactory.sol",
+        "../../../interfaces/IPMarketFactory.sol",
+        "../../libraries/BaseSplitCodeFactory.sol",
+        "../../libraries/Errors.sol",
+        "../../libraries/BoringOwnableUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "EuphratesMarketFactoryV2"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketFactoryV2.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "801c0976f2019dd3004b72d9a550b110",
+      "sourceName": "contracts/interfaces/IPMarketFactoryV2.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IPMarketFactory.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPMarketFactoryV2"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesGaugeV3.sol": {
+      "lastModificationDate": 1705501344649,
+      "contentHash": "1995c443229013ea5f2bed326e0b4812",
+      "sourceName": "contracts/core/Market/v3/EuphratesGaugeV3.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../../interfaces/IPGauge.sol",
+        "../../../interfaces/IStandardizedYield.sol",
+        "../../../interfaces/IPMarketFactoryV2.sol",
+        "../../../interfaces/IPExternalRewardDistributor.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "../../RewardManager/RewardManager.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EuphratesGaugeV2"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPExternalRewardDistributor.sol": {
+      "lastModificationDate": 1705501344654,
+      "contentHash": "0c103c23e5b6cee17cd4db8f03c9a4b2",
+      "sourceName": "contracts/interfaces/IPExternalRewardDistributor.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPExternalRewardDistributor"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesMarketV3.sol": {
+      "lastModificationDate": 1705501344649,
+      "contentHash": "63062b7024c02a5e4acab694b554d4c4",
+      "sourceName": "contracts/core/Market/v3/EuphratesMarketV3.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../../interfaces/IPMarket.sol",
+        "../../../interfaces/IPMarketFactory.sol",
+        "../../../interfaces/IPMarketSwapCallback.sol",
+        "../../erc20/EuphratesERC20.sol",
+        "./EuphratesGaugeV3.sol",
+        "../OracleLib.sol",
+        "../../../router/base/MarketApproxLib.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "EuphratesMarketV2"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/OracleLib.sol": {
+      "lastModificationDate": 1705501344649,
+      "contentHash": "1835466bd70093740823f92273f2bc3a",
+      "sourceName": "contracts/core/Market/OracleLib.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
         "../libraries/Errors.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "BulkSellerMathCore"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionAddRemoveLiq.sol": {
-      "lastModificationDate": 1705501344657,
-      "contentHash": "3373c69a12f5a8eb212e06ddbba4ee24",
-      "sourceName": "contracts/router/ActionAddRemoveLiq.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./base/ActionBaseMintRedeem.sol",
-        "../interfaces/IPActionAddRemoveLiq.sol",
-        "../interfaces/IPMarket.sol",
-        "../core/libraries/Errors.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "ActionAddRemoveLiq"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionAddRemoveLiq.sol": {
-      "lastModificationDate": 1705501344653,
-      "contentHash": "01983cfa41d4d6c27383fd9636e24f23",
-      "sourceName": "contracts/interfaces/IPActionAddRemoveLiq.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../router/base/MarketApproxLib.sol",
-        "../router/base/ActionBaseMintRedeem.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPActionAddRemoveLiq"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/base/ActionBaseCallback.sol": {
-      "lastModificationDate": 1705501344658,
-      "contentHash": "ea531e5ad638fd4955bf0402ff1d2b83",
-      "sourceName": "contracts/router/base/ActionBaseCallback.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../..//interfaces/IPMarketFactory.sol",
-        "../..//interfaces/IPMarket.sol",
-        "../..//interfaces/IPMarketSwapCallback.sol",
-        "../..//core/libraries/Errors.sol",
-        "./MarketApproxLib.sol",
-        "./ActionBaseMintRedeem.sol",
-        "./CallbackHelper.sol",
-        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "ActionBaseCallback"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketFactory.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "62e109fc3c752147be3d3863ab13ce45",
-      "sourceName": "contracts/interfaces/IPMarketFactory.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPMarketFactory"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketSwapCallback.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "d792f2683157f83244ea53461aef1cb9",
-      "sourceName": "contracts/interfaces/IPMarketSwapCallback.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPMarketSwapCallback"
+        "OracleLib"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPAllAction.sol": {
@@ -3754,44 +4413,6 @@
         "IPActionSwapYT"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionSwapPT.sol": {
-      "lastModificationDate": 1705501344654,
-      "contentHash": "84d38e0085e0e3651b537e488aa6f8a6",
-      "sourceName": "contracts/interfaces/IPActionSwapPT.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../router/base/MarketApproxLib.sol",
-        "../router/base/ActionBaseMintRedeem.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPActionSwapPT"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionMintRedeem.sol": {
       "lastModificationDate": 1705501344653,
       "contentHash": "59c4fb6e533c7795b68acb9def2788bf",
@@ -3830,6 +4451,41 @@
         "IPActionMintRedeem"
       ]
     },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IDiamondLoupe.sol": {
+      "lastModificationDate": 1705501344652,
+      "contentHash": "6c18b54285f3f4a3043c407a4316ce22",
+      "sourceName": "contracts/interfaces/IDiamondLoupe.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IDiamondLoupe"
+      ]
+    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionMisc.sol": {
       "lastModificationDate": 1705501344653,
       "contentHash": "23218a8606f3cb3f22b607c2a35d6899",
@@ -3865,10 +4521,10 @@
         "IPActionMisc"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IDiamondLoupe.sol": {
-      "lastModificationDate": 1705501344652,
-      "contentHash": "6c18b54285f3f4a3043c407a4316ce22",
-      "sourceName": "contracts/interfaces/IDiamondLoupe.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionSwapPT.sol": {
+      "lastModificationDate": 1705501344654,
+      "contentHash": "84d38e0085e0e3651b537e488aa6f8a6",
+      "sourceName": "contracts/interfaces/IPActionSwapPT.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -3892,12 +4548,15 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "../router/base/MarketApproxLib.sol",
+        "../router/base/ActionBaseMintRedeem.sol"
+      ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IDiamondLoupe"
+        "IPActionSwapPT"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/PendleRouter.sol": {
@@ -4169,43 +4828,6 @@
         "AccessControlUpgradeable"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
-      "lastModificationDate": 1705501607246,
-      "contentHash": "b6dfb72ff1fd764f725ec4db364b1b20",
-      "sourceName": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ContextUpgradeable"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": {
       "lastModificationDate": 1705501607246,
       "contentHash": "c221361be1c4953f5b71f47475b90266",
@@ -4242,6 +4864,43 @@
       ],
       "artifacts": [
         "StringsUpgradeable"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
+      "lastModificationDate": 1705501607246,
+      "contentHash": "b6dfb72ff1fd764f725ec4db364b1b20",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ContextUpgradeable"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol": {
@@ -4661,665 +5320,6 @@
         "EuphratesExternalRewardDistributor"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPExternalRewardDistributor.sol": {
-      "lastModificationDate": 1705501344654,
-      "contentHash": "0c103c23e5b6cee17cd4db8f03c9a4b2",
-      "sourceName": "contracts/interfaces/IPExternalRewardDistributor.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPExternalRewardDistributor"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
-      "lastModificationDate": 1705501608757,
-      "contentHash": "e029f029abc1fd2d85d54fd69086f076",
-      "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "EnumerableSet"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/structs/EnumerableMap.sol": {
-      "lastModificationDate": 1705501608757,
-      "contentHash": "95822db95440af83b6df65ea18862ed9",
-      "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableMap.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./EnumerableSet.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "EnumerableMap"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSenderAppUpg.sol": {
-      "lastModificationDate": 1705501344647,
-      "contentHash": "71c0f061941aaaf375a2c19a65a3f76d",
-      "sourceName": "contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSenderAppUpg.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../interfaces/IPMsgSendEndpoint.sol",
-        "../../core/libraries/BoringOwnableUpgradeable.sol",
-        "../../core/libraries/Errors.sol",
-        "@openzeppelin/contracts/utils/structs/EnumerableMap.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "EuphratesMsgSenderAppUpg"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMsgSendEndpoint.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "e2f3a92fc117be034a14d88073f81da4",
-      "sourceName": "contracts/interfaces/IPMsgSendEndpoint.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "IPMsgSendEndpoint"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSendEndpointUpg.sol": {
-      "lastModificationDate": 1705501344647,
-      "contentHash": "a4c92a6561c7e42fdf33fc239ff57a8c",
-      "sourceName": "contracts/LiquidityMining/CrossChainMsg/EuphratesMsgSendEndpointUpg.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../interfaces/IPMsgSendEndpoint.sol",
-        "../../interfaces/ILayerZeroEndpoint.sol",
-        "../../core/libraries/BoringOwnableUpgradeable.sol",
-        "../../core/libraries/Errors.sol",
-        "./libraries/LayerZeroHelper.sol",
-        "@openzeppelin/contracts/utils/structs/EnumerableMap.sol",
-        "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "EuphratesMsgSendEndpointUpg"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/YieldContractsV3/EuphratesYieldContractFactoryV3.sol": {
-      "lastModificationDate": 1705501344650,
-      "contentHash": "1fd87a7b8ab24b589312b29438710a54",
-      "sourceName": "contracts/core/YieldContractsV3/EuphratesYieldContractFactoryV3.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../interfaces/IPYieldContractFactory.sol",
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
-        "../libraries/ExpiryUtilsLib.sol",
-        "../libraries/BaseSplitCodeFactory.sol",
-        "../libraries/MiniHelpers.sol",
-        "../libraries/Errors.sol",
-        "../libraries/BoringOwnableUpgradeable.sol",
-        "../libraries/StringLib.sol",
-        "./EuphratesPrincipalTokenV3.sol",
-        "./EuphratesYieldTokenV3.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "EuphratesYieldContractFactoryV3"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/ExpiryUtilsLib.sol": {
-      "lastModificationDate": 1705501344651,
-      "contentHash": "0f72deebb4ed26153374f4c45e059d2d",
-      "sourceName": "contracts/core/libraries/ExpiryUtilsLib.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ExpiryUtils"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/BaseSplitCodeFactory.sol": {
-      "lastModificationDate": 1705501344651,
-      "contentHash": "9358b64ee2c3d61dbbb38599728061ab",
-      "sourceName": "contracts/core/libraries/BaseSplitCodeFactory.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/utils/Create2.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "BaseSplitCodeFactory",
-        "CodeDeployer"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/libraries/StringLib.sol": {
-      "lastModificationDate": 1705501344652,
-      "contentHash": "bef959e05945e8d51bd5f767707c819e",
-      "sourceName": "contracts/core/libraries/StringLib.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "StringLib"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/YieldContractsV3/EuphratesPrincipalTokenV3.sol": {
-      "lastModificationDate": 1705501344650,
-      "contentHash": "48bfb8b1e586135af8e62a6c533bcca2",
-      "sourceName": "contracts/core/YieldContractsV3/EuphratesPrincipalTokenV3.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../interfaces/IPPrincipalToken.sol",
-        "../../interfaces/IPYieldTokenV3.sol",
-        "../libraries/MiniHelpers.sol",
-        "../libraries/Errors.sol",
-        "../erc20/EuphratesERC20Permit.sol",
-        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "EuphratesPrincipalTokenV3"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/node_modules/@openzeppelin/contracts/utils/Create2.sol": {
-      "lastModificationDate": 1705501607276,
-      "contentHash": "752ff0901adbdac182deace414d9e75f",
-      "sourceName": "@openzeppelin/contracts/utils/Create2.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Create2"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesMarketV3.sol": {
-      "lastModificationDate": 1705501344649,
-      "contentHash": "63062b7024c02a5e4acab694b554d4c4",
-      "sourceName": "contracts/core/Market/v3/EuphratesMarketV3.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../../interfaces/IPMarket.sol",
-        "../../../interfaces/IPMarketFactory.sol",
-        "../../../interfaces/IPMarketSwapCallback.sol",
-        "../../erc20/EuphratesERC20.sol",
-        "./EuphratesGaugeV3.sol",
-        "../OracleLib.sol",
-        "../../../router/base/MarketApproxLib.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "EuphratesMarketV2"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/OracleLib.sol": {
-      "lastModificationDate": 1705501344649,
-      "contentHash": "1835466bd70093740823f92273f2bc3a",
-      "sourceName": "contracts/core/Market/OracleLib.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../libraries/Errors.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "OracleLib"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesGaugeV3.sol": {
-      "lastModificationDate": 1705501344649,
-      "contentHash": "1995c443229013ea5f2bed326e0b4812",
-      "sourceName": "contracts/core/Market/v3/EuphratesGaugeV3.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../../interfaces/IPGauge.sol",
-        "../../../interfaces/IStandardizedYield.sol",
-        "../../../interfaces/IPMarketFactoryV2.sol",
-        "../../../interfaces/IPExternalRewardDistributor.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "../../RewardManager/RewardManager.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "EuphratesGaugeV2"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMarketFactoryV2.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "801c0976f2019dd3004b72d9a550b110",
-      "sourceName": "contracts/interfaces/IPMarketFactoryV2.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IPMarketFactory.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPMarketFactoryV2"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/core/Market/v3/EuphratesMarketFactoryV3.sol": {
-      "lastModificationDate": 1705501344649,
-      "contentHash": "185cef896db89ae506e20833854ae038",
-      "sourceName": "contracts/core/Market/v3/EuphratesMarketFactoryV3.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
-        "../../../interfaces/IPMarket.sol",
-        "../../../interfaces/IPYieldContractFactory.sol",
-        "../../../interfaces/IPMarketFactory.sol",
-        "../../libraries/BaseSplitCodeFactory.sol",
-        "../../libraries/Errors.sol",
-        "../../libraries/BoringOwnableUpgradeable.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "EuphratesMarketFactoryV2"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPYieldTokenV2.sol": {
       "lastModificationDate": 1705501344655,
       "contentHash": "5c1b18bd9eb5710fa4cc3571463d4c81",
@@ -5357,46 +5357,6 @@
       ],
       "artifacts": [
         "IPYieldTokenV2"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionMintRedeem.sol": {
-      "lastModificationDate": 1705501344658,
-      "contentHash": "a427493ac9b5603e6b7b93838105d299",
-      "sourceName": "contracts/router/ActionMintRedeem.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./base/ActionBaseMintRedeem.sol",
-        "../interfaces/IPMarket.sol",
-        "../interfaces/IPActionMintRedeem.sol",
-        "../core/libraries/Errors.sol"
-      ],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "ActionMintRedeem"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionSwapPT.sol": {
@@ -5437,6 +5397,46 @@
       ],
       "artifacts": [
         "ActionSwapPT"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionMintRedeem.sol": {
+      "lastModificationDate": 1705501344658,
+      "contentHash": "a427493ac9b5603e6b7b93838105d299",
+      "sourceName": "contracts/router/ActionMintRedeem.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./base/ActionBaseMintRedeem.sol",
+        "../interfaces/IPMarket.sol",
+        "../interfaces/IPActionMintRedeem.sol",
+        "../core/libraries/Errors.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "ActionMintRedeem"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/router/ActionSwapYT.sol": {
@@ -5667,6 +5667,41 @@
         "IPActionInfoStatic"
       ]
     },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionVeEuphratesStatic.sol": {
+      "lastModificationDate": 1705501344654,
+      "contentHash": "a611de5188c91e56e55be6dec5d57bd3",
+      "sourceName": "contracts/interfaces/IPActionVeEuphratesStatic.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPActionVeEuphratesStatic"
+      ]
+    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionMarketAuxStatic.sol": {
       "lastModificationDate": 1705501344653,
       "contentHash": "21798ea1b2132abcfefd53fa00b8197e",
@@ -5704,76 +5739,6 @@
         "IPActionMarketAuxStatic"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionMarketCoreStatic.sol": {
-      "lastModificationDate": 1705501344653,
-      "contentHash": "687ae8b56ccbd0a3c3858e079083c72a",
-      "sourceName": "contracts/interfaces/IPActionMarketCoreStatic.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPActionMarketCoreStatic"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionVeEuphratesStatic.sol": {
-      "lastModificationDate": 1705501344654,
-      "contentHash": "a611de5188c91e56e55be6dec5d57bd3",
-      "sourceName": "contracts/interfaces/IPActionVeEuphratesStatic.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IPActionVeEuphratesStatic"
-      ]
-    },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPMiniDiamond.sol": {
       "lastModificationDate": 1705501344655,
       "contentHash": "81cedb81fea36d3b0153e8f17ff62201",
@@ -5809,10 +5774,10 @@
         "IPMiniDiamond"
       ]
     },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPRouterHelper.sol": {
-      "lastModificationDate": 1705501344655,
-      "contentHash": "09b3ee86be2f1ca25ba4414de5e6069c",
-      "sourceName": "contracts/interfaces/IPRouterHelper.sol",
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPActionMarketCoreStatic.sol": {
+      "lastModificationDate": 1705501344653,
+      "contentHash": "687ae8b56ccbd0a3c3858e079083c72a",
+      "sourceName": "contracts/interfaces/IPActionMarketCoreStatic.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -5836,15 +5801,12 @@
           }
         }
       },
-      "imports": [
-        "../router/base/MarketApproxLib.sol",
-        "../router/base/ActionBaseMintRedeem.sol"
-      ],
+      "imports": [],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IPRouterHelper"
+        "IPActionMarketCoreStatic"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/mocks/EUSDMock.sol": {
@@ -5955,43 +5917,6 @@
       ],
       "artifacts": [
         "SafeMath"
-      ]
-    },
-    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IERC4626.sol": {
-      "lastModificationDate": 1705501344652,
-      "contentHash": "170d2b06d8651aacf143aa3514b72e77",
-      "sourceName": "contracts/interfaces/IERC4626.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 2000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC4626"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IQiToken.sol": {
@@ -6139,6 +6064,81 @@
       ],
       "artifacts": [
         "IQiAvax"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IERC4626.sol": {
+      "lastModificationDate": 1705501344652,
+      "contentHash": "170d2b06d8651aacf143aa3514b72e77",
+      "sourceName": "contracts/interfaces/IERC4626.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC4626"
+      ]
+    },
+    "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/interfaces/IPRouterHelper.sol": {
+      "lastModificationDate": 1705501344655,
+      "contentHash": "09b3ee86be2f1ca25ba4414de5e6069c",
+      "sourceName": "contracts/interfaces/IPRouterHelper.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 2000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../router/base/MarketApproxLib.sol",
+        "../router/base/ActionBaseMintRedeem.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IPRouterHelper"
       ]
     },
     "/Users/vincentlu/Desktop/euphrates-smart-contracts-v3/contracts/LiquidityMining/CrossChainMsg/EuphratesMsgReceiverAppUpg.sol": {

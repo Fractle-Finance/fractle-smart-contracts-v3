@@ -3,5 +3,3 @@
 /* eslint-disable */
 import type * as interfaces from "./interfaces";
 export type { interfaces };
-export type { AutomationBase } from "./AutomationBase";
-export type { AutomationCompatible } from "./AutomationCompatible";
