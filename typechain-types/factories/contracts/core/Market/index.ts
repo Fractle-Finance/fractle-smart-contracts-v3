@@ -2,5 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as v2 from "./v2";
+export * as v3 from "./v3";
 export { EuphratesExternalRewardDistributor__factory } from "./EuphratesExternalRewardDistributor__factory";
 export { OracleLib__factory } from "./OracleLib__factory";

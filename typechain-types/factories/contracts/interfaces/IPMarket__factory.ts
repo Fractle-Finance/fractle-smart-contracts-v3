@@ -467,6 +467,38 @@ const _abi = [
         name: "netPtDesired",
         type: "uint256",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessInitialImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "mint",
     outputs: [
@@ -594,6 +626,11 @@ const _abi = [
           },
           {
             internalType: "uint256",
+            name: "lifecircle",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
             name: "lnFeeRateRoot",
             type: "uint256",
           },
@@ -631,7 +668,7 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "contract IPYieldToken",
+        internalType: "contract IPYieldTokenV3",
         name: "_YT",
         type: "address",
       },
@@ -659,6 +696,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "sAPR",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -669,6 +719,38 @@ const _abi = [
         internalType: "uint256",
         name: "exactPtIn",
         type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
       },
       {
         internalType: "bytes",
@@ -703,6 +785,38 @@ const _abi = [
         internalType: "uint256",
         name: "exactPtOut",
         type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
       },
       {
         internalType: "bytes",

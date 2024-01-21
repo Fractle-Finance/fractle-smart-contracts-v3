@@ -1,1 +1,22 @@
-node_modules/
+node_modules
+.env
+.env.json
+coverage
+coverage.json
+typechain
+typechain-types
+data
+.openzeppelin
+deployments
+hardhat.config.ts
+
+#Hardhat files
+cache
+artifacts
+
+#Mac files
+.DS_Store
+
+# idea
+.idea/
+.idea/vcs.xml

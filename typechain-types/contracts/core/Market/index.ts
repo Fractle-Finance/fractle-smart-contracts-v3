@@ -3,5 +3,7 @@
 /* eslint-disable */
 import type * as v2 from "./v2";
 export type { v2 };
+import type * as v3 from "./v3";
+export type { v3 };
 export type { EuphratesExternalRewardDistributor } from "./EuphratesExternalRewardDistributor";
 export type { OracleLib } from "./OracleLib";

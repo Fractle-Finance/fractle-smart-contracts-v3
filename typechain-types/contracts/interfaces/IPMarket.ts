@@ -23,6 +23,28 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export type ApproxParamsStruct = {
+  guessMin: BigNumberish;
+  guessMax: BigNumberish;
+  guessOffchain: BigNumberish;
+  maxIteration: BigNumberish;
+  eps: BigNumberish;
+};
+
+export type ApproxParamsStructOutput = [
+  guessMin: bigint,
+  guessMax: bigint,
+  guessOffchain: bigint,
+  maxIteration: bigint,
+  eps: bigint
+] & {
+  guessMin: bigint;
+  guessMax: bigint;
+  guessOffchain: bigint;
+  maxIteration: bigint;
+  eps: bigint;
+};
+
 export type MarketStateStruct = {
   totalPt: BigNumberish;
   totalSy: BigNumberish;
@@ -30,6 +52,7 @@ export type MarketStateStruct = {
   treasury: AddressLike;
   scalarRoot: BigNumberish;
   expiry: BigNumberish;
+  lifecircle: BigNumberish;
   lnFeeRateRoot: BigNumberish;
   reserveFeePercent: BigNumberish;
   lastLnImpliedRate: BigNumberish;
@@ -42,6 +65,7 @@ export type MarketStateStructOutput = [
   treasury: string,
   scalarRoot: bigint,
   expiry: bigint,
+  lifecircle: bigint,
   lnFeeRateRoot: bigint,
   reserveFeePercent: bigint,
   lastLnImpliedRate: bigint
@@ -52,6 +76,7 @@ export type MarketStateStructOutput = [
   treasury: string;
   scalarRoot: bigint;
   expiry: bigint;
+  lifecircle: bigint;
   lnFeeRateRoot: bigint;
   reserveFeePercent: bigint;
   lastLnImpliedRate: bigint;
@@ -78,6 +103,7 @@ export interface IPMarketInterface extends Interface {
       | "readState"
       | "readTokens"
       | "redeemRewards"
+      | "sAPR"
       | "swapExactPtForSy"
       | "swapSyForExactPt"
       | "symbol"
@@ -133,7 +159,7 @@ export interface IPMarketInterface extends Interface {
   encodeFunctionData(functionFragment: "isExpired", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [AddressLike, BigNumberish, BigNumberish]
+    values: [AddressLike, BigNumberish, BigNumberish, ApproxParamsStruct]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -156,13 +182,14 @@ export interface IPMarketInterface extends Interface {
     functionFragment: "redeemRewards",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "sAPR", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "swapExactPtForSy",
-    values: [AddressLike, BigNumberish, BytesLike]
+    values: [AddressLike, BigNumberish, ApproxParamsStruct, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "swapSyForExactPt",
-    values: [AddressLike, BigNumberish, BytesLike]
+    values: [AddressLike, BigNumberish, ApproxParamsStruct, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -215,6 +242,7 @@ export interface IPMarketInterface extends Interface {
     functionFragment: "redeemRewards",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "sAPR", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "swapExactPtForSy",
     data: BytesLike
@@ -509,7 +537,8 @@ export interface IPMarket extends BaseContract {
     [
       receiver: AddressLike,
       netSyDesired: BigNumberish,
-      netPtDesired: BigNumberish
+      netPtDesired: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -559,14 +588,26 @@ export interface IPMarket extends BaseContract {
     "nonpayable"
   >;
 
+  sAPR: TypedContractMethod<[], [bigint], "view">;
+
   swapExactPtForSy: TypedContractMethod<
-    [receiver: AddressLike, exactPtIn: BigNumberish, data: BytesLike],
+    [
+      receiver: AddressLike,
+      exactPtIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct,
+      data: BytesLike
+    ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
 
   swapSyForExactPt: TypedContractMethod<
-    [receiver: AddressLike, exactPtOut: BigNumberish, data: BytesLike],
+    [
+      receiver: AddressLike,
+      exactPtOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct,
+      data: BytesLike
+    ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
@@ -661,7 +702,8 @@ export interface IPMarket extends BaseContract {
     [
       receiver: AddressLike,
       netSyDesired: BigNumberish,
-      netPtDesired: BigNumberish
+      netPtDesired: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -709,16 +751,29 @@ export interface IPMarket extends BaseContract {
     nameOrSignature: "redeemRewards"
   ): TypedContractMethod<[user: AddressLike], [bigint[]], "nonpayable">;
   getFunction(
+    nameOrSignature: "sAPR"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "swapExactPtForSy"
   ): TypedContractMethod<
-    [receiver: AddressLike, exactPtIn: BigNumberish, data: BytesLike],
+    [
+      receiver: AddressLike,
+      exactPtIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct,
+      data: BytesLike
+    ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
   getFunction(
     nameOrSignature: "swapSyForExactPt"
   ): TypedContractMethod<
-    [receiver: AddressLike, exactPtOut: BigNumberish, data: BytesLike],
+    [
+      receiver: AddressLike,
+      exactPtOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct,
+      data: BytesLike
+    ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
   >;

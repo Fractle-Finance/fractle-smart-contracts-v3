@@ -25,10 +25,8 @@ export interface InterestManagerYTV3Interface extends Interface {
     nameOrSignature:
       | "globalInterestIndex"
       | "globalInterestIndexFPT"
+      | "lastGlobalInterestUpdatedDayIndexByOracle"
       | "lastInterestBlock"
-      | "lastInterestDayIndex"
-      | "lastInterestUpdatedDayIndexByOracle"
-      | "sAPR"
       | "userInterest"
       | "userInterestFPT"
   ): FunctionFragment;
@@ -42,18 +40,13 @@ export interface InterestManagerYTV3Interface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "lastInterestBlock",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "lastInterestDayIndex",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastInterestUpdatedDayIndexByOracle",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "sAPR", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "userInterest",
     values: [AddressLike]
@@ -72,18 +65,13 @@ export interface InterestManagerYTV3Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "lastInterestBlock",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastInterestDayIndex",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastInterestUpdatedDayIndexByOracle",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "sAPR", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "userInterest",
     data: BytesLike
@@ -141,17 +129,13 @@ export interface InterestManagerYTV3 extends BaseContract {
 
   globalInterestIndexFPT: TypedContractMethod<[], [bigint], "view">;
 
-  lastInterestBlock: TypedContractMethod<[], [bigint], "view">;
-
-  lastInterestDayIndex: TypedContractMethod<[], [bigint], "view">;
-
-  lastInterestUpdatedDayIndexByOracle: TypedContractMethod<
+  lastGlobalInterestUpdatedDayIndexByOracle: TypedContractMethod<
     [],
     [bigint],
     "view"
   >;
 
-  sAPR: TypedContractMethod<[], [bigint], "view">;
+  lastInterestBlock: TypedContractMethod<[], [bigint], "view">;
 
   userInterest: TypedContractMethod<
     [arg0: AddressLike],
@@ -188,16 +172,10 @@ export interface InterestManagerYTV3 extends BaseContract {
     nameOrSignature: "globalInterestIndexFPT"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "lastGlobalInterestUpdatedDayIndexByOracle"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "lastInterestBlock"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "lastInterestDayIndex"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "lastInterestUpdatedDayIndexByOracle"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "sAPR"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "userInterest"

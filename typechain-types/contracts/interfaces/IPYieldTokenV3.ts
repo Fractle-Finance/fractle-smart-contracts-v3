@@ -38,14 +38,18 @@ export interface IPYieldTokenV3Interface extends Interface {
       | "factory"
       | "getRewardTokens"
       | "isExpired"
+      | "lastGlobalInterestUpdatedDayIndexByOracle"
+      | "lifecircle"
       | "mintPY"
       | "name"
       | "pyIndexCurrent"
+      | "pyIndexLastUpdatedBlock"
       | "pyIndexStored"
       | "redeemDueInterestAndRewards"
       | "redeemPY"
       | "redeemPYMulti"
       | "rewardIndexesCurrent"
+      | "sAPR"
       | "setPostExpiryData"
       | "symbol"
       | "totalSupply"
@@ -55,6 +59,7 @@ export interface IPYieldTokenV3Interface extends Interface {
       | "updateAndDistributeInterestForTwoFPT"
       | "updateSyReserve"
       | "userInterest"
+      | "userInterestFPT"
       | "userReward"
   ): FunctionFragment;
 
@@ -102,12 +107,24 @@ export interface IPYieldTokenV3Interface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "isExpired", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lifecircle",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "mintPY",
     values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "pyIndexCurrent",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "pyIndexLastUpdatedBlock",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -130,6 +147,7 @@ export interface IPYieldTokenV3Interface extends Interface {
     functionFragment: "rewardIndexesCurrent",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "sAPR", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setPostExpiryData",
     values?: undefined
@@ -164,6 +182,10 @@ export interface IPYieldTokenV3Interface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "userInterestFPT",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "userReward",
     values: [AddressLike, AddressLike]
   ): string;
@@ -189,10 +211,19 @@ export interface IPYieldTokenV3Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isExpired", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "lifecircle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintPY", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pyIndexCurrent",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "pyIndexLastUpdatedBlock",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -212,6 +243,7 @@ export interface IPYieldTokenV3Interface extends Interface {
     functionFragment: "rewardIndexesCurrent",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "sAPR", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setPostExpiryData",
     data: BytesLike
@@ -240,6 +272,10 @@ export interface IPYieldTokenV3Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "userInterest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "userInterestFPT",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "userReward", data: BytesLike): Result;
@@ -486,6 +522,14 @@ export interface IPYieldTokenV3 extends BaseContract {
 
   isExpired: TypedContractMethod<[], [boolean], "view">;
 
+  lastGlobalInterestUpdatedDayIndexByOracle: TypedContractMethod<
+    [],
+    [bigint],
+    "view"
+  >;
+
+  lifecircle: TypedContractMethod<[], [bigint], "view">;
+
   mintPY: TypedContractMethod<
     [receiverPT: AddressLike, receiverYT: AddressLike],
     [bigint],
@@ -495,6 +539,8 @@ export interface IPYieldTokenV3 extends BaseContract {
   name: TypedContractMethod<[], [string], "view">;
 
   pyIndexCurrent: TypedContractMethod<[], [bigint], "nonpayable">;
+
+  pyIndexLastUpdatedBlock: TypedContractMethod<[], [bigint], "view">;
 
   pyIndexStored: TypedContractMethod<[], [bigint], "view">;
 
@@ -517,6 +563,8 @@ export interface IPYieldTokenV3 extends BaseContract {
   >;
 
   rewardIndexesCurrent: TypedContractMethod<[], [bigint[]], "nonpayable">;
+
+  sAPR: TypedContractMethod<[], [bigint], "view">;
 
   setPostExpiryData: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -551,6 +599,18 @@ export interface IPYieldTokenV3 extends BaseContract {
   updateSyReserve: TypedContractMethod<[], [void], "nonpayable">;
 
   userInterest: TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  userInterestFPT: TypedContractMethod<
     [user: AddressLike],
     [
       [bigint, bigint, bigint] & {
@@ -617,6 +677,12 @@ export interface IPYieldTokenV3 extends BaseContract {
     nameOrSignature: "isExpired"
   ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
+    nameOrSignature: "lastGlobalInterestUpdatedDayIndexByOracle"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "lifecircle"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "mintPY"
   ): TypedContractMethod<
     [receiverPT: AddressLike, receiverYT: AddressLike],
@@ -629,6 +695,9 @@ export interface IPYieldTokenV3 extends BaseContract {
   getFunction(
     nameOrSignature: "pyIndexCurrent"
   ): TypedContractMethod<[], [bigint], "nonpayable">;
+  getFunction(
+    nameOrSignature: "pyIndexLastUpdatedBlock"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "pyIndexStored"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -652,6 +721,9 @@ export interface IPYieldTokenV3 extends BaseContract {
   getFunction(
     nameOrSignature: "rewardIndexesCurrent"
   ): TypedContractMethod<[], [bigint[]], "nonpayable">;
+  getFunction(
+    nameOrSignature: "sAPR"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "setPostExpiryData"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -690,6 +762,19 @@ export interface IPYieldTokenV3 extends BaseContract {
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "userInterest"
+  ): TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "userInterestFPT"
   ): TypedContractMethod<
     [user: AddressLike],
     [

@@ -21,15 +21,36 @@ import type {
 } from "../../common";
 
 export interface IPInterestManagerYTV2Interface extends Interface {
-  getFunction(nameOrSignature: "userInterest"): FunctionFragment;
+  getFunction(
+    nameOrSignature:
+      | "lastGlobalInterestUpdatedDayIndexByOracle"
+      | "userInterest"
+      | "userInterestFPT"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "userInterest",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "userInterestFPT",
+    values: [AddressLike]
+  ): string;
 
   decodeFunctionResult(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "userInterest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "userInterestFPT",
     data: BytesLike
   ): Result;
 }
@@ -77,7 +98,25 @@ export interface IPInterestManagerYTV2 extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  lastGlobalInterestUpdatedDayIndexByOracle: TypedContractMethod<
+    [],
+    [bigint],
+    "view"
+  >;
+
   userInterest: TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  userInterestFPT: TypedContractMethod<
     [user: AddressLike],
     [
       [bigint, bigint, bigint] & {
@@ -94,7 +133,23 @@ export interface IPInterestManagerYTV2 extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "lastGlobalInterestUpdatedDayIndexByOracle"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "userInterest"
+  ): TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "userInterestFPT"
   ): TypedContractMethod<
     [user: AddressLike],
     [

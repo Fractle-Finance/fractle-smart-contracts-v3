@@ -23,6 +23,28 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export type ApproxParamsStruct = {
+  guessMin: BigNumberish;
+  guessMax: BigNumberish;
+  guessOffchain: BigNumberish;
+  maxIteration: BigNumberish;
+  eps: BigNumberish;
+};
+
+export type ApproxParamsStructOutput = [
+  guessMin: bigint,
+  guessMax: bigint,
+  guessOffchain: bigint,
+  maxIteration: bigint,
+  eps: bigint
+] & {
+  guessMin: bigint;
+  guessMax: bigint;
+  guessOffchain: bigint;
+  maxIteration: bigint;
+  eps: bigint;
+};
+
 export type SwapDataStruct = {
   swapType: BigNumberish;
   extRouter: AddressLike;
@@ -67,28 +89,6 @@ export type TokenOutputStructOutput = [
   swapData: SwapDataStructOutput;
 };
 
-export type ApproxParamsStruct = {
-  guessMin: BigNumberish;
-  guessMax: BigNumberish;
-  guessOffchain: BigNumberish;
-  maxIteration: BigNumberish;
-  eps: BigNumberish;
-};
-
-export type ApproxParamsStructOutput = [
-  guessMin: bigint,
-  guessMax: bigint,
-  guessOffchain: bigint,
-  maxIteration: bigint,
-  eps: bigint
-] & {
-  guessMin: bigint;
-  guessMax: bigint;
-  guessOffchain: bigint;
-  maxIteration: bigint;
-  eps: bigint;
-};
-
 export type TokenInputStruct = {
   tokenIn: AddressLike;
   netTokenIn: BigNumberish;
@@ -131,11 +131,23 @@ export interface ActionSwapPTInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "swapExactPtForSy",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactPtForToken",
-    values: [AddressLike, AddressLike, BigNumberish, TokenOutputStruct]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      TokenOutputStruct,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactSyForPt",
@@ -144,6 +156,7 @@ export interface ActionSwapPTInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
@@ -154,7 +167,8 @@ export interface ActionSwapPTInterface extends Interface {
       AddressLike,
       BigNumberish,
       ApproxParamsStruct,
-      TokenInputStruct
+      TokenInputStruct,
+      ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
@@ -164,12 +178,19 @@ export interface ActionSwapPTInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapSyForExactPt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
 
   decodeFunctionResult(
@@ -305,7 +326,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -316,7 +338,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -328,7 +351,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
+      guessPtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -340,7 +364,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       minPtOut: BigNumberish,
       guessPtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -352,7 +377,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxPtIn: BigNumberish,
-      guessPtIn: ApproxParamsStruct
+      guessPtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -363,7 +389,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -380,7 +407,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -392,7 +420,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -405,7 +434,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
+      guessPtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -418,7 +448,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       minPtOut: BigNumberish,
       guessPtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -431,7 +462,8 @@ export interface ActionSwapPT extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxPtIn: BigNumberish,
-      guessPtIn: ApproxParamsStruct
+      guessPtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -443,7 +475,8 @@ export interface ActionSwapPT extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"

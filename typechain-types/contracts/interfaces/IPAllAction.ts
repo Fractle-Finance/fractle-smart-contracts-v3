@@ -23,6 +23,28 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export type ApproxParamsStruct = {
+  guessMin: BigNumberish;
+  guessMax: BigNumberish;
+  guessOffchain: BigNumberish;
+  maxIteration: BigNumberish;
+  eps: BigNumberish;
+};
+
+export type ApproxParamsStructOutput = [
+  guessMin: bigint,
+  guessMax: bigint,
+  guessOffchain: bigint,
+  maxIteration: bigint,
+  eps: bigint
+] & {
+  guessMin: bigint;
+  guessMax: bigint;
+  guessOffchain: bigint;
+  maxIteration: bigint;
+  eps: bigint;
+};
+
 export type SwapDataStruct = {
   swapType: BigNumberish;
   extRouter: AddressLike;
@@ -65,28 +87,6 @@ export type TokenInputStructOutput = [
   bulk: string;
   euphratesSwap: string;
   swapData: SwapDataStructOutput;
-};
-
-export type ApproxParamsStruct = {
-  guessMin: BigNumberish;
-  guessMax: BigNumberish;
-  guessOffchain: BigNumberish;
-  maxIteration: BigNumberish;
-  eps: BigNumberish;
-};
-
-export type ApproxParamsStructOutput = [
-  guessMin: bigint,
-  guessMax: bigint,
-  guessOffchain: bigint,
-  maxIteration: bigint,
-  eps: bigint
-] & {
-  guessMin: bigint;
-  guessMax: bigint;
-  guessOffchain: bigint;
-  maxIteration: bigint;
-  eps: bigint;
 };
 
 export type TokenOutputStruct = {
@@ -157,11 +157,7 @@ export interface IPAllActionInterface extends Interface {
     nameOrSignature:
       | "addLiquidityDualSyAndPt"
       | "addLiquidityDualTokenAndPt"
-      | "addLiquiditySinglePt"
       | "addLiquiditySingleSy"
-      | "addLiquiditySingleSyKeepYt"
-      | "addLiquiditySingleToken"
-      | "addLiquiditySingleTokenKeepYt"
       | "approveInf"
       | "batchExec"
       | "facetAddress"
@@ -177,9 +173,7 @@ export interface IPAllActionInterface extends Interface {
       | "redeemSyToToken"
       | "removeLiquidityDualSyAndPt"
       | "removeLiquidityDualTokenAndPt"
-      | "removeLiquiditySinglePt"
       | "removeLiquiditySingleSy"
-      | "removeLiquiditySingleToken"
       | "swapCallback"
       | "swapExactPtForSy"
       | "swapExactPtForToken"
@@ -226,7 +220,14 @@ export interface IPAllActionInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "addLiquidityDualSyAndPt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "addLiquidityDualTokenAndPt",
@@ -234,15 +235,6 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       AddressLike,
       TokenInputStruct,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySinglePt",
-    values: [
-      AddressLike,
-      AddressLike,
       BigNumberish,
       BigNumberish,
       ApproxParamsStruct
@@ -255,31 +247,8 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
-      ApproxParamsStruct
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleSyKeepYt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleToken",
-    values: [
-      AddressLike,
-      AddressLike,
-      BigNumberish,
       ApproxParamsStruct,
-      TokenInputStruct
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleTokenKeepYt",
-    values: [
-      AddressLike,
-      AddressLike,
-      BigNumberish,
-      BigNumberish,
-      TokenInputStruct
+      ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
@@ -346,7 +315,7 @@ export interface IPAllActionInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeLiquiditySinglePt",
+    functionFragment: "removeLiquiditySingleSy",
     values: [
       AddressLike,
       AddressLike,
@@ -356,24 +325,28 @@ export interface IPAllActionInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeLiquiditySingleSy",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeLiquiditySingleToken",
-    values: [AddressLike, AddressLike, BigNumberish, TokenOutputStruct]
-  ): string;
-  encodeFunctionData(
     functionFragment: "swapCallback",
     values: [BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactPtForSy",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactPtForToken",
-    values: [AddressLike, AddressLike, BigNumberish, TokenOutputStruct]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      TokenOutputStruct,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactPtForYt",
@@ -382,6 +355,7 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
@@ -392,6 +366,7 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
@@ -402,6 +377,7 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
@@ -412,7 +388,8 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       ApproxParamsStruct,
-      TokenInputStruct
+      TokenInputStruct,
+      ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
@@ -422,7 +399,8 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       ApproxParamsStruct,
-      TokenInputStruct
+      TokenInputStruct,
+      ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
@@ -432,16 +410,29 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactYtForSy",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapExactYtForToken",
-    values: [AddressLike, AddressLike, BigNumberish, TokenOutputStruct]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      TokenOutputStruct,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapPtForExactSy",
@@ -450,16 +441,29 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapSyForExactPt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapSyForExactYt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "swapYtForExactSy",
@@ -468,6 +472,7 @@ export interface IPAllActionInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
+      ApproxParamsStruct,
       ApproxParamsStruct
     ]
   ): string;
@@ -481,23 +486,7 @@ export interface IPAllActionInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "addLiquiditySinglePt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "addLiquiditySingleSy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleSyKeepYt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleTokenKeepYt",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "approveInf", data: BytesLike): Result;
@@ -552,15 +541,7 @@ export interface IPAllActionInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "removeLiquiditySinglePt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "removeLiquiditySingleSy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeLiquiditySingleToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -1369,7 +1350,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       netSyDesired: BigNumberish,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -1387,7 +1369,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       input: TokenInputStruct,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -1399,63 +1382,16 @@ export interface IPAllAction extends BaseContract {
     "payable"
   >;
 
-  addLiquiditySinglePt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netPtIn: BigNumberish,
-      minLpOut: BigNumberish,
-      guessPtSwapToSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
   addLiquiditySingleSy: TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netSyIn: BigNumberish,
       minLpOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
-  addLiquiditySingleSyKeepYt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netSyIn: BigNumberish,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
-    "nonpayable"
-  >;
-
-  addLiquiditySingleToken: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
       guessPtReceivedFromSy: ApproxParamsStruct,
-      input: TokenInputStruct
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "payable"
-  >;
-
-  addLiquiditySingleTokenKeepYt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish,
-      input: TokenInputStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
     "nonpayable"
   >;
 
@@ -1588,37 +1524,15 @@ export interface IPAllAction extends BaseContract {
     "nonpayable"
   >;
 
-  removeLiquiditySinglePt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
   removeLiquiditySingleSy: TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netLpToRemove: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
-  removeLiquiditySingleToken: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      output: TokenOutputStruct
-    ],
-    [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
 
@@ -1633,7 +1547,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1644,7 +1559,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1656,7 +1572,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactPtIn: BigNumberish,
       minYtOut: BigNumberish,
-      guessTotalPtToSwap: ApproxParamsStruct
+      guessTotalPtToSwap: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1668,7 +1585,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
+      guessPtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1680,7 +1598,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minYtOut: BigNumberish,
-      guessYtOut: ApproxParamsStruct
+      guessYtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1692,7 +1611,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       minPtOut: BigNumberish,
       guessPtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -1704,7 +1624,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       minYtOut: BigNumberish,
       guessYtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -1716,7 +1637,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactYtIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessTotalPtSwapped: ApproxParamsStruct
+      guessTotalPtSwapped: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1727,7 +1649,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactYtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1738,7 +1661,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       netYtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1750,7 +1674,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxPtIn: BigNumberish,
-      guessPtIn: ApproxParamsStruct
+      guessPtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1761,7 +1686,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1772,7 +1698,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactYtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1784,7 +1711,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxYtIn: BigNumberish,
-      guessYtIn: ApproxParamsStruct
+      guessYtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -1802,7 +1730,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       netSyDesired: BigNumberish,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -1821,7 +1750,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       input: TokenInputStruct,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -1833,19 +1763,6 @@ export interface IPAllAction extends BaseContract {
     "payable"
   >;
   getFunction(
-    nameOrSignature: "addLiquiditySinglePt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netPtIn: BigNumberish,
-      minLpOut: BigNumberish,
-      guessPtSwapToSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "addLiquiditySingleSy"
   ): TypedContractMethod<
     [
@@ -1853,48 +1770,10 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       netSyIn: BigNumberish,
       minLpOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleSyKeepYt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netSyIn: BigNumberish,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleToken"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
       guessPtReceivedFromSy: ApproxParamsStruct,
-      input: TokenInputStruct
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleTokenKeepYt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish,
-      input: TokenInputStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
     "nonpayable"
   >;
   getFunction(
@@ -2034,40 +1913,16 @@ export interface IPAllAction extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "removeLiquiditySinglePt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "removeLiquiditySingleSy"
   ): TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netLpToRemove: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "removeLiquiditySingleToken"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      output: TokenOutputStruct
-    ],
-    [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
   getFunction(
@@ -2084,7 +1939,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2096,7 +1952,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2109,7 +1966,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactPtIn: BigNumberish,
       minYtOut: BigNumberish,
-      guessTotalPtToSwap: ApproxParamsStruct
+      guessTotalPtToSwap: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2122,7 +1980,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessPtOut: ApproxParamsStruct
+      guessPtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2135,7 +1994,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyIn: BigNumberish,
       minYtOut: BigNumberish,
-      guessYtOut: ApproxParamsStruct
+      guessYtOut: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2148,7 +2008,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       minPtOut: BigNumberish,
       guessPtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -2161,7 +2022,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       minYtOut: BigNumberish,
       guessYtOut: ApproxParamsStruct,
-      input: TokenInputStruct
+      input: TokenInputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtOut: bigint; netSyFee: bigint }],
     "payable"
@@ -2174,7 +2036,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactYtIn: BigNumberish,
       minPtOut: BigNumberish,
-      guessTotalPtSwapped: ApproxParamsStruct
+      guessTotalPtSwapped: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2186,7 +2049,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactYtIn: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2198,7 +2062,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       netYtIn: BigNumberish,
-      output: TokenOutputStruct
+      output: TokenOutputStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2211,7 +2076,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxPtIn: BigNumberish,
-      guessPtIn: ApproxParamsStruct
+      guessPtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netPtIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2223,7 +2089,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactPtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2235,7 +2102,8 @@ export interface IPAllAction extends BaseContract {
       receiver: AddressLike,
       market: AddressLike,
       exactYtOut: BigNumberish,
-      maxSyIn: BigNumberish
+      maxSyIn: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyIn: bigint; netSyFee: bigint }],
     "nonpayable"
@@ -2248,7 +2116,8 @@ export interface IPAllAction extends BaseContract {
       market: AddressLike,
       exactSyOut: BigNumberish,
       maxYtIn: BigNumberish,
-      guessYtIn: ApproxParamsStruct
+      guessYtIn: ApproxParamsStruct,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netYtIn: bigint; netSyFee: bigint }],
     "nonpayable"

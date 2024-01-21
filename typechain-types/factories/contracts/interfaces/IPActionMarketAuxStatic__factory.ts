@@ -188,6 +188,11 @@ const _abi = [
           },
           {
             internalType: "uint256",
+            name: "lifecircle",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
             name: "lnFeeRateRoot",
             type: "uint256",
           },
@@ -285,6 +290,11 @@ const _abi = [
           {
             internalType: "uint256",
             name: "expiry",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "lifecircle",
             type: "uint256",
           },
           {

@@ -186,6 +186,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.EuphratesMarketV2__factory>;
     getContractFactory(
+      name: "EuphratesGaugeV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EuphratesGaugeV2__factory>;
+    getContractFactory(
+      name: "EuphratesMarketFactoryV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EuphratesMarketFactoryV2__factory>;
+    getContractFactory(
+      name: "EuphratesMarketV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EuphratesMarketV2__factory>;
+    getContractFactory(
       name: "RewardManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.RewardManager__factory>;
@@ -918,6 +930,21 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.EuphratesMarketV2>;
     getContractAt(
+      name: "EuphratesGaugeV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EuphratesGaugeV2>;
+    getContractAt(
+      name: "EuphratesMarketFactoryV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    getContractAt(
+      name: "EuphratesMarketV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EuphratesMarketV2>;
+    getContractAt(
       name: "RewardManager",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -1736,6 +1763,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.EuphratesMarketV2>;
     deployContract(
+      name: "EuphratesGaugeV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesGaugeV2>;
+    deployContract(
+      name: "EuphratesMarketFactoryV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    deployContract(
+      name: "EuphratesMarketV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesMarketV2>;
+    deployContract(
       name: "RewardManager",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.RewardManager>;
@@ -2452,6 +2491,21 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OracleLib>;
+    deployContract(
+      name: "EuphratesGaugeV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesGaugeV2>;
+    deployContract(
+      name: "EuphratesMarketFactoryV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    deployContract(
+      name: "EuphratesMarketV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EuphratesMarketV2>;
     deployContract(
       name: "EuphratesGaugeV2",
       args: any[],

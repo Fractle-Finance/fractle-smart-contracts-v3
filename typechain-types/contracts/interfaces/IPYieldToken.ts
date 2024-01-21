@@ -46,6 +46,7 @@ export interface IPYieldTokenInterface extends Interface {
       | "redeemPY"
       | "redeemPYMulti"
       | "rewardIndexesCurrent"
+      | "sAPR"
       | "symbol"
       | "totalSupply"
       | "transfer"
@@ -125,6 +126,7 @@ export interface IPYieldTokenInterface extends Interface {
     functionFragment: "rewardIndexesCurrent",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "sAPR", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -191,6 +193,7 @@ export interface IPYieldTokenInterface extends Interface {
     functionFragment: "rewardIndexesCurrent",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "sAPR", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -461,6 +464,8 @@ export interface IPYieldToken extends BaseContract {
 
   rewardIndexesCurrent: TypedContractMethod<[], [bigint[]], "nonpayable">;
 
+  sAPR: TypedContractMethod<[], [bigint], "view">;
+
   symbol: TypedContractMethod<[], [string], "view">;
 
   totalSupply: TypedContractMethod<[], [bigint], "view">;
@@ -569,6 +574,9 @@ export interface IPYieldToken extends BaseContract {
   getFunction(
     nameOrSignature: "rewardIndexesCurrent"
   ): TypedContractMethod<[], [bigint[]], "nonpayable">;
+  getFunction(
+    nameOrSignature: "sAPR"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "symbol"
   ): TypedContractMethod<[], [string], "view">;

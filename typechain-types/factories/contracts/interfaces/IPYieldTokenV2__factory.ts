@@ -388,6 +388,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "lastGlobalInterestUpdatedDayIndexByOracle",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -628,6 +641,35 @@ const _abi = [
       },
     ],
     name: "userInterest",
+    outputs: [
+      {
+        internalType: "uint128",
+        name: "lastInterestIndex",
+        type: "uint128",
+      },
+      {
+        internalType: "uint128",
+        name: "accruedInterest",
+        type: "uint128",
+      },
+      {
+        internalType: "uint256",
+        name: "lastPYIndex",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "userInterestFPT",
     outputs: [
       {
         internalType: "uint128",

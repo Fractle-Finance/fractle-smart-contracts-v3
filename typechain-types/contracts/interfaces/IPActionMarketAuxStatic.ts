@@ -28,6 +28,7 @@ export type MarketStateStruct = {
   treasury: AddressLike;
   scalarRoot: BigNumberish;
   expiry: BigNumberish;
+  lifecircle: BigNumberish;
   lnFeeRateRoot: BigNumberish;
   reserveFeePercent: BigNumberish;
   lastLnImpliedRate: BigNumberish;
@@ -40,6 +41,7 @@ export type MarketStateStructOutput = [
   treasury: string,
   scalarRoot: bigint,
   expiry: bigint,
+  lifecircle: bigint,
   lnFeeRateRoot: bigint,
   reserveFeePercent: bigint,
   lastLnImpliedRate: bigint
@@ -50,6 +52,7 @@ export type MarketStateStructOutput = [
   treasury: string;
   scalarRoot: bigint;
   expiry: bigint;
+  lifecircle: bigint;
   lnFeeRateRoot: bigint;
   reserveFeePercent: bigint;
   lastLnImpliedRate: bigint;

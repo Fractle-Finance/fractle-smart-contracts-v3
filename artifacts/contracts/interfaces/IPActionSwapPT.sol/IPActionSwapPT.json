@@ -104,6 +104,38 @@
           "internalType": "uint256",
           "name": "minSyOut",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
+          "type": "tuple"
         }
       ],
       "name": "swapExactPtForSy",
@@ -197,6 +229,38 @@
           "internalType": "struct TokenOutput",
           "name": "output",
           "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
+          "type": "tuple"
         }
       ],
       "name": "swapExactPtForToken",
@@ -267,6 +331,38 @@
           ],
           "internalType": "struct ApproxParams",
           "name": "guessPtOut",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
           "type": "tuple"
         }
       ],
@@ -393,6 +489,38 @@
           "internalType": "struct TokenInput",
           "name": "input",
           "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
+          "type": "tuple"
         }
       ],
       "name": "swapExactTokenForPt",
@@ -464,6 +592,38 @@
           "internalType": "struct ApproxParams",
           "name": "guessPtIn",
           "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
+          "type": "tuple"
         }
       ],
       "name": "swapPtForExactSy",
@@ -503,6 +663,38 @@
           "internalType": "uint256",
           "name": "maxSyIn",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "guessMin",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessMax",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "guessOffchain",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxIteration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "eps",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ApproxParams",
+          "name": "guessNewImpliedRate",
+          "type": "tuple"
         }
       ],
       "name": "swapSyForExactPt",
