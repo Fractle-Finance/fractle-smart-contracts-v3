@@ -14,14 +14,6 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
-      name: "AutomationBase",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AutomationBase__factory>;
-    getContractFactory(
-      name: "AutomationCompatible",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AutomationCompatible__factory>;
-    getContractFactory(
       name: "AggregatorInterface",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AggregatorInterface__factory>;
@@ -33,10 +25,6 @@ declare module "hardhat/types/runtime" {
       name: "AggregatorV3Interface",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AggregatorV3Interface__factory>;
-    getContractFactory(
-      name: "AutomationCompatibleInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AutomationCompatibleInterface__factory>;
     getContractFactory(
       name: "AccessControlUpgradeable",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -174,17 +162,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.OracleLib__factory>;
     getContractFactory(
-      name: "EuphratesGaugeV2",
+      name: "EuphratesGaugeV3",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesGaugeV2__factory>;
+    ): Promise<Contracts.EuphratesGaugeV3__factory>;
     getContractFactory(
-      name: "EuphratesMarketFactoryV2",
+      name: "EuphratesMarketFactoryV3",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesMarketFactoryV2__factory>;
+    ): Promise<Contracts.EuphratesMarketFactoryV3__factory>;
     getContractFactory(
-      name: "EuphratesMarketV2",
+      name: "EuphratesMarketV3",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesMarketV2__factory>;
+    ): Promise<Contracts.EuphratesMarketV3__factory>;
     getContractFactory(
       name: "RewardManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -213,38 +201,6 @@ declare module "hardhat/types/runtime" {
       name: "SYBaseWithRewards",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SYBaseWithRewards__factory>;
-    getContractFactory(
-      name: "EuphratesPrincipalToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesPrincipalToken__factory>;
-    getContractFactory(
-      name: "EuphratesYieldContractFactory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesYieldContractFactory__factory>;
-    getContractFactory(
-      name: "EuphratesYieldToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesYieldToken__factory>;
-    getContractFactory(
-      name: "InterestManagerYT",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.InterestManagerYT__factory>;
-    getContractFactory(
-      name: "EuphratesPrincipalTokenV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesPrincipalTokenV2__factory>;
-    getContractFactory(
-      name: "EuphratesYieldContractFactoryV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesYieldContractFactoryV2__factory>;
-    getContractFactory(
-      name: "EuphratesYieldTokenV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesYieldTokenV2__factory>;
-    getContractFactory(
-      name: "InterestManagerYTV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.InterestManagerYTV2__factory>;
     getContractFactory(
       name: "EuphratesPrincipalTokenV3",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -398,10 +354,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPInterestManagerYTV2__factory>;
     getContractFactory(
-      name: "IPInterestManagerYTV3",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPInterestManagerYTV3__factory>;
-    getContractFactory(
       name: "IPMarket",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPMarket__factory>;
@@ -550,98 +502,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AddressProvider__factory>;
     getContractFactory(
-      name: "AutomateReady",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AutomateReady__factory>;
-    getContractFactory(
-      name: "IAutomate",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IAutomate__factory>;
-    getContractFactory(
-      name: "IOpsProxyFactory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IOpsProxyFactory__factory>;
-    getContractFactory(
-      name: "ITaskTreasuryUpgradable",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ITaskTreasuryUpgradable__factory>;
-    getContractFactory(
-      name: "BaseSplitCodeFactoryContract",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.BaseSplitCodeFactoryContract__factory>;
-    getContractFactory(
-      name: "Broadcaster",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Broadcaster__factory>;
-    getContractFactory(
-      name: "BulkSellerOffchain",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.BulkSellerOffchain__factory>;
-    getContractFactory(
-      name: "ChainlinkRelayerAutomation",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ChainlinkRelayerAutomation__factory>;
-    getContractFactory(
-      name: "ChainlinkRelayerGelato",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ChainlinkRelayerGelato__factory>;
-    getContractFactory(
-      name: "EmptyUUPS",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EmptyUUPS__factory>;
-    getContractFactory(
-      name: "SDKErrorsDirectory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.SDKErrorsDirectory__factory>;
-    getContractFactory(
-      name: "LegacyNFTHelper",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.LegacyNFTHelper__factory>;
-    getContractFactory(
-      name: "StarNFTV1",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.StarNFTV1__factory>;
-    getContractFactory(
-      name: "Multicall2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Multicall2__factory>;
-    getContractFactory(
-      name: "EuphratesMulticallV1",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesMulticallV1__factory>;
-    getContractFactory(
-      name: "EuphratesMulticallV2",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesMulticallV2__factory>;
-    getContractFactory(
-      name: "PtAndLpToAsset",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PtAndLpToAsset__factory>;
-    getContractFactory(
-      name: "ActionInfoStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ActionInfoStatic__factory>;
-    getContractFactory(
-      name: "ActionMarketAuxStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ActionMarketAuxStatic__factory>;
-    getContractFactory(
-      name: "ActionMarketCoreStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ActionMarketCoreStatic__factory>;
-    getContractFactory(
-      name: "ActionMintRedeemStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ActionMintRedeemStatic__factory>;
-    getContractFactory(
-      name: "ActionStorageStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ActionStorageStatic__factory>;
-    getContractFactory(
-      name: "EuphratesRouterStatic",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesRouterStatic__factory>;
-    getContractFactory(
       name: "EuphratesPtOracle",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.EuphratesPtOracle__factory>;
@@ -674,10 +534,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.EuphratesRouter__factory>;
     getContractFactory(
-      name: "EuphratesRouterHelper",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.EuphratesRouterHelper__factory>;
-    getContractFactory(
       name: "IPSwapAggregator",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPSwapAggregator__factory>;
@@ -703,16 +559,6 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.EuphratesSwap__factory>;
 
     getContractAt(
-      name: "AutomationBase",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AutomationBase>;
-    getContractAt(
-      name: "AutomationCompatible",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AutomationCompatible>;
-    getContractAt(
       name: "AggregatorInterface",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -727,11 +573,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.AggregatorV3Interface>;
-    getContractAt(
-      name: "AutomationCompatibleInterface",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AutomationCompatibleInterface>;
     getContractAt(
       name: "AccessControlUpgradeable",
       address: string | ethers.Addressable,
@@ -903,20 +744,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.OracleLib>;
     getContractAt(
-      name: "EuphratesGaugeV2",
+      name: "EuphratesGaugeV3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesGaugeV2>;
+    ): Promise<Contracts.EuphratesGaugeV3>;
     getContractAt(
-      name: "EuphratesMarketFactoryV2",
+      name: "EuphratesMarketFactoryV3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    ): Promise<Contracts.EuphratesMarketFactoryV3>;
     getContractAt(
-      name: "EuphratesMarketV2",
+      name: "EuphratesMarketV3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesMarketV2>;
+    ): Promise<Contracts.EuphratesMarketV3>;
     getContractAt(
       name: "RewardManager",
       address: string | ethers.Addressable,
@@ -952,46 +793,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.SYBaseWithRewards>;
-    getContractAt(
-      name: "EuphratesPrincipalToken",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesPrincipalToken>;
-    getContractAt(
-      name: "EuphratesYieldContractFactory",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesYieldContractFactory>;
-    getContractAt(
-      name: "EuphratesYieldToken",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesYieldToken>;
-    getContractAt(
-      name: "InterestManagerYT",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.InterestManagerYT>;
-    getContractAt(
-      name: "EuphratesPrincipalTokenV2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesPrincipalTokenV2>;
-    getContractAt(
-      name: "EuphratesYieldContractFactoryV2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesYieldContractFactoryV2>;
-    getContractAt(
-      name: "EuphratesYieldTokenV2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesYieldTokenV2>;
-    getContractAt(
-      name: "InterestManagerYTV2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.InterestManagerYTV2>;
     getContractAt(
       name: "EuphratesPrincipalTokenV3",
       address: string | ethers.Addressable,
@@ -1183,11 +984,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IPInterestManagerYTV2>;
     getContractAt(
-      name: "IPInterestManagerYTV3",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPInterestManagerYTV3>;
-    getContractAt(
       name: "IPMarket",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -1373,121 +1169,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AddressProvider>;
     getContractAt(
-      name: "AutomateReady",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AutomateReady>;
-    getContractAt(
-      name: "IAutomate",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IAutomate>;
-    getContractAt(
-      name: "IOpsProxyFactory",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IOpsProxyFactory>;
-    getContractAt(
-      name: "ITaskTreasuryUpgradable",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ITaskTreasuryUpgradable>;
-    getContractAt(
-      name: "BaseSplitCodeFactoryContract",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.BaseSplitCodeFactoryContract>;
-    getContractAt(
-      name: "Broadcaster",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Broadcaster>;
-    getContractAt(
-      name: "BulkSellerOffchain",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.BulkSellerOffchain>;
-    getContractAt(
-      name: "ChainlinkRelayerAutomation",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ChainlinkRelayerAutomation>;
-    getContractAt(
-      name: "ChainlinkRelayerGelato",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ChainlinkRelayerGelato>;
-    getContractAt(
-      name: "EmptyUUPS",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EmptyUUPS>;
-    getContractAt(
-      name: "SDKErrorsDirectory",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.SDKErrorsDirectory>;
-    getContractAt(
-      name: "LegacyNFTHelper",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.LegacyNFTHelper>;
-    getContractAt(
-      name: "StarNFTV1",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.StarNFTV1>;
-    getContractAt(
-      name: "Multicall2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Multicall2>;
-    getContractAt(
-      name: "EuphratesMulticallV1",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesMulticallV1>;
-    getContractAt(
-      name: "EuphratesMulticallV2",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesMulticallV2>;
-    getContractAt(
-      name: "PtAndLpToAsset",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PtAndLpToAsset>;
-    getContractAt(
-      name: "ActionInfoStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ActionInfoStatic>;
-    getContractAt(
-      name: "ActionMarketAuxStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ActionMarketAuxStatic>;
-    getContractAt(
-      name: "ActionMarketCoreStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ActionMarketCoreStatic>;
-    getContractAt(
-      name: "ActionMintRedeemStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ActionMintRedeemStatic>;
-    getContractAt(
-      name: "ActionStorageStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ActionStorageStatic>;
-    getContractAt(
-      name: "EuphratesRouterStatic",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesRouterStatic>;
-    getContractAt(
       name: "EuphratesPtOracle",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -1527,11 +1208,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.EuphratesRouter>;
-    getContractAt(
-      name: "EuphratesRouterHelper",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.EuphratesRouterHelper>;
     getContractAt(
       name: "IPSwapAggregator",
       address: string | ethers.Addressable,
@@ -1564,14 +1240,6 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.EuphratesSwap>;
 
     deployContract(
-      name: "AutomationBase",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationBase>;
-    deployContract(
-      name: "AutomationCompatible",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationCompatible>;
-    deployContract(
       name: "AggregatorInterface",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AggregatorInterface>;
@@ -1583,10 +1251,6 @@ declare module "hardhat/types/runtime" {
       name: "AggregatorV3Interface",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AggregatorV3Interface>;
-    deployContract(
-      name: "AutomationCompatibleInterface",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationCompatibleInterface>;
     deployContract(
       name: "AccessControlUpgradeable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1724,17 +1388,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OracleLib>;
     deployContract(
-      name: "EuphratesGaugeV2",
+      name: "EuphratesGaugeV3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesGaugeV2>;
+    ): Promise<Contracts.EuphratesGaugeV3>;
     deployContract(
-      name: "EuphratesMarketFactoryV2",
+      name: "EuphratesMarketFactoryV3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    ): Promise<Contracts.EuphratesMarketFactoryV3>;
     deployContract(
-      name: "EuphratesMarketV2",
+      name: "EuphratesMarketV3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMarketV2>;
+    ): Promise<Contracts.EuphratesMarketV3>;
     deployContract(
       name: "RewardManager",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1763,38 +1427,6 @@ declare module "hardhat/types/runtime" {
       name: "SYBaseWithRewards",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SYBaseWithRewards>;
-    deployContract(
-      name: "EuphratesPrincipalToken",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesPrincipalToken>;
-    deployContract(
-      name: "EuphratesYieldContractFactory",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldContractFactory>;
-    deployContract(
-      name: "EuphratesYieldToken",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldToken>;
-    deployContract(
-      name: "InterestManagerYT",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.InterestManagerYT>;
-    deployContract(
-      name: "EuphratesPrincipalTokenV2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesPrincipalTokenV2>;
-    deployContract(
-      name: "EuphratesYieldContractFactoryV2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldContractFactoryV2>;
-    deployContract(
-      name: "EuphratesYieldTokenV2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldTokenV2>;
-    deployContract(
-      name: "InterestManagerYTV2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.InterestManagerYTV2>;
     deployContract(
       name: "EuphratesPrincipalTokenV3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -1948,10 +1580,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IPInterestManagerYTV2>;
     deployContract(
-      name: "IPInterestManagerYTV3",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPInterestManagerYTV3>;
-    deployContract(
       name: "IPMarket",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IPMarket>;
@@ -2100,98 +1728,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AddressProvider>;
     deployContract(
-      name: "AutomateReady",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomateReady>;
-    deployContract(
-      name: "IAutomate",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IAutomate>;
-    deployContract(
-      name: "IOpsProxyFactory",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IOpsProxyFactory>;
-    deployContract(
-      name: "ITaskTreasuryUpgradable",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ITaskTreasuryUpgradable>;
-    deployContract(
-      name: "BaseSplitCodeFactoryContract",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.BaseSplitCodeFactoryContract>;
-    deployContract(
-      name: "Broadcaster",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Broadcaster>;
-    deployContract(
-      name: "BulkSellerOffchain",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.BulkSellerOffchain>;
-    deployContract(
-      name: "ChainlinkRelayerAutomation",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ChainlinkRelayerAutomation>;
-    deployContract(
-      name: "ChainlinkRelayerGelato",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ChainlinkRelayerGelato>;
-    deployContract(
-      name: "EmptyUUPS",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EmptyUUPS>;
-    deployContract(
-      name: "SDKErrorsDirectory",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.SDKErrorsDirectory>;
-    deployContract(
-      name: "LegacyNFTHelper",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.LegacyNFTHelper>;
-    deployContract(
-      name: "StarNFTV1",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.StarNFTV1>;
-    deployContract(
-      name: "Multicall2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Multicall2>;
-    deployContract(
-      name: "EuphratesMulticallV1",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMulticallV1>;
-    deployContract(
-      name: "EuphratesMulticallV2",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMulticallV2>;
-    deployContract(
-      name: "PtAndLpToAsset",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PtAndLpToAsset>;
-    deployContract(
-      name: "ActionInfoStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionInfoStatic>;
-    deployContract(
-      name: "ActionMarketAuxStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMarketAuxStatic>;
-    deployContract(
-      name: "ActionMarketCoreStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMarketCoreStatic>;
-    deployContract(
-      name: "ActionMintRedeemStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMintRedeemStatic>;
-    deployContract(
-      name: "ActionStorageStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionStorageStatic>;
-    deployContract(
-      name: "EuphratesRouterStatic",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesRouterStatic>;
-    deployContract(
       name: "EuphratesPtOracle",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.EuphratesPtOracle>;
@@ -2223,10 +1759,6 @@ declare module "hardhat/types/runtime" {
       name: "EuphratesRouter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.EuphratesRouter>;
-    deployContract(
-      name: "EuphratesRouterHelper",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesRouterHelper>;
     deployContract(
       name: "IPSwapAggregator",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -2253,16 +1785,6 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.EuphratesSwap>;
 
     deployContract(
-      name: "AutomationBase",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationBase>;
-    deployContract(
-      name: "AutomationCompatible",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationCompatible>;
-    deployContract(
       name: "AggregatorInterface",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -2277,11 +1799,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AggregatorV3Interface>;
-    deployContract(
-      name: "AutomationCompatibleInterface",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomationCompatibleInterface>;
     deployContract(
       name: "AccessControlUpgradeable",
       args: any[],
@@ -2453,20 +1970,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OracleLib>;
     deployContract(
-      name: "EuphratesGaugeV2",
+      name: "EuphratesGaugeV3",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesGaugeV2>;
+    ): Promise<Contracts.EuphratesGaugeV3>;
     deployContract(
-      name: "EuphratesMarketFactoryV2",
+      name: "EuphratesMarketFactoryV3",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMarketFactoryV2>;
+    ): Promise<Contracts.EuphratesMarketFactoryV3>;
     deployContract(
-      name: "EuphratesMarketV2",
+      name: "EuphratesMarketV3",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMarketV2>;
+    ): Promise<Contracts.EuphratesMarketV3>;
     deployContract(
       name: "RewardManager",
       args: any[],
@@ -2502,46 +2019,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SYBaseWithRewards>;
-    deployContract(
-      name: "EuphratesPrincipalToken",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesPrincipalToken>;
-    deployContract(
-      name: "EuphratesYieldContractFactory",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldContractFactory>;
-    deployContract(
-      name: "EuphratesYieldToken",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldToken>;
-    deployContract(
-      name: "InterestManagerYT",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.InterestManagerYT>;
-    deployContract(
-      name: "EuphratesPrincipalTokenV2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesPrincipalTokenV2>;
-    deployContract(
-      name: "EuphratesYieldContractFactoryV2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldContractFactoryV2>;
-    deployContract(
-      name: "EuphratesYieldTokenV2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesYieldTokenV2>;
-    deployContract(
-      name: "InterestManagerYTV2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.InterestManagerYTV2>;
     deployContract(
       name: "EuphratesPrincipalTokenV3",
       args: any[],
@@ -2733,11 +2210,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IPInterestManagerYTV2>;
     deployContract(
-      name: "IPInterestManagerYTV3",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IPInterestManagerYTV3>;
-    deployContract(
       name: "IPMarket",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -2923,121 +2395,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AddressProvider>;
     deployContract(
-      name: "AutomateReady",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AutomateReady>;
-    deployContract(
-      name: "IAutomate",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IAutomate>;
-    deployContract(
-      name: "IOpsProxyFactory",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IOpsProxyFactory>;
-    deployContract(
-      name: "ITaskTreasuryUpgradable",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ITaskTreasuryUpgradable>;
-    deployContract(
-      name: "BaseSplitCodeFactoryContract",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.BaseSplitCodeFactoryContract>;
-    deployContract(
-      name: "Broadcaster",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Broadcaster>;
-    deployContract(
-      name: "BulkSellerOffchain",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.BulkSellerOffchain>;
-    deployContract(
-      name: "ChainlinkRelayerAutomation",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ChainlinkRelayerAutomation>;
-    deployContract(
-      name: "ChainlinkRelayerGelato",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ChainlinkRelayerGelato>;
-    deployContract(
-      name: "EmptyUUPS",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EmptyUUPS>;
-    deployContract(
-      name: "SDKErrorsDirectory",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.SDKErrorsDirectory>;
-    deployContract(
-      name: "LegacyNFTHelper",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.LegacyNFTHelper>;
-    deployContract(
-      name: "StarNFTV1",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.StarNFTV1>;
-    deployContract(
-      name: "Multicall2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Multicall2>;
-    deployContract(
-      name: "EuphratesMulticallV1",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMulticallV1>;
-    deployContract(
-      name: "EuphratesMulticallV2",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesMulticallV2>;
-    deployContract(
-      name: "PtAndLpToAsset",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.PtAndLpToAsset>;
-    deployContract(
-      name: "ActionInfoStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionInfoStatic>;
-    deployContract(
-      name: "ActionMarketAuxStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMarketAuxStatic>;
-    deployContract(
-      name: "ActionMarketCoreStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMarketCoreStatic>;
-    deployContract(
-      name: "ActionMintRedeemStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionMintRedeemStatic>;
-    deployContract(
-      name: "ActionStorageStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ActionStorageStatic>;
-    deployContract(
-      name: "EuphratesRouterStatic",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesRouterStatic>;
-    deployContract(
       name: "EuphratesPtOracle",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -3077,11 +2434,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.EuphratesRouter>;
-    deployContract(
-      name: "EuphratesRouterHelper",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.EuphratesRouterHelper>;
     deployContract(
       name: "IPSwapAggregator",
       args: any[],

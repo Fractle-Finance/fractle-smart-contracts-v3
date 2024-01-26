@@ -37,7 +37,6 @@ export type { IPFeeDistributorV2 } from "./IPFeeDistributorV2";
 export type { IPGauge } from "./IPGauge";
 export type { IPInterestManagerYT } from "./IPInterestManagerYT";
 export type { IPInterestManagerYTV2 } from "./IPInterestManagerYTV2";
-export type { IPInterestManagerYTV3 } from "./IPInterestManagerYTV3";
 export type { IPMarket } from "./IPMarket";
 export type { IPMarketFactory } from "./IPMarketFactory";
 export type { IPMarketFactoryV2 } from "./IPMarketFactoryV2";

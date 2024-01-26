@@ -37,6 +37,7 @@ export interface IPYieldTokenV2Interface extends Interface {
       | "factory"
       | "getRewardTokens"
       | "isExpired"
+      | "lastGlobalInterestUpdatedDayIndexByOracle"
       | "mintPY"
       | "name"
       | "pyIndexCurrent"
@@ -50,6 +51,7 @@ export interface IPYieldTokenV2Interface extends Interface {
       | "transfer"
       | "transferFrom"
       | "userInterest"
+      | "userInterestFPT"
       | "userReward"
   ): FunctionFragment;
 
@@ -92,6 +94,10 @@ export interface IPYieldTokenV2Interface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "isExpired", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "mintPY",
     values: [AddressLike, AddressLike]
@@ -139,6 +145,10 @@ export interface IPYieldTokenV2Interface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "userInterestFPT",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "userReward",
     values: [AddressLike, AddressLike]
   ): string;
@@ -160,6 +170,10 @@ export interface IPYieldTokenV2Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isExpired", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mintPY", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
@@ -195,6 +209,10 @@ export interface IPYieldTokenV2Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "userInterest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "userInterestFPT",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "userReward", data: BytesLike): Result;
@@ -435,6 +453,12 @@ export interface IPYieldTokenV2 extends BaseContract {
 
   isExpired: TypedContractMethod<[], [boolean], "view">;
 
+  lastGlobalInterestUpdatedDayIndexByOracle: TypedContractMethod<
+    [],
+    [bigint],
+    "view"
+  >;
+
   mintPY: TypedContractMethod<
     [receiverPT: AddressLike, receiverYT: AddressLike],
     [bigint],
@@ -495,6 +519,18 @@ export interface IPYieldTokenV2 extends BaseContract {
     "view"
   >;
 
+  userInterestFPT: TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+
   userReward: TypedContractMethod<
     [token: AddressLike, user: AddressLike],
     [[bigint, bigint] & { index: bigint; accrued: bigint }],
@@ -542,6 +578,9 @@ export interface IPYieldTokenV2 extends BaseContract {
   getFunction(
     nameOrSignature: "isExpired"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "lastGlobalInterestUpdatedDayIndexByOracle"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "mintPY"
   ): TypedContractMethod<
@@ -600,6 +639,19 @@ export interface IPYieldTokenV2 extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "userInterest"
+  ): TypedContractMethod<
+    [user: AddressLike],
+    [
+      [bigint, bigint, bigint] & {
+        lastInterestIndex: bigint;
+        accruedInterest: bigint;
+        lastPYIndex: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "userInterestFPT"
   ): TypedContractMethod<
     [user: AddressLike],
     [

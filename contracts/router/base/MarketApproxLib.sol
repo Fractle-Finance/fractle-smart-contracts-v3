@@ -398,15 +398,17 @@ library MarketApproxPtOutLib {
             approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
             validateApprox(approx);
         }
+        
+        return _calculateNetSyOut(market, comp, index, approx, minSyOut);
+        revert Errors.ApproxFail();
+    }
 
+    function _calculateNetSyOut(MarketState memory market, MarketPreCompute memory comp, PYIndex index, ApproxParams memory approx, uint256 minSyOut) internal pure returns (uint256, uint256, uint256) {
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
-
             (uint256 netSyOwed, uint256 netSyFee, ) = calcSyIn(market, comp, index, guess);
-
             uint256 netAssetToRepay = index.syToAssetUp(netSyOwed);
             uint256 netSyOut = index.assetToSy(guess - netAssetToRepay);
-
             if (netSyOut >= minSyOut) {
                 if (PMath.isAGreaterApproxB(netSyOut, minSyOut, approx.eps))
                     return (guess, netSyOut, netSyFee);
@@ -415,7 +417,6 @@ library MarketApproxPtOutLib {
                 approx.guessMin = guess + 1;
             }
         }
-        revert Errors.ApproxFail();
     }
 
     struct Args6 {

@@ -35,7 +35,6 @@ export { IPFeeDistributorV2__factory } from "./IPFeeDistributorV2__factory";
 export { IPGauge__factory } from "./IPGauge__factory";
 export { IPInterestManagerYT__factory } from "./IPInterestManagerYT__factory";
 export { IPInterestManagerYTV2__factory } from "./IPInterestManagerYTV2__factory";
-export { IPInterestManagerYTV3__factory } from "./IPInterestManagerYTV3__factory";
 export { IPMarket__factory } from "./IPMarket__factory";
 export { IPMarketFactory__factory } from "./IPMarketFactory__factory";
 export { IPMarketFactoryV2__factory } from "./IPMarketFactoryV2__factory";

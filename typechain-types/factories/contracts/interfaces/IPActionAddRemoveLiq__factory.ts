@@ -546,6 +546,38 @@ const _abi = [
         name: "minLpOut",
         type: "uint256",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessInitialImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "addLiquidityDualSyAndPt",
     outputs: [
@@ -649,6 +681,38 @@ const _abi = [
         name: "minLpOut",
         type: "uint256",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessInitialImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "addLiquidityDualTokenAndPt",
     outputs: [
@@ -685,77 +749,6 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "netPtIn",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minLpOut",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "guessMin",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "guessMax",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "guessOffchain",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxIteration",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "eps",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct ApproxParams",
-        name: "guessPtSwapToSy",
-        type: "tuple",
-      },
-    ],
-    name: "addLiquiditySinglePt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netSyFee",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
         name: "netSyIn",
         type: "uint256",
       },
@@ -794,6 +787,38 @@ const _abi = [
         ],
         internalType: "struct ApproxParams",
         name: "guessPtReceivedFromSy",
+        type: "tuple",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
         type: "tuple",
       },
     ],
@@ -807,273 +832,6 @@ const _abi = [
       {
         internalType: "uint256",
         name: "netSyFee",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "netSyIn",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minYtOut",
-        type: "uint256",
-      },
-    ],
-    name: "addLiquiditySingleSyKeepYt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netYtOut",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "minLpOut",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "guessMin",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "guessMax",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "guessOffchain",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxIteration",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "eps",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct ApproxParams",
-        name: "guessPtReceivedFromSy",
-        type: "tuple",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "tokenIn",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "netTokenIn",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenMintSy",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "bulk",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "euphratesSwap",
-            type: "address",
-          },
-          {
-            components: [
-              {
-                internalType: "enum SwapType",
-                name: "swapType",
-                type: "uint8",
-              },
-              {
-                internalType: "address",
-                name: "extRouter",
-                type: "address",
-              },
-              {
-                internalType: "bytes",
-                name: "extCalldata",
-                type: "bytes",
-              },
-              {
-                internalType: "bool",
-                name: "needScale",
-                type: "bool",
-              },
-            ],
-            internalType: "struct SwapData",
-            name: "swapData",
-            type: "tuple",
-          },
-        ],
-        internalType: "struct TokenInput",
-        name: "input",
-        type: "tuple",
-      },
-    ],
-    name: "addLiquiditySingleToken",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netSyFee",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "minLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minYtOut",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "tokenIn",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "netTokenIn",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenMintSy",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "bulk",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "euphratesSwap",
-            type: "address",
-          },
-          {
-            components: [
-              {
-                internalType: "enum SwapType",
-                name: "swapType",
-                type: "uint8",
-              },
-              {
-                internalType: "address",
-                name: "extRouter",
-                type: "address",
-              },
-              {
-                internalType: "bytes",
-                name: "extCalldata",
-                type: "bytes",
-              },
-              {
-                internalType: "bool",
-                name: "needScale",
-                type: "bool",
-              },
-            ],
-            internalType: "struct SwapData",
-            name: "swapData",
-            type: "tuple",
-          },
-        ],
-        internalType: "struct TokenInput",
-        name: "input",
-        type: "tuple",
-      },
-    ],
-    name: "addLiquiditySingleTokenKeepYt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netLpOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netYtOut",
         type: "uint256",
       },
     ],
@@ -1241,7 +999,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "minPtOut",
+        name: "minSyOut",
         type: "uint256",
       },
       {
@@ -1273,47 +1031,8 @@ const _abi = [
           },
         ],
         internalType: "struct ApproxParams",
-        name: "guessPtOut",
+        name: "guessNewImpliedRate",
         type: "tuple",
-      },
-    ],
-    name: "removeLiquiditySinglePt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netPtOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netSyFee",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "netLpToRemove",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minSyOut",
-        type: "uint256",
       },
     ],
     name: "removeLiquiditySingleSy",
@@ -1321,99 +1040,6 @@ const _abi = [
       {
         internalType: "uint256",
         name: "netSyOut",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "netSyFee",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "netLpToRemove",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "tokenOut",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "minTokenOut",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenRedeemSy",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "bulk",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "euphratesSwap",
-            type: "address",
-          },
-          {
-            components: [
-              {
-                internalType: "enum SwapType",
-                name: "swapType",
-                type: "uint8",
-              },
-              {
-                internalType: "address",
-                name: "extRouter",
-                type: "address",
-              },
-              {
-                internalType: "bytes",
-                name: "extCalldata",
-                type: "bytes",
-              },
-              {
-                internalType: "bool",
-                name: "needScale",
-                type: "bool",
-              },
-            ],
-            internalType: "struct SwapData",
-            name: "swapData",
-            type: "tuple",
-          },
-        ],
-        internalType: "struct TokenOutput",
-        name: "output",
-        type: "tuple",
-      },
-    ],
-    name: "removeLiquiditySingleToken",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "netTokenOut",
         type: "uint256",
       },
       {

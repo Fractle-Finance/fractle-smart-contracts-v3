@@ -11,7 +11,7 @@ import "../../libraries/BaseSplitCodeFactory.sol";
 import "../../libraries/Errors.sol";
 import "../../libraries/BoringOwnableUpgradeable.sol";
 
-contract EuphratesMarketFactoryV2 is BoringOwnableUpgradeable, IPMarketFactory {
+contract EuphratesMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     address public immutable yieldContractFactory;
@@ -47,7 +47,6 @@ contract EuphratesMarketFactoryV2 is BoringOwnableUpgradeable, IPMarketFactory {
         __BoringOwnable_init();
         setTreasury(_treasury);
         setDefaultFee(_defaultLnFeeRateRoot, _defaultReserveFeePercent);
-
         externalRewardDistributor = newExternalRewardDistributor;
     }
 

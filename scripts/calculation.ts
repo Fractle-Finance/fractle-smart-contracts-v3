@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { exp, log, abs } from "mathjs";
+import { exp, log, abs, bignumber } from "mathjs";
 
 export interface MarketState {
     totalPt: BigNumber;
@@ -8,6 +8,8 @@ export interface MarketState {
     treasury: `0x${string}`;
     scalarRoot: BigNumber;
     expiry: BigNumber;
+    lifecircle: BigNumber;
+    sAPR: BigNumber;
     lnFeeRateRoot: BigNumber;
     reserveFeePercent: BigNumber;
     lastLnImpliedRate: BigNumber;
@@ -26,6 +28,12 @@ interface MarketPreCompute {
     totalAsset: BigNumber;
     rateAnchor: BigNumber;
     feeRate: BigNumber;
+}
+
+interface CalcTradeResult {
+    netSyToAccount:BigNumber,
+    netSyFee: BigNumber,
+    netSyToReserve:BigNumber
 }
 
 const test_market = {
@@ -161,17 +169,53 @@ export class MarketMathCore {
         }
         return middle;
     }
+    
+    //bisec six is for getting new implied rate
+    bisectionMethodSix(
+        sapr:BigNumber,
+        n:BigNumber, 
+        price:BigNumber, 
+        left = BigNumber(0), 
+        right = BigNumber(2), 
+        tolerance = BigNumber(1e-7), 
+        maxIterations = BigNumber(1000)) {
+        let middle = BigNumber(0);
+        for (let i = 0; i < maxIterations.toNumber(); i++) {
+            middle = left.plus(right).dividedBy(2);
+            let q = Math.exp(middle.toNumber() / (-365));
+            let bnq = BigNumber(q);
+            let q_to_n = BigNumber(Math.pow(q,n.toNumber()));
+            let f = sapr.dividedBy(365).multipliedBy(bnq).multipliedBy(MarketMathCore.IONE.minus(q_to_n))
+                    .plus(q_to_n.multipliedBy(MarketMathCore.IONE.minus(bnq)))
+                    .minus(price.multipliedBy(MarketMathCore.IONE.minus(bnq)));
+            //let f = sapr / 365 * q * (1 - q_to_n) + q_to_n * (1 - q) - price * (1 - q);
+      
+            if (f.abs().isLessThan(tolerance)) {
+                return middle;
+            }
+      
+            if (f.isGreaterThan(BigNumber(0))) {
+                left = middle;
+            } else {
+                right = middle;
+            }
+        }
+        return middle;
+      }
 
     getMarketPreCompute(
         market: MarketState,
         exchangeRate: BigNumber,
+        sAPR: BigNumber,
         blockTime: BigNumber
     ) {
         if (MiniHelpers.isExpired(market.expiry, blockTime)) {
             throw new Error("Market is expired");
         }
 
-        let timeToExpiry = market.expiry.minus(blockTime);
+        //let timeToExpiry = market.expiry.minus(blockTime);
+        let timeToExpiry = market.lifecircle.minus(blockTime);//left days
+        console.log("time to expiry is :" + timeToExpiry);
         let res: MarketPreCompute = {
             rateScalar: BigNumber(0),
             totalAsset: BigNumber(0),
@@ -180,10 +224,12 @@ export class MarketMathCore {
         };
 
         // TODO: .int()
+        console.log("scalar root is :" + market.scalarRoot);
         res.rateScalar = market.scalarRoot
             .dividedBy(1e18)
-            .multipliedBy(MarketMathCore.IMPLIED_RATE_TIME)
-            .dividedBy(timeToExpiry);
+            .multipliedBy(MarketMathCore.IMPLIED_RATE_TIME) // 86400*365
+            .dividedBy(timeToExpiry)
+            .dividedBy(MarketMathCore.DAY);
 
         res.totalAsset = market.totalSy.multipliedBy(exchangeRate.dividedBy(1e18));
 
@@ -196,6 +242,7 @@ export class MarketMathCore {
             market.lastLnImpliedRate.dividedBy(1e18),
             res.totalAsset,
             res.rateScalar,
+            sAPR.dividedBy(1e18),
             timeToExpiry
         );
 
@@ -207,26 +254,141 @@ export class MarketMathCore {
         return res;
     }
 
+    calcTrade(
+        market: MarketState,
+        comp: MarketPreCompute,
+        exchangeRate: BigNumber,
+        netPtToAccount:BigNumber
+    ){
+        let preFeeExchangeRate = this._getExchangeRate(market,comp,netPtToAccount);
+       
+        let preFeeAssetToAccount = netPtToAccount.dividedBy(preFeeExchangeRate).multipliedBy(-1);
+        let fee = comp.feeRate;
+        
+        if(netPtToAccount.isGreaterThan(BigNumber(0))){
+            const postFeeExchangeRate = preFeeExchangeRate.dividedBy(fee);
+            if(postFeeExchangeRate.isLessThan(MarketMathCore.IONE)){
+                throw new Error("Exchange rate cannot be less than one");
+            }
+            fee = preFeeAssetToAccount.multipliedBy(MarketMathCore.IONE.minus(fee));
+        }else{
+            fee = preFeeAssetToAccount.multipliedBy(MarketMathCore.IONE.minus(fee)).dividedBy(fee).multipliedBy(-1);
+        }
+
+        let netAssetToReserve = fee.multipliedBy(market.reserveFeePercent).dividedBy(100);
+        let netAssetToAccount = preFeeAssetToAccount.minus(fee);
+
+        let res: CalcTradeResult = {
+            netSyToAccount: BigNumber(0),
+            netSyFee: BigNumber(0),
+            netSyToReserve: BigNumber(0),
+        };
+
+        res.netSyToAccount = netAssetToAccount.dividedBy(exchangeRate.dividedBy(1e18));
+        res.netSyFee = fee.dividedBy(exchangeRate.dividedBy(1e18));
+        res.netSyToReserve = netAssetToReserve.dividedBy(exchangeRate.dividedBy(1e18));
+
+        return res;
+    }
+
+    estimateNewImpliedRate(
+        market:MarketState,
+        comp:MarketPreCompute,
+        calcRes:CalcTradeResult,
+        netPtToAccount:BigNumber,
+        exchangeRate:BigNumber,
+        blockTime: BigNumber
+    ){
+        const timeToExpiry = market.lifecircle.minus(blockTime);//left days
+        const newTotalPt = market.totalPt.minus(netPtToAccount);
+        const newTotalSy = market.totalSy.minus(calcRes.netSyToAccount.plus(calcRes.netSyToReserve));
+        let newImpliedRate = this._getLnImpliedRate(
+            newTotalPt,
+            newTotalSy.multipliedBy(exchangeRate.dividedBy(1e18)),
+            comp,
+            market.sAPR.dividedBy(1e18),
+            timeToExpiry);
+        newImpliedRate = newImpliedRate.multipliedBy(1e18);
+        return {
+            guessMin: newImpliedRate.multipliedBy(0.95).integerValue(),
+            guessMax: newImpliedRate.multipliedBy(1.05).integerValue(),
+            guessOffchain: newImpliedRate.integerValue(),
+            maxIteration: BigNumber(7),
+            eps: BigNumber(1e14),
+        };
+    }
+
+    //use binary search to get new implied rate
+    _getLnImpliedRate(
+        totalPt:BigNumber,
+        totalAsset:BigNumber,
+        comp:MarketPreCompute,
+        sAPR:BigNumber,
+        timeToExpiry:BigNumber
+    ){
+        const proportion = totalPt.dividedBy(totalPt.plus(totalAsset));
+        const lnProportion = this._logProportion(proportion);
+        const newExchangeRate = lnProportion.dividedBy(comp.rateScalar).plus(comp.rateAnchor);
+        const newPrice = MarketMathCore.IONE.dividedBy(newExchangeRate);//use this price to do binary search to get new r
+        //plug bisec funtion 6 here
+        const result = this.bisectionMethodSix(sAPR,timeToExpiry,newPrice);
+        return result;
+    }
+
+    _getExchangeRate(
+        market: MarketState,
+        comp: MarketPreCompute,
+        netPtToAccount:BigNumber
+    ){
+        const numerator = market.totalPt.minus(netPtToAccount);
+        const proportion = numerator.dividedBy(market.totalPt.plus(comp.totalAsset));
+        const lnProportion = this._logProportion(proportion);
+        const newExchangeRate = lnProportion.dividedBy(comp.rateScalar).plus(comp.rateAnchor);
+        return newExchangeRate;
+    }
+
     _getExchangeRateFromImpliedRate(
         lnImpliedRate: BigNumber,
         timeToExpiry: BigNumber
     ) {
         const rt = lnImpliedRate
             .multipliedBy(timeToExpiry)
-            .dividedBy(MarketMathCore.IMPLIED_RATE_TIME)
+            //.dividedBy(MarketMathCore.IMPLIED_RATE_TIME)//86400*365
+            .dividedBy(365)
             .toNumber();
         return BigNumber(exp(rt));
     }
 
+    _getFPTExchangeRateFromImpliedRate(
+        lnImpliedRate: BigNumber,//has removed 1e18,can be used directly
+        sAPR:BigNumber,////has removed 1e18,can be used directly
+        timeToExpiry: BigNumber//day
+    ){
+        const multiplier = sAPR.dividedBy(365);
+        const rdiv365 = lnImpliedRate.dividedBy(365);
+        const rndiv365 = rdiv365.multipliedBy(timeToExpiry);
+        const x = BigNumber(exp(rdiv365.multipliedBy(-1).toNumber()));
+        const xn = BigNumber(exp(rndiv365.multipliedBy(-1).toNumber()));
+        const sumSequence = x.multipliedBy(MarketMathCore.IONE.minus(xn)).dividedBy(MarketMathCore.IONE.minus(x)); //(1-xn)*x/(1-x);
+        const price = multiplier.multipliedBy(sumSequence).plus(xn);
+        return MarketMathCore.IONE.dividedBy(price);
+    }
+
     _getRateAnchor(
         totalPt: BigNumber,
-        lastLnImpliedRate: BigNumber,
+        lastLnImpliedRate: BigNumber,//has removed 1e18,can be used directly
         totalAsset: BigNumber,
         rateScalar: BigNumber,
+        sAPR:BigNumber,//has removed 1e18,can be used directly
         timeToExpiry: BigNumber
     ) {
-        const newExchangeRate = this._getExchangeRateFromImpliedRate(
+        // const newExchangeRate = this._getExchangeRateFromImpliedRate(
+        //     lastLnImpliedRate,
+        //     timeToExpiry
+        // );
+        const newExchangeRate = this._getFPTExchangeRateFromImpliedRate(
             lastLnImpliedRate,
+            sAPR,
             timeToExpiry
         );
         console.log(

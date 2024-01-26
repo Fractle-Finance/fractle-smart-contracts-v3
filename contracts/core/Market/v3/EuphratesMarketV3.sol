@@ -17,7 +17,7 @@ Invariance to maintain:
 - address(0) & address(this) should never have any rewards & activeBalance accounting done. This is
     guaranteed by address(0) & address(this) check in each updateForTwo function
 */
-contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
+contract EuphratesMarketV3 is EuphratesERC20, EuphratesGaugeV3, IPMarket {
     using PMath for uint256;
     using PMath for int256;
     using MarketMathCore for MarketState;
@@ -68,7 +68,7 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
         address _marketFactory
     )
         EuphratesERC20(NAME, SYMBOL, 18)
-        EuphratesGaugeV2(
+        EuphratesGaugeV3(
             IPPrincipalToken(_PT).SY(),
             _EUPHRATES,
             _externalRewardDistributor
@@ -320,7 +320,7 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
         market.scalarRoot = scalarRoot;
         market.expiry = expiry;
         market.lifecircle = lifecircle;
-
+        market.sAPR = sAPR;
         market.lastLnImpliedRate = _storage.lastLnImpliedRate;
         return market;
     }
@@ -383,8 +383,8 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
         address from,
         address to,
         uint256 amount
-    ) internal override(EuphratesERC20, EuphratesGaugeV2) {
-        EuphratesGaugeV2._beforeTokenTransfer(from, to, amount);
+    ) internal override(EuphratesERC20, EuphratesGaugeV3) {
+        EuphratesGaugeV3._beforeTokenTransfer(from, to, amount);
     }
 
     // solhint-disable-next-line ordering
@@ -392,7 +392,7 @@ contract EuphratesMarketV2 is EuphratesERC20, EuphratesGaugeV2, IPMarket {
         address from,
         address to,
         uint256 amount
-    ) internal override(EuphratesERC20, EuphratesGaugeV2) {
-        EuphratesGaugeV2._afterTokenTransfer(from, to, amount);
+    ) internal override(EuphratesERC20, EuphratesGaugeV3) {
+        EuphratesGaugeV3._afterTokenTransfer(from, to, amount);
     }
 }

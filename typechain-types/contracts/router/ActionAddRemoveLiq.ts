@@ -23,6 +23,28 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export type ApproxParamsStruct = {
+  guessMin: BigNumberish;
+  guessMax: BigNumberish;
+  guessOffchain: BigNumberish;
+  maxIteration: BigNumberish;
+  eps: BigNumberish;
+};
+
+export type ApproxParamsStructOutput = [
+  guessMin: bigint,
+  guessMax: bigint,
+  guessOffchain: bigint,
+  maxIteration: bigint,
+  eps: bigint
+] & {
+  guessMin: bigint;
+  guessMax: bigint;
+  guessOffchain: bigint;
+  maxIteration: bigint;
+  eps: bigint;
+};
+
 export type SwapDataStruct = {
   swapType: BigNumberish;
   extRouter: AddressLike;
@@ -67,28 +89,6 @@ export type TokenInputStructOutput = [
   swapData: SwapDataStructOutput;
 };
 
-export type ApproxParamsStruct = {
-  guessMin: BigNumberish;
-  guessMax: BigNumberish;
-  guessOffchain: BigNumberish;
-  maxIteration: BigNumberish;
-  eps: BigNumberish;
-};
-
-export type ApproxParamsStructOutput = [
-  guessMin: bigint,
-  guessMax: bigint,
-  guessOffchain: bigint,
-  maxIteration: bigint,
-  eps: bigint
-] & {
-  guessMin: bigint;
-  guessMax: bigint;
-  guessOffchain: bigint;
-  maxIteration: bigint;
-  eps: bigint;
-};
-
 export type TokenOutputStruct = {
   tokenOut: AddressLike;
   minTokenOut: BigNumberish;
@@ -119,16 +119,10 @@ export interface ActionAddRemoveLiqInterface extends Interface {
     nameOrSignature:
       | "addLiquidityDualSyAndPt"
       | "addLiquidityDualTokenAndPt"
-      | "addLiquiditySinglePt"
       | "addLiquiditySingleSy"
-      | "addLiquiditySingleSyKeepYt"
-      | "addLiquiditySingleToken"
-      | "addLiquiditySingleTokenKeepYt"
       | "removeLiquidityDualSyAndPt"
       | "removeLiquidityDualTokenAndPt"
-      | "removeLiquiditySinglePt"
       | "removeLiquiditySingleSy"
-      | "removeLiquiditySingleToken"
   ): FunctionFragment;
 
   getEvent(
@@ -149,7 +143,14 @@ export interface ActionAddRemoveLiqInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "addLiquidityDualSyAndPt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BigNumberish]
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      ApproxParamsStruct
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "addLiquidityDualTokenAndPt",
@@ -157,15 +158,6 @@ export interface ActionAddRemoveLiqInterface extends Interface {
       AddressLike,
       AddressLike,
       TokenInputStruct,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySinglePt",
-    values: [
-      AddressLike,
-      AddressLike,
       BigNumberish,
       BigNumberish,
       ApproxParamsStruct
@@ -178,31 +170,8 @@ export interface ActionAddRemoveLiqInterface extends Interface {
       AddressLike,
       BigNumberish,
       BigNumberish,
-      ApproxParamsStruct
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleSyKeepYt",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleToken",
-    values: [
-      AddressLike,
-      AddressLike,
-      BigNumberish,
       ApproxParamsStruct,
-      TokenInputStruct
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLiquiditySingleTokenKeepYt",
-    values: [
-      AddressLike,
-      AddressLike,
-      BigNumberish,
-      BigNumberish,
-      TokenInputStruct
+      ApproxParamsStruct
     ]
   ): string;
   encodeFunctionData(
@@ -220,7 +189,7 @@ export interface ActionAddRemoveLiqInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeLiquiditySinglePt",
+    functionFragment: "removeLiquiditySingleSy",
     values: [
       AddressLike,
       AddressLike,
@@ -228,14 +197,6 @@ export interface ActionAddRemoveLiqInterface extends Interface {
       BigNumberish,
       ApproxParamsStruct
     ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeLiquiditySingleSy",
-    values: [AddressLike, AddressLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeLiquiditySingleToken",
-    values: [AddressLike, AddressLike, BigNumberish, TokenOutputStruct]
   ): string;
 
   decodeFunctionResult(
@@ -247,23 +208,7 @@ export interface ActionAddRemoveLiqInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "addLiquiditySinglePt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "addLiquiditySingleSy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleSyKeepYt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLiquiditySingleTokenKeepYt",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -275,15 +220,7 @@ export interface ActionAddRemoveLiqInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "removeLiquiditySinglePt",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "removeLiquiditySingleSy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeLiquiditySingleToken",
     data: BytesLike
   ): Result;
 }
@@ -706,7 +643,8 @@ export interface ActionAddRemoveLiq extends BaseContract {
       market: AddressLike,
       netSyDesired: BigNumberish,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -724,7 +662,8 @@ export interface ActionAddRemoveLiq extends BaseContract {
       market: AddressLike,
       input: TokenInputStruct,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -736,63 +675,16 @@ export interface ActionAddRemoveLiq extends BaseContract {
     "payable"
   >;
 
-  addLiquiditySinglePt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netPtIn: BigNumberish,
-      minLpOut: BigNumberish,
-      guessPtSwapToSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
   addLiquiditySingleSy: TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netSyIn: BigNumberish,
       minLpOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
-  addLiquiditySingleSyKeepYt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netSyIn: BigNumberish,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
-    "nonpayable"
-  >;
-
-  addLiquiditySingleToken: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
       guessPtReceivedFromSy: ApproxParamsStruct,
-      input: TokenInputStruct
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "payable"
-  >;
-
-  addLiquiditySingleTokenKeepYt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish,
-      input: TokenInputStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
     "nonpayable"
   >;
 
@@ -820,37 +712,15 @@ export interface ActionAddRemoveLiq extends BaseContract {
     "nonpayable"
   >;
 
-  removeLiquiditySinglePt: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      minPtOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
   removeLiquiditySingleSy: TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netLpToRemove: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-
-  removeLiquiditySingleToken: TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      output: TokenOutputStruct
-    ],
-    [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
 
@@ -866,7 +736,8 @@ export interface ActionAddRemoveLiq extends BaseContract {
       market: AddressLike,
       netSyDesired: BigNumberish,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -885,7 +756,8 @@ export interface ActionAddRemoveLiq extends BaseContract {
       market: AddressLike,
       input: TokenInputStruct,
       netPtDesired: BigNumberish,
-      minLpOut: BigNumberish
+      minLpOut: BigNumberish,
+      guessInitialImpliedRate: ApproxParamsStruct
     ],
     [
       [bigint, bigint, bigint] & {
@@ -897,19 +769,6 @@ export interface ActionAddRemoveLiq extends BaseContract {
     "payable"
   >;
   getFunction(
-    nameOrSignature: "addLiquiditySinglePt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netPtIn: BigNumberish,
-      minLpOut: BigNumberish,
-      guessPtSwapToSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "addLiquiditySingleSy"
   ): TypedContractMethod<
     [
@@ -917,48 +776,10 @@ export interface ActionAddRemoveLiq extends BaseContract {
       market: AddressLike,
       netSyIn: BigNumberish,
       minLpOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleSyKeepYt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netSyIn: BigNumberish,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleToken"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
       guessPtReceivedFromSy: ApproxParamsStruct,
-      input: TokenInputStruct
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netLpOut: bigint; netSyFee: bigint }],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "addLiquiditySingleTokenKeepYt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      minLpOut: BigNumberish,
-      minYtOut: BigNumberish,
-      input: TokenInputStruct
-    ],
-    [[bigint, bigint] & { netLpOut: bigint; netYtOut: bigint }],
     "nonpayable"
   >;
   getFunction(
@@ -988,40 +809,16 @@ export interface ActionAddRemoveLiq extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "removeLiquiditySinglePt"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      minPtOut: BigNumberish,
-      guessPtReceivedFromSy: ApproxParamsStruct
-    ],
-    [[bigint, bigint] & { netPtOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "removeLiquiditySingleSy"
   ): TypedContractMethod<
     [
       receiver: AddressLike,
       market: AddressLike,
       netLpToRemove: BigNumberish,
-      minSyOut: BigNumberish
+      minSyOut: BigNumberish,
+      guessNewImpliedRate: ApproxParamsStruct
     ],
     [[bigint, bigint] & { netSyOut: bigint; netSyFee: bigint }],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "removeLiquiditySingleToken"
-  ): TypedContractMethod<
-    [
-      receiver: AddressLike,
-      market: AddressLike,
-      netLpToRemove: BigNumberish,
-      output: TokenOutputStruct
-    ],
-    [[bigint, bigint] & { netTokenOut: bigint; netSyFee: bigint }],
     "nonpayable"
   >;
 

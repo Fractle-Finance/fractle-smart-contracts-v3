@@ -18,6 +18,7 @@ struct MarketState {
     int256 scalarRoot;
     uint256 expiry;
     uint256 lifecircle;//new,from yt
+    uint256 sAPR;
     /// fee data ///
     uint256 lnFeeRateRoot;
     uint256 reserveFeePercent; // base 100

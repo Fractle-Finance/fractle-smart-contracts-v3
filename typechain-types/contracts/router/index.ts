@@ -3,8 +3,6 @@
 /* eslint-disable */
 import type * as pendleRouterSol from "./PendleRouter.sol";
 export type { pendleRouterSol };
-import type * as pendleRouterHelperSol from "./PendleRouterHelper.sol";
-export type { pendleRouterHelperSol };
 import type * as base from "./base";
 export type { base };
 import type * as swapAggregator from "./swap-aggregator";

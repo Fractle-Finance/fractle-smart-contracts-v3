@@ -13,7 +13,7 @@ import "../../RewardManager/RewardManager.sol";
 Invariants to maintain:
 - before any changes to active balance, updateAndDistributeRewards() must be called
  */
-abstract contract EuphratesGaugeV2 is RewardManager, IPGauge {
+abstract contract EuphratesGaugeV3 is RewardManager, IPGauge {
     using PMath for uint256;
     using SafeERC20 for IERC20;
     using ArrayLib for address[];

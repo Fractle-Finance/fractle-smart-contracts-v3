@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as pendleRouterSol from "./PendleRouter.sol";
-export * as pendleRouterHelperSol from "./PendleRouterHelper.sol";
 export * as base from "./base";
 export * as swapAggregator from "./swap-aggregator";
 export { ActionAddRemoveLiq__factory } from "./ActionAddRemoveLiq__factory";

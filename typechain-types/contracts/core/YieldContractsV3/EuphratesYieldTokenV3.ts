@@ -42,10 +42,10 @@ export interface EuphratesYieldTokenV3Interface extends Interface {
       | "globalInterestIndexFPT"
       | "isDistributingInterestAndRewards"
       | "isExpired"
+      | "lastGlobalInterestUpdatedDayIndexByOracle"
       | "lastInterestBlock"
-      | "lastInterestDayIndex"
-      | "lastInterestUpdatedDayIndexByOracle"
       | "lastRewardBlock"
+      | "lifecircle"
       | "mintPY"
       | "mintPYMulti"
       | "name"
@@ -134,19 +134,19 @@ export interface EuphratesYieldTokenV3Interface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "isExpired", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "lastInterestBlock",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "lastInterestDayIndex",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastInterestUpdatedDayIndexByOracle",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "lastRewardBlock",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lifecircle",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -280,21 +280,18 @@ export interface EuphratesYieldTokenV3Interface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "isExpired", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "lastGlobalInterestUpdatedDayIndexByOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "lastInterestBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastInterestDayIndex",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastInterestUpdatedDayIndexByOracle",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "lastRewardBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "lifecircle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintPY", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintPYMulti",
@@ -623,17 +620,17 @@ export interface EuphratesYieldTokenV3 extends BaseContract {
 
   isExpired: TypedContractMethod<[], [boolean], "view">;
 
-  lastInterestBlock: TypedContractMethod<[], [bigint], "view">;
-
-  lastInterestDayIndex: TypedContractMethod<[], [bigint], "view">;
-
-  lastInterestUpdatedDayIndexByOracle: TypedContractMethod<
+  lastGlobalInterestUpdatedDayIndexByOracle: TypedContractMethod<
     [],
     [bigint],
     "view"
   >;
 
+  lastInterestBlock: TypedContractMethod<[], [bigint], "view">;
+
   lastRewardBlock: TypedContractMethod<[], [bigint], "view">;
+
+  lifecircle: TypedContractMethod<[], [bigint], "view">;
 
   mintPY: TypedContractMethod<
     [receiverPT: AddressLike, receiverYT: AddressLike],
@@ -820,16 +817,16 @@ export interface EuphratesYieldTokenV3 extends BaseContract {
     nameOrSignature: "isExpired"
   ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
+    nameOrSignature: "lastGlobalInterestUpdatedDayIndexByOracle"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "lastInterestBlock"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "lastInterestDayIndex"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "lastInterestUpdatedDayIndexByOracle"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "lastRewardBlock"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "lifecircle"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "mintPY"

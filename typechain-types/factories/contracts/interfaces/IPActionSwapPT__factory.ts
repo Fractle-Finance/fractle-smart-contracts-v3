@@ -111,6 +111,38 @@ const _abi = [
         name: "minSyOut",
         type: "uint256",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "swapExactPtForSy",
     outputs: [
@@ -204,6 +236,38 @@ const _abi = [
         name: "output",
         type: "tuple",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "swapExactPtForToken",
     outputs: [
@@ -273,6 +337,38 @@ const _abi = [
         ],
         internalType: "struct ApproxParams",
         name: "guessPtOut",
+        type: "tuple",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
         type: "tuple",
       },
     ],
@@ -400,6 +496,38 @@ const _abi = [
         name: "input",
         type: "tuple",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "swapExactTokenForPt",
     outputs: [
@@ -471,6 +599,38 @@ const _abi = [
         name: "guessPtIn",
         type: "tuple",
       },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
+      },
     ],
     name: "swapPtForExactSy",
     outputs: [
@@ -509,6 +669,38 @@ const _abi = [
         internalType: "uint256",
         name: "maxSyIn",
         type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "guessMin",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessMax",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "guessOffchain",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxIteration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "eps",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct ApproxParams",
+        name: "guessNewImpliedRate",
+        type: "tuple",
       },
     ],
     name: "swapSyForExactPt",
