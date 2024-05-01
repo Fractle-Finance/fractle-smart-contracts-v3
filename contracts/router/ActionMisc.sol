@@ -20,7 +20,9 @@ contract ActionMisc is IPActionMisc, TokenHelper {
         }
     }
 
-    function batchExec(Call3[] calldata calls) external returns (Result[] memory res) {
+    function batchExec(
+        Call3[] calldata calls
+    ) external returns (Result[] memory res) {
         uint256 length = calls.length;
 
         res = new Result[](length);
@@ -31,7 +33,9 @@ contract ActionMisc is IPActionMisc, TokenHelper {
             calli = calls[i];
 
             // delegatecall to itself, it turns allowing invoking functions from other actions
-            (bool success, bytes memory result) = address(this).delegatecall(calli.callData);
+            (bool success, bytes memory result) = address(this).delegatecall(
+                calli.callData
+            );
 
             if (!success && !calli.allowFailure) {
                 assembly {

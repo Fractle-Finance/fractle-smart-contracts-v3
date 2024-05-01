@@ -9,11 +9,21 @@ interface IPExternalRewardDistributor {
         uint128 incentiveEndsAt;
     }
 
-    event DistributeReward(address indexed market, address indexed rewardToken, uint256 amount);
+    event DistributeReward(
+        address indexed market,
+        address indexed rewardToken,
+        uint256 amount
+    );
 
-    event AddRewardToMarket(address indexed market, address indexed token, MarketRewardData data);
+    event AddRewardToMarket(
+        address indexed market,
+        address indexed token,
+        MarketRewardData data
+    );
 
-    function getRewardTokens(address market) external view returns (address[] memory);
+    function getRewardTokens(
+        address market
+    ) external view returns (address[] memory);
 
     function redeemRewards() external;
 }

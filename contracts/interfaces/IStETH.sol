@@ -2,9 +2,13 @@
 pragma solidity ^0.8.0;
 
 interface IStETH {
-    function getSharesByPooledEth(uint256 _ethAmount) external view returns (uint256);
+    function getSharesByPooledEth(
+        uint256 _ethAmount
+    ) external view returns (uint256);
 
-    function getPooledEthByShares(uint256 _sharesAmount) external view returns (uint256);
+    function getPooledEthByShares(
+        uint256 _sharesAmount
+    ) external view returns (uint256);
 
     function submit(address referral) external payable returns (uint256 amount);
 

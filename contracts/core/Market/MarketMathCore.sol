@@ -9,29 +9,30 @@ import "../libraries/MiniHelpers.sol";
 import "../libraries/Errors.sol";
 import "../../router/base/MarketApproxLib.sol";
 
-struct MarketState {
-    int256 totalPt;
-    int256 totalSy;
-    int256 totalLp;
-    address treasury;
-    /// immutable variables ///
-    int256 scalarRoot;
-    uint256 expiry;
-    uint256 lifecircle;//new,from yt
-    /// fee data ///
-    uint256 lnFeeRateRoot;
-    uint256 reserveFeePercent; // base 100
-    /// last trade data ///
-    uint256 lastLnImpliedRate;
-}
+    struct MarketState {
+        int256 totalPt;
+        int256 totalSy;
+        int256 totalLp;
+        address treasury;
+        /// immutable variables ///
+        int256 scalarRoot;
+        uint256 expiry;
+        uint256 lifeCircle;//new,from yt
+        uint256 sAPR;
+        /// fee data ///
+        uint256 lnFeeRateRoot;
+        uint256 reserveFeePercent; // base 100
+        /// last trade data ///
+        uint256 lastLnImpliedRate;
+    }
 
 // params that are expensive to compute, therefore we pre-compute them
-struct MarketPreCompute {
-    int256 rateScalar;
-    int256 totalAsset;
-    int256 rateAnchor;
-    int256 feeRate;
-}
+    struct MarketPreCompute {
+        int256 rateScalar;
+        int256 totalAsset;
+        int256 rateAnchor;
+        int256 feeRate;
+    }
 
 // solhint-disable ordering
 library MarketMathCore {
@@ -60,9 +61,9 @@ library MarketMathCore {
         uint256 ptDesired,
         uint256 blockTime
     )
-        internal
-        pure
-        returns (uint256 lpToReserve, uint256 lpToAccount, uint256 syUsed, uint256 ptUsed)
+    internal
+    pure
+    returns (uint256 lpToReserve, uint256 lpToAccount, uint256 syUsed, uint256 ptUsed)
     {
         (
             int256 _lpToReserve,
@@ -141,9 +142,9 @@ library MarketMathCore {
         int256 ptDesired,
         uint256 blockTime
     )
-        internal
-        pure
-        returns (int256 lpToReserve, int256 lpToAccount, int256 syUsed, int256 ptUsed)
+    internal
+    pure
+    returns (int256 lpToReserve, int256 lpToAccount, int256 syUsed, int256 ptUsed)
     {
         /// ------------------------------------------------------------
         /// CHECKS
@@ -219,7 +220,7 @@ library MarketMathCore {
         /// ------------------------------------------------------------
         /// CHECKS
         /// ------------------------------------------------------------
-        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.lifeCircle, blockTime)) revert Errors.MarketExpired();
         if (market.totalPt <= netPtToAccount)
             revert Errors.MarketInsufficientPtForTrade(market.totalPt, netPtToAccount);
 
@@ -257,10 +258,10 @@ library MarketMathCore {
         uint256 sAPR,//new
         uint256 blockTime//daily
     ) internal pure returns (MarketPreCompute memory res) {
-        if (MiniHelpers.isExpired(market.lifecircle, blockTime)) revert Errors.MarketExpired();
+        if (MiniHelpers.isExpired(market.lifeCircle, blockTime)) revert Errors.MarketExpired();
 
         //uint256 timeToExpiry = market.expiry - blockTime;
-        uint256 timeToExpiry = market.lifecircle - blockTime;//how many days left before expiry
+        uint256 timeToExpiry = market.lifeCircle - blockTime;//how many days left before expiry
 
         res.rateScalar = _getRateScalar(market, timeToExpiry*DAY);
         res.totalAsset = index.syToAsset(market.totalSy);
@@ -327,7 +328,7 @@ library MarketMathCore {
         uint256 sAPR,//new
         uint256 blockTime//daily
     ) internal pure {
-        uint256 timeToExpiry = market.lifecircle - blockTime;//daily,how many days left before expiry,n
+        uint256 timeToExpiry = market.lifeCircle - blockTime;//daily,how many days left before expiry,n
 
         market.totalPt = market.totalPt.subNoNeg(netPtToAccount);
         market.totalSy = market.totalSy.subNoNeg(netSyToAccount + netSyToReserve);
@@ -494,7 +495,7 @@ library MarketMathCore {
         /// MATH
         /// ------------------------------------------------------------
         int256 totalAsset = index.syToAsset(market.totalSy);
-        uint256 timeToExpiry = market.lifecircle;//market.expiry - blockTime;
+        uint256 timeToExpiry = market.lifeCircle;//market.expiry - blockTime;
         int256 rateScalar = _getRateScalar(market, timeToExpiry*DAY);
 
         /// ------------------------------------------------------------
@@ -511,4 +512,3 @@ library MarketMathCore {
         );
     }
 }
-

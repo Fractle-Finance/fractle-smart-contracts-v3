@@ -1,15 +1,9 @@
-# Sample Hardhat Project
+# Fractle Finance
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
+This project cut the PoS staking yield into fixed yield and dynamic yield. Both for trading(long or short)
 
 ```shell
-npx hardhat help
 npx hardhat test
-REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
-# euphrates-smart-contracts
-# euphrates-smart-contracts

@@ -28,7 +28,10 @@ interface IPYieldToken is IERC20Metadata, IRewardManager, IPInterestManagerYT {
 
     event WithdrawFeeToTreasury(uint256[] amountRewardsOut, uint256 syOut);
 
-    function mintPY(address receiverPT, address receiverYT) external returns (uint256 amountPYOut);
+    function mintPY(
+        address receiverPT,
+        address receiverYT
+    ) external returns (uint256 amountPYOut);
 
     function redeemPY(address receiver) external returns (uint256 amountSyOut);
 
@@ -55,7 +58,7 @@ interface IPYieldToken is IERC20Metadata, IRewardManager, IPInterestManagerYT {
 
     function PT() external view returns (address);
 
-    function sAPR() external view returns(uint256);
+    function sAPR() external view returns (uint256);
 
     function factory() external view returns (address);
 
@@ -66,5 +69,4 @@ interface IPYieldToken is IERC20Metadata, IRewardManager, IPInterestManagerYT {
     function doCacheIndexSameBlock() external view returns (bool);
 
     function pyIndexLastUpdatedBlock() external view returns (uint128);
-
 }

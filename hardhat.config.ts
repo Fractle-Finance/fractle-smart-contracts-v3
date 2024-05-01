@@ -16,6 +16,15 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: true,
       chainId:9090,
     },
+    'polygon': {
+      url: 'https://polygon-mainnet.g.alchemy.com/v2/crGfXSjivssOPlyJaiSjnBPKrSg1BtKd',
+      accounts: [
+          '7a8ff0d60c4dcfeed173c8284c086095c6b72b66bfbdb8860d4b51f31bde4a6d'
+      ],
+      allowUnlimitedContractSize: true,
+      chainId: 137,
+      gasPrice: 300000000000
+    },
     'arbitrum-goerli': {
       url: 'https://arb-goerli.g.alchemy.com/v2/hegn8vBG_khxu0tXv8jXP_NUmRCUvJUb',
       accounts: [

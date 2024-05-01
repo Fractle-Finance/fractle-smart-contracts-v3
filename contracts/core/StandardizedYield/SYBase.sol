@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 import "../../interfaces/IStandardizedYield.sol";
 
-import "../erc20/EuphratesERC20Permit.sol";
+import "../erc20/FractleERC20Permit.sol";
 
 import "../libraries/math/PMath.sol";
 import "../libraries/TokenHelper.sol";
@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 
 abstract contract SYBase is
     IStandardizedYield,
-    EuphratesERC20Permit,
+    FractleERC20Permit,
     TokenHelper,
     BoringOwnableUpgradeable,
     Pausable
@@ -25,7 +25,7 @@ abstract contract SYBase is
         string memory _name,
         string memory _symbol,
         address _yieldToken
-    ) EuphratesERC20Permit(_name, _symbol, IERC20Metadata(_yieldToken).decimals()) initializer {
+    ) FractleERC20Permit(_name, _symbol, IERC20Metadata(_yieldToken).decimals()) initializer {
         yieldToken = _yieldToken;
         __BoringOwnable_init();
     }

@@ -7,7 +7,7 @@ import "../router/base/ActionBaseMintRedeem.sol";
 interface IPRouterHelper {
     /**
      * @param output This output struct should be filled the same way as the normal removeLiquiditySingleToken
-     operation (This means all BulkSeller, EuphratesSwap still works the same way). Note that the
+     operation (This means all BulkSeller, FractleSwap still works the same way). Note that the
      output.tokenOut will also be used as the input token for the addLiquidity
      */
     struct RemoveLiquiditySingleTokenStruct {
@@ -166,11 +166,11 @@ interface IPRouterHelper {
             uint256 netSyFeeOfRemove
         );
 
-    function removeLiquiditySingleToken(RemoveLiquiditySingleTokenStruct calldata fromMarket)
-        external
-        returns (uint256 netTokenOut, uint256 netSyFee);
+    function removeLiquiditySingleToken(
+        RemoveLiquiditySingleTokenStruct calldata fromMarket
+    ) external returns (uint256 netTokenOut, uint256 netSyFee);
 
-    function removeLiquiditySingleSy(RemoveLiquiditySingleSyStruct calldata fromMarket)
-        external
-        returns (uint256 netSyOut, uint256 netSyFee);
+    function removeLiquiditySingleSy(
+        RemoveLiquiditySingleSyStruct calldata fromMarket
+    ) external returns (uint256 netSyOut, uint256 netSyFee);
 }

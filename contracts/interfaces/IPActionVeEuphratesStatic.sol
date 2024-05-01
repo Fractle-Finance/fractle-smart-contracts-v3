@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-interface IPActionVeEuphratesStatic {
+interface IPActionVeFractleStatic {
     function increaseLockPositionStatic(
         address user,
         uint128 additionalAmountToLock,

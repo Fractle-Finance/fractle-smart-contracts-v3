@@ -23,7 +23,14 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
     ) external payable returns (uint256 netSyOut) {
         _safeApproveInf(input.tokenIn, SY);
         netSyOut = _mintSyFromToken(receiver, SY, minSyOut, input);
-        emit MintSyFromToken(msg.sender, input.tokenIn, SY, receiver, input.netTokenIn, netSyOut);
+        emit MintSyFromToken(
+            msg.sender,
+            input.tokenIn,
+            SY,
+            receiver,
+            input.netTokenIn,
+            netSyOut
+        );
     }
 
     /**
@@ -38,7 +45,14 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
         TokenOutput calldata output
     ) external returns (uint256 netTokenOut) {
         netTokenOut = _redeemSyToToken(receiver, SY, netSyIn, output, true);
-        emit RedeemSyToToken(msg.sender, output.tokenOut, SY, receiver, netSyIn, netTokenOut);
+        emit RedeemSyToToken(
+            msg.sender,
+            output.tokenOut,
+            SY,
+            receiver,
+            netSyIn,
+            netTokenOut
+        );
     }
 
     /**
@@ -57,9 +71,23 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
         address SY = IPYieldToken(YT).SY();
 
         uint256 netSyToMint = _mintSyFromToken(YT, SY, 0, input);
-        netPyOut = _mintPyFromSy(receiver, SY, YT, netSyToMint, minPyOut, false);
+        netPyOut = _mintPyFromSy(
+            receiver,
+            SY,
+            YT,
+            netSyToMint,
+            minPyOut,
+            false
+        );
 
-        emit MintPyFromToken(msg.sender, input.tokenIn, YT, receiver, input.netTokenIn, netPyOut);
+        emit MintPyFromToken(
+            msg.sender,
+            input.tokenIn,
+            YT,
+            receiver,
+            input.netTokenIn,
+            netPyOut
+        );
     }
 
     /**
@@ -76,7 +104,12 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
         address SY = IPYieldToken(YT).SY();
 
         uint256 netSyToRedeem = _redeemPyToSy(SY, YT, netPyIn, 1);
-        netTokenOut = _redeemSyToToken(receiver, SY, netSyToRedeem, tokenRedeemSy);
+        netTokenOut = _redeemSyToToken(
+            receiver,
+            SY,
+            netSyToRedeem,
+            tokenRedeemSy
+        );
 
         // emit RedeemPyToToken(msg.sender, output.tokenOut, YT, receiver, netPyIn, netTokenOut);
     }
@@ -91,7 +124,14 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
         uint256 netSyIn,
         uint256 minPyOut
     ) external returns (uint256 netPyOut) {
-        netPyOut = _mintPyFromSy(receiver, IPYieldToken(YT).SY(), YT, netSyIn, minPyOut, true);
+        netPyOut = _mintPyFromSy(
+            receiver,
+            IPYieldToken(YT).SY(),
+            YT,
+            netSyIn,
+            minPyOut,
+            true
+        );
         emit MintPyFromSy(msg.sender, receiver, YT, netSyIn, netPyOut);
     }
 
@@ -123,7 +163,11 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
             }
 
             for (uint256 i = 0; i < yts.length; ++i) {
-                IPYieldToken(yts[i]).redeemDueInterestAndRewards(user, true, true);
+                IPYieldToken(yts[i]).redeemDueInterestAndRewards(
+                    user,
+                    true,
+                    true
+                );
             }
 
             for (uint256 i = 0; i < markets.length; ++i) {

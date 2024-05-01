@@ -4,7 +4,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./IRewardManager.sol";
 import "./IPInterestManagerYTV2.sol";
 
-interface IPYieldTokenV2 is IERC20Metadata, IRewardManager, IPInterestManagerYTV2 {
+interface IPYieldTokenV2 is
+    IERC20Metadata,
+    IRewardManager,
+    IPInterestManagerYTV2
+{
     event Mint(
         address indexed caller,
         address indexed receiverPT,
@@ -28,9 +32,15 @@ interface IPYieldTokenV2 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
 
     event CollectInterestFee(uint256 amountInterestFee);
 
-    event CollectRewardFee(address indexed rewardToken, uint256 amountRewardFee);
+    event CollectRewardFee(
+        address indexed rewardToken,
+        uint256 amountRewardFee
+    );
 
-    function mintPY(address receiverPT, address receiverYT) external returns (uint256 amountPYOut);
+    function mintPY(
+        address receiverPT,
+        address receiverYT
+    ) external returns (uint256 amountPYOut);
 
     function redeemPY(address receiver) external returns (uint256 amountSyOut);
 

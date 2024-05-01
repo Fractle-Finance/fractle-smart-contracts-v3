@@ -4,7 +4,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./IRewardManager.sol";
 import "./IPInterestManagerYTV2.sol";
 
-interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV2 {
+interface IPYieldTokenV3 is
+    IERC20Metadata,
+    IRewardManager,
+    IPInterestManagerYTV2
+{
     event Mint(
         address indexed caller,
         address indexed receiverPT,
@@ -28,9 +32,15 @@ interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
 
     event CollectInterestFee(uint256 amountInterestFee);
 
-    event CollectRewardFee(address indexed rewardToken, uint256 amountRewardFee);
+    event CollectRewardFee(
+        address indexed rewardToken,
+        uint256 amountRewardFee
+    );
 
-    function mintPY(address receiverPT, address receiverYT) external returns (uint256 amountPYOut);
+    function mintPY(
+        address receiverPT,
+        address receiverYT
+    ) external returns (uint256 amountPYOut);
 
     function redeemPY(address receiver) external returns (uint256 amountSyOut);
 
@@ -56,14 +66,14 @@ interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
     function SY() external view returns (address);
 
     function PT() external view returns (address);
- 
+
     function factory() external view returns (address);
 
     function expiry() external view returns (uint256);
 
-    function sAPR() external view returns(uint256);
+    function sAPR() external view returns (uint256);
 
-    function lifecircle() external view returns(uint256);
+    function lifeCircle() external view returns (uint256);
 
     function isExpired() external view returns (bool);
 
@@ -72,12 +82,18 @@ interface IPYieldTokenV3 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
     function setPostExpiryData() external;
 
     function updateSyReserve() external;
-    
+
     function updateAndDistributeInterestFPT(address user) external;
 
-    function doTransferOutInterestFPT(address user,address SY) external returns(uint256 interestAmount);
+    function doTransferOutInterestFPT(
+        address user,
+        address SY
+    ) external returns (uint256 interestAmount);
 
-    function updateAndDistributeInterestForTwoFPT(address user1, address user2) external;
+    function updateAndDistributeInterestForTwoFPT(
+        address user1,
+        address user2
+    ) external;
 
     function pyIndexLastUpdatedBlock() external view returns (uint128);
 }

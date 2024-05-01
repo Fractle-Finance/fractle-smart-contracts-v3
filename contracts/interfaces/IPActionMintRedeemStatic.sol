@@ -14,19 +14,12 @@ interface IPActionMintRedeemStatic {
         address SY,
         uint256 netTokenIn,
         uint256 netSyIn
-    )
-        external
-        view
-        returns (
-            address bulk,
-            uint256 totalToken,
-            uint256 totalSy
-        );
+    ) external view returns (address bulk, uint256 totalToken, uint256 totalSy);
 
-    function mintPyFromSyStatic(address YT, uint256 netSyToMint)
-        external
-        view
-        returns (uint256 netPYOut);
+    function mintPyFromSyStatic(
+        address YT,
+        uint256 netSyToMint
+    ) external view returns (uint256 netPYOut);
 
     function mintPyFromTokenStatic(
         address YT,
@@ -42,10 +35,10 @@ interface IPActionMintRedeemStatic {
         address bulk
     ) external view returns (uint256 netSyOut);
 
-    function redeemPyToSyStatic(address YT, uint256 netPYToRedeem)
-        external
-        view
-        returns (uint256 netSyOut);
+    function redeemPyToSyStatic(
+        address YT,
+        uint256 netPYToRedeem
+    ) external view returns (uint256 netSyOut);
 
     function redeemPyToTokenStatic(
         address YT,
@@ -61,7 +54,9 @@ interface IPActionMintRedeemStatic {
         address bulk
     ) external view returns (uint256 netTokenOut);
 
-    function pyIndexCurrentViewMarket(address market) external view returns (uint256);
+    function pyIndexCurrentViewMarket(
+        address market
+    ) external view returns (uint256);
 
     function pyIndexCurrentViewYt(address yt) external view returns (uint256);
 }

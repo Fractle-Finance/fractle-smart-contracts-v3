@@ -20,9 +20,9 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
 
     address internal immutable marketFactory;
 
-    modifier onlyEuphratesMarket(address caller) {
+    modifier onlyFractleMarket(address caller) {
         if (!IPMarketFactory(marketFactory).isValidMarket(caller))
-            revert Errors.RouterCallbackNotEuphratesMarket(caller);
+            revert Errors.RouterCallbackNotFractleMarket(caller);
         _;
     }
 
@@ -32,7 +32,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
     }
 
     /**
-     * @dev The callback is only callable by a Euphrates Market created by the factory
+     * @dev The callback is only callable by a Fractle Market created by the factory
      */
     function swapCallback(
         int256 ptToAccount,
@@ -76,7 +76,7 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         int256 ptToAccount,
         int256 syToAccount,
         bytes calldata data
-    ) internal onlyEuphratesMarket(msg.sender) {
+    ) internal onlyFractleMarket(msg.sender) {
         (
             address payer,
             address receiver,

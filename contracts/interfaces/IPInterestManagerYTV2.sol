@@ -7,15 +7,25 @@ interface IPInterestManagerYTV2 {
     )
         external
         view
-        returns (uint128 lastInterestIndex, uint128 accruedInterest, uint256 lastPYIndex);
-    
+        returns (
+            uint128 lastInterestIndex,
+            uint128 accruedInterest,
+            uint256 lastPYIndex
+        );
+
     function userInterestFPT(
         address user
     )
         external
         view
-        returns (uint128 lastInterestIndex, uint128 accruedInterest, uint256 lastPYIndex);
+        returns (
+            uint128 lastInterestIndex,
+            uint128 accruedInterest,
+            uint256 lastPYIndex
+        );
 
-    function lastGlobalInterestUpdatedDayIndexByOracle() external view returns(uint256);
-    
+    function lastGlobalInterestUpdatedDayIndexByOracle()
+        external
+        view
+        returns (uint256);
 }

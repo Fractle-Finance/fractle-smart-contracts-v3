@@ -2,7 +2,10 @@
 pragma solidity ^0.8.0;
 
 interface IPFeeDistributorV2 {
-    event SetMerkleRootAndFund(bytes32 indexed merkleRoot, uint256 amountFunded);
+    event SetMerkleRootAndFund(
+        bytes32 indexed merkleRoot,
+        uint256 amountFunded
+    );
 
     event Claimed(address indexed user, uint256 amountOut);
 
@@ -26,21 +29,24 @@ interface IPFeeDistributorV2 {
     ) external returns (uint256 amountOut);
 
     /**
-     * @notice Protocols that require the use of this function & feeData should contact the Euphrates team.
+     * @notice Protocols that require the use of this function & feeData should contact the Fractle team.
      * @notice Protocols should NOT EVER use claimRetail. Using it will make getProtocolFeeData unreliable.
      */
-    function claimProtocol(address receiver, address[] calldata pools)
-        external
-        returns (uint256 totalAmountOut, uint256[] memory amountsOut);
+    function claimProtocol(
+        address receiver,
+        address[] calldata pools
+    ) external returns (uint256 totalAmountOut, uint256[] memory amountsOut);
 
     /**
-    * @notice returns the claimable fees per pool. Only available if the Euphrates team has specifically
+    * @notice returns the claimable fees per pool. Only available if the Fractle team has specifically
     set up the data
      */
-    function getProtocolClaimables(address user, address[] calldata pools)
-        external
-        view
-        returns (uint256[] memory claimables);
+    function getProtocolClaimables(
+        address user,
+        address[] calldata pools
+    ) external view returns (uint256[] memory claimables);
 
-    function getProtocolTotalAccrued(address user) external view returns (uint256);
+    function getProtocolTotalAccrued(
+        address user
+    ) external view returns (uint256);
 }

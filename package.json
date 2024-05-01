@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "prettier:sol": "prettier --write --plugin=prettier-plugin-solidity 'contracts/*/*.sol'",
+    "prettier:ts" : "prettier --write 'scripts/*.ts'"
   },
   "dependencies": {
     "@account-abstraction/contracts": "^0.6.0",

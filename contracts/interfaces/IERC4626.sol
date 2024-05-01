@@ -27,9 +27,16 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 interface IERC4626 is IERC20Metadata {
     function asset() external view returns (address);
 
-    function deposit(uint256 assets, address receiver) external returns (uint256);
+    function deposit(
+        uint256 assets,
+        address receiver
+    ) external returns (uint256);
 
-    function redeem(uint256 shares, address receiver, address owner) external returns (uint256);
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner
+    ) external returns (uint256);
 
     function convertToAssets(uint256 shares) external view returns (uint256);
 

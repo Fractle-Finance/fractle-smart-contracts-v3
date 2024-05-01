@@ -14,9 +14,9 @@ library ExpiryUtils {
     uint16 private constant ORIGIN_YEAR = 1970;
 
     /**
-     * @notice Concatenates a Euphrates token name/symbol, a yield token name/symbol,
+     * @notice Concatenates a Fractle token name/symbol, a yield token name/symbol,
      *         and an expiry, using a delimiter (usually "-" or " ").
-     * @param _bt The Euphrates token name/symbol.
+     * @param _bt The Fractle token name/symbol.
      * @param _yt The yield token name/symbol.
      * @param _expiry The expiry in epoch time.
      * @param _delimiter Can be any delimiter, but usually "-" or " ".

@@ -5,7 +5,6 @@ import "./IPActionMarketAuxStatic.sol";
 import "./IPActionMintRedeemStatic.sol";
 import "./IPActionInfoStatic.sol";
 import "./IPActionMarketCoreStatic.sol";
-import "./IPActionVeEuphratesStatic.sol";
 import "./IPMiniDiamond.sol";
 import "./IPActionStorageStatic.sol";
 
@@ -15,9 +14,6 @@ interface IPRouterStatic is
     IPActionInfoStatic,
     IPActionMarketAuxStatic,
     IPActionMarketCoreStatic,
-    IPActionVeEuphratesStatic,
     IPMiniDiamond,
     IPActionStorageStatic
-{
-
-}
+{}

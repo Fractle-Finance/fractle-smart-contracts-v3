@@ -240,96 +240,6 @@ contract ActionSwapYT is
     }
 
     /**
-     * @notice swaps any token to YT
-     * @dev this function swaps token for SY-mintable token first through Kyberswap, then mints SY
-     * from such, finally swaps SY to YT (see `swapSyForExactYt()`)
-     */
-    function swapExactTokenForYt(
-        address receiver,
-        address market,
-        uint256 minYtOut,
-        ApproxParams calldata guessYtOut,
-        TokenInput calldata input,
-        ApproxParams calldata guessNewImpliedRate
-    ) external payable returns (uint256 netYtOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market)
-            .readTokens();
-
-        uint256 netSyUsedToBuyYT = _mintSyFromToken(
-            address(YT),
-            address(SY),
-            1,
-            input
-        );
-
-        (netYtOut, netSyFee) = _swapExactSyForYt(
-            receiver,
-            market,
-            YT,
-            netSyUsedToBuyYT,
-            minYtOut,
-            guessYtOut,
-            guessNewImpliedRate
-        );
-
-        emit SwapYtAndToken(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            netYtOut.Int(),
-            input.netTokenIn.neg()
-        );
-    }
-
-    /**
-     * @notice swaps YT to a given token
-     * @dev the function first swaps YT to SY (see `swapExactYtForSy()`), then redeems SY,
-     * finally swaps resulting tokens to desired output token using Kyberswap
-     */
-    function swapExactYtForToken(
-        address receiver,
-        address market,
-        uint256 netYtIn,
-        TokenOutput calldata output,
-        ApproxParams calldata guessNewImpliedRate
-    ) external returns (uint256 netTokenOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldTokenV3 YT) = IPMarket(market)
-            .readTokens();
-
-        _transferFrom(IERC20(YT), msg.sender, address(YT), netYtIn);
-
-        uint256 netSyOut;
-
-        (netSyOut, netSyFee) = _swapExactYtForSy(
-            _syOrBulk(address(SY), output),
-            market,
-            SY,
-            YT,
-            netYtIn,
-            1,
-            guessNewImpliedRate
-        );
-
-        netTokenOut = _redeemSyToToken(
-            receiver,
-            address(SY),
-            netSyOut,
-            output,
-            false
-        );
-
-        emit SwapYtAndToken(
-            msg.sender,
-            market,
-            output.tokenOut,
-            receiver,
-            netYtIn.neg(),
-            netTokenOut.Int()
-        );
-    }
-
-    /**
      * @notice swap exact PT to YT with the help of flashswaps & YT tokenization / redemption
      * @dev inner working of this function:
      - `exactPtIn` PT is transferred to market contract
@@ -489,7 +399,16 @@ contract ActionSwapYT is
         if (netPtOut < minPtOut)
             revert Errors.RouterInsufficientPtOut(netPtOut, minPtOut);
 
-        _trySwapSyForExactPt(receiver, market, PT, YT, totalPtFromSwap, exactYtIn, minPtOut, guessNewImpliedRate);
+        _trySwapSyForExactPt(
+            receiver,
+            market,
+            PT,
+            YT,
+            totalPtFromSwap,
+            exactYtIn,
+            minPtOut,
+            guessNewImpliedRate
+        );
 
         emit SwapPtAndYt(
             msg.sender,
@@ -510,7 +429,7 @@ contract ActionSwapYT is
         uint256 minPtOut,
         ApproxParams calldata guessNewImpliedRate
     ) internal {
-            IPMarket(market).swapSyForExactPt(
+        IPMarket(market).swapSyForExactPt(
             address(this),
             amountPtFromSwap,
             guessNewImpliedRate,

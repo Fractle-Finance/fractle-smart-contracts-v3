@@ -71,7 +71,7 @@ library Errors {
     error RouterNotAllSyUsed(uint256 netSyDesired, uint256 netSyUsed);
 
     error RouterTimeRangeZero();
-    error RouterCallbackNotEuphratesMarket(address caller);
+    error RouterCallbackNotFractleMarket(address caller);
     error RouterInvalidAction(bytes4 selector);
     error RouterInvalidFacet(address facet);
 
@@ -123,7 +123,7 @@ library Errors {
     // Liquidity Mining
     error VCInactivePool(address pool);
     error VCPoolAlreadyActive(address pool);
-    error VCZeroVeEuphrates(address user);
+    error VCZeroVeFractle(address user);
     error VCExceededMaxWeight(uint256 totalWeight, uint256 maxWeight);
     error VCEpochNotFinalized(uint256 wTime);
     error VCPoolAlreadyAddAndRemoved(address pool);
@@ -138,7 +138,7 @@ library Errors {
     error VEZeroSlope(uint128 bias, uint128 slope);
     error VEReceiveOldSupply(uint256 msgTime);
 
-    error GCNotEuphratesMarket(address caller);
+    error GCNotFractleMarket(address caller);
     error GCNotVotingController(address caller);
 
     error InvalidWTime(uint256 wTime);

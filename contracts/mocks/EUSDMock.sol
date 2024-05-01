@@ -194,10 +194,17 @@ contract EUSDMock is IERC20, Context {
      *
      * Might emit an {Approval} event.
      */
-    function _spendAllowance(address owner, address spender, uint256 amount) internal virtual {
+    function _spendAllowance(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal virtual {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
-            require(currentAllowance >= amount, "ERC20: insufficient allowance");
+            require(
+                currentAllowance >= amount,
+                "ERC20: insufficient allowance"
+            );
             unchecked {
                 _approve(owner, spender, currentAllowance - amount);
             }
@@ -271,11 +278,7 @@ contract EUSDMock is IERC20, Context {
         uint256 _addedValue
     ) public returns (bool) {
         address owner = _msgSender();
-        _approve(
-            owner,
-            _spender,
-            allowances[owner][_spender].add(_addedValue)
-        );
+        _approve(owner, _spender, allowances[owner][_spender].add(_addedValue));
         return true;
     }
 
@@ -293,10 +296,16 @@ contract EUSDMock is IERC20, Context {
      * - `_spender` must have allowance for the caller of at least `_subtractedValue`.
      * - the contract must not be paused.
      */
-    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) public virtual returns (bool) {
         address owner = _msgSender();
         uint256 currentAllowance = allowance(owner, spender);
-        require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
+        require(
+            currentAllowance >= subtractedValue,
+            "ERC20: decreased allowance below zero"
+        );
         unchecked {
             _approve(owner, spender, currentAllowance - subtractedValue);
         }
@@ -480,7 +489,6 @@ contract EUSDMock is IERC20, Context {
         emit Transfer(address(0), _recipient, _mintAmount);
     }
 
-
     /**
      * @notice Destroys `sharesAmount` shares from `_account`'s holdings, decreasing the total amount of shares.
      * @dev This doesn't decrease the token total supply.
@@ -521,7 +529,10 @@ contract EUSDMock is IERC20, Context {
         newTotalShares = _onlyBurnShares(_account, _sharesAmount);
     }
 
-    function _onlyBurnShares( address _account, uint256 _sharesAmount) private returns(uint256 newTotalShares){
+    function _onlyBurnShares(
+        address _account,
+        uint256 _sharesAmount
+    ) private returns (uint256 newTotalShares) {
         uint256 accountShares = shares[_account];
         require(_sharesAmount <= accountShares, "BURN_AMOUNT_EXCEEDS_BALANCE");
 
@@ -548,6 +559,5 @@ contract EUSDMock is IERC20, Context {
         // but we cannot reflect this as it would require sending an unbounded number of events.
 
         // We're emitting `SharesBurnt` event to provide an explicit rebase log record nonetheless.
-
     }
 }
