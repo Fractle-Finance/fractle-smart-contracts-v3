@@ -3,6 +3,7 @@ import { MarketMathCore, MarketState } from "./calculation";
 import { ContractTransactionResponse, ZeroAddress } from "ethers";
 import BigNumber from "bignumber.js";
 import {
+  ActionAddRemoveLiq,
   ActionSwapPT,
   ActionSwapYT,
   FractleMarketV3,
@@ -341,7 +342,6 @@ async function main() {
   await addLiquidity.wait();
 
   // how much lp do we have? // 172205
-  console.log(await deployedFractleMarket.balanceOf(signers[0].getAddress()));
   const approvalToMarket = await deployedFractleMarket.approve(
     await actionAddRemoveLiqInstance.getAddress(),
     ethers.parseEther("100000000"),
@@ -359,7 +359,7 @@ async function main() {
   );
   await approvalSY.wait();
 
-  // begin to swap 0.01 PT for SY
+  // begin to swap 0.01 Pt for Sy
   const res_swapPtForSy = await preCalculationSwapPt(
     deployedFractleMarket,
     actionSwapPTInstance,
@@ -376,8 +376,9 @@ async function main() {
     res_swapPtForSy.calldata_guessR,
   );
   await actionSwapPtForSy.wait();
-  //
-  // swap exact 0.01 SY for PT
+  console.log("successfully swap 0.01 pt for sy");
+
+  // swap exact 0.01 Sy for Pt
   const res_swapSyForPt = await preCalculationSwapPt(
     deployedFractleMarket,
     actionSwapPTInstance,
@@ -395,54 +396,54 @@ async function main() {
     res_swapSyForPt.calldata_guessR,
   );
   await actionSwapSyForPt.wait();
+  console.log("success swap 0.01 sy for pt");
 
-  //------swap exact 10000 yt for sy-------------//
+  //------swap exact 1yt for sy-------------//
   // no need to approx in fractle version but need to estimate new r now
-  // await deployedYT.approve(
-  //   actionSwapYTInstance.getAddress(),
-  //   ethers.parseEther("100000000000"),
-  // );
-  //
-  // const res_swapYtForSy = await preCalculationSwapYt(
-  //   deployedFractleMarket,
-  //   actionSwapYTInstance,
-  //   deployedYT,
-  //   { exactYtInForSy: 10000 },
-  // );
-  //
-  // await actionSwapYTInstance.swapExactYtForSy(
-  //   signers[0].getAddress(),
-  //   await deployedFractleMarket.getAddress(),
-  //   10000,
-  //   0,
-  //   res_swapYtForSy.calldata_guessR,
-  // );
-  // console.log("successfully swap 10000 Yt for Sy");
+  await deployedYT.approve(
+    actionSwapYTInstance.getAddress(),
+    ethers.parseEther("1000000000000000000"),
+  );
 
-  //-----swap exact 100 sy for yt-------//
-  // sth wrong with this test.
-  // await FractleEUSDSY.approve(
-  //   actionSwapYTInstance.getAddress(),
-  //   ethers.parseEther("100000000"),
-  // );
-  //
-  // const res_swapSyForYt = await preCalculationSwapYt(
-  //   deployedFractleMarket,
-  //   actionSwapYTInstance,
-  //   deployedYT,
-  //   { exactSyIn: 1},
-  // );
-  // await actionSwapYTInstance.swapExactSyForYt(
-  //   signers[0].getAddress(),
-  //   await deployedFractleMarket.getAddress(),
-  //   10,
-  //   0,
-  //   res_swapSyForYt.calldata0,
-  //   res_swapSyForYt.calldata_guessR,
-  // );
-  // console.log("successfully swap 10 Sy for Yt");
+  const res_swapYtForSy = await preCalculationSwapYt(
+    deployedFractleMarket,
+    actionSwapYTInstance,
+    deployedYT,
+    { exactYtInForSy: BigNumber("1000000000000000000") },
+  );
+  const actionSwapYtForSy = await actionSwapYTInstance.swapExactYtForSy(
+    signers[0].getAddress(),
+    await deployedFractleMarket.getAddress(),
+    1000000000000000000n,
+    0,
+    res_swapYtForSy.calldata_guessR,
+  );
+  await actionSwapYtForSy.wait();
+  console.log("successfully swap 1yt for sy");
 
-  //-----swap exact 10000 pt for yt -----//
+  //-----swap exact 0.01sy for yt-------//
+  await FractleEUSDSY.approve(
+    actionSwapYTInstance.getAddress(),
+    ethers.parseEther("1000000000000000000"),
+  );
+  const res_swapSyForYt = await preCalculationSwapYt(
+    deployedFractleMarket,
+    actionSwapYTInstance,
+    deployedYT,
+    { exactSyInForYt: BigNumber("10000000000000000") },
+  );
+  const actionSwapSyForYt = await actionSwapYTInstance.swapExactSyForYt(
+    signers[0].getAddress(),
+    await deployedFractleMarket.getAddress(),
+    10000000000000000n,
+    0,
+    res_swapSyForYt.calldata0,
+    res_swapSyForYt.calldata_guessR,
+  );
+  await actionSwapSyForYt.wait();
+  console.log("successfully swap 0.01sy for yt");
+
+  //-----swap exact 0.01pt for yt -----//
   await deployedPT.approve(
     actionSwapYTInstance.getAddress(),
     ethers.parseEther("100000000000"),
@@ -451,389 +452,93 @@ async function main() {
     deployedFractleMarket,
     actionSwapYTInstance,
     deployedYT,
-    { exactPtInForYt: 20},
+    { exactPtInForYt: BigNumber("10000000000000000") },
   );
-  await actionSwapYTInstance.swapExactPtForYt(
+  const actionSwapPtForYt = await actionSwapYTInstance.swapExactPtForYt(
     signers[0].getAddress(),
     await deployedFractleMarket.getAddress(),
-    20,
+    10000000000000000n,
     0,
     res_swapPtForYt.calldata0,
     res_swapPtForYt.calldata_guessR,
   );
+  await actionSwapPtForYt.wait();
+  console.log("successfully swap 0.01pt for yt");
 
-  //--------------swap 1000 yt for pt--------------//
-  // await deployedYT.approve(
-  //   actionSwapYTInstance.getAddress(),
-  //   ethers.parseEther("100000000000"),
-  // );
-  // const res_swapYtForPt = await preCalculationSwapYt(
-  //   deployedFractleMarket,
-  //   actionSwapYTInstance,
-  //   deployedYT,
-  //   { exactYtInForPt: 1000 },
-  // );
-  // await actionSwapYTInstance.swapExactYtForPt(
-  //   signers[0].getAddress(),
-  //   await deployedFractleMarket.getAddress(),
-  //   1000,
-  //   0,
-  //   res_swapYtForPt.calldata0,
-  //   res_swapYtForPt.calldata_guessR,
-  // );
-
-  //  const afterSwapPt0 = await deployedPT.balanceOf(signers[0].getAddress());
-  //  console.log("after swap pt: " + afterSwapPt0);
-  //  const afterSwapYt0 = await deployedYT.balanceOf(signers[0].getAddress());
-  //  console.log("after swap yt: " + afterSwapYt0);
-  //----------------------------------------------//
+  //--------------swap 1yt for pt--------------//
+  await deployedYT.approve(
+    actionSwapYTInstance.getAddress(),
+    ethers.parseEther("100000000000"),
+  );
+  const res_swapYtForPt = await preCalculationSwapYt(
+    deployedFractleMarket,
+    actionSwapYTInstance,
+    deployedYT,
+    { exactYtInForPt: BigNumber("1000000000000000000") },
+  );
+  const actionSwapYtForPt = await actionSwapYTInstance.swapExactYtForPt(
+    signers[0].getAddress(),
+    await deployedFractleMarket.getAddress(),
+    1000000000000000000n,
+    0,
+    res_swapYtForPt.calldata0,
+    res_swapYtForPt.calldata_guessR,
+  );
+  await actionSwapYtForPt.wait();
+  console.log("successfully swap 1yt for pt");
 
   //---------try remove liquidity-------------//
-  // const removeLiquidityDual =
-  //   await actionAddRemoveLiqInstance.removeLiquidityDualSyAndPt(
-  //     signers[0].getAddress(),
-  //     deployedFractleMarket,
-  //     100000000000000000000n,
-  //     0,
-  //     0,
-  //   );
-  // await removeLiquidityDual.wait();
+  const removeLiquidityDual =
+    await actionAddRemoveLiqInstance.removeLiquidityDualSyAndPt(
+      signers[0].getAddress(),
+      deployedFractleMarket,
+      100000000000000000000n,
+      0,
+      0,
+    );
+  await removeLiquidityDual.wait();
+  console.log("successfully remove the liquidity dualSyAndPt");
 
-  // const removeLiquiditySingle = await actionAddRemoveLiqInstance.removeLiquiditySingleSy(signers[0].getAddress(), deployedFractleMarket, 10000, 0, );
-  // await removeLiquiditySingle.wait();
-
-  //     console.log("my yt balance, sy balance");
-  //     console.log(await deployedYT.balanceOf(signers[0].getAddress()), await FractleEUSDSY.balanceOf(signers[0].getAddress()));
-  //     await deployedYT.approve(actionSwapYTInstance.getAddress(), ethers.parseEther("100000000000"));
-  //     await actionSwapYTInstance.swapExactYtForSy(signers[0].getAddress(), deployedFractleMarket.getAddress(), 1000, 0);
-  //     console.log("after swapping, my yt balance, sy balance");
-  //     console.log(await deployedYT.balanceOf(signers[0].getAddress()), await FractleEUSDSY.balanceOf(signers[0].getAddress()));
-
-  //     // redeemPYToToken
-  //     // approve YT
-  //     await deployedPT.approve(actionMintRedeemInstance.getAddress(), ethers.parseEther("100000000000"));
-  //     await deployedYT.approve(actionMintRedeemInstance.getAddress(), ethers.parseEther("100000000000"));
-  //     console.log(await EUSD.balanceOf(signers[0].getAddress()));
-  //     await actionMintRedeemInstance.redeemPyToToken(signers[0].getAddress(), deployedYT.getAddress(), 30, EUSD.getAddress());
-  //     console.log(await EUSD.balanceOf(signers[0].getAddress()));
-
-  //     //swap exact sy for yt
-  //     const state = await deployedFractleMarket.readState(actionSwapYTInstance.getAddress());
-
-  //     console.log(state);
-  //     const market: MarketState = {
-  //         totalPt: BigNumber(state.totalPt.toString()),
-  //         totalSy: BigNumber(state.totalSy.toString()),
-  //         totalLp: BigNumber(state.totalLp.toString()),
-  //         treasury: state.treasury as `0x${string}`,
-  //         scalarRoot: BigNumber(state.scalarRoot.toString()),
-  //         expiry: BigNumber(state.expiry.toString()),
-  //         lnFeeRateRoot: BigNumber(state.lnFeeRateRoot.toString()),
-  //         reserveFeePercent: BigNumber(state.reserveFeePercent.toString()),
-  //         lastLnImpliedRate: BigNumber(state.lastLnImpliedRate.toString()),
-  //     };
-
-  //     const sm = new MarketMathCore();
-  //     const comp = sm.getMarketPreCompute(
-  //         market,
-  //         BigNumber("1100000000000000000"),
-  //         BigNumber(((new Date().getTime()) / 1000).toFixed(0))
-  //     )
-
-  //     const r = sm.calculateSwapExactSyForYt(
-  //         market,
-  //         BigNumber("1100000000000000000"),
-  //         comp,
-  //         BigNumber("100"),
-  //     );
-
-  //     // const s = sm.calculateAddLiquiditySignleSy(
-  //     //     market,
-  //     //     BigNumber("1100000000000000000"),
-  //     //     comp,
-  //     //     BigNumber("120"),
-  //     // );
-
-  //     const beforeSwapSY = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  //     console.log("before swap sy: " + beforeSwapSY);
-  //     const beforeSwapYt = await deployedYT.balanceOf(signers[0].getAddress());
-  //     console.log("before swap yt: " + beforeSwapYt);
-
-  //     await FractleEUSDSY.approve(actionSwapYTInstance.getAddress(), ethers.parseEther("100000000000"));
-  //     const calldata = {
-  //         guessMin: String(r.guessMin),
-  //         guessMax: String(r.guessMax),
-  //         guessOffchain: String(r.guessOffchain),
-  //         maxIteration: String(r.maxIteration),
-  //         eps: String(r.eps)
-  //     };
-  //    //await actionSwapYTInstance.swapExactSyForYt(signers[0].getAddress(), await deployedFractleMarket.getAddress(), 100, 0, calldata);
-
-  //     const afterSwapSY = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  //     console.log("after swap sy: " + afterSwapSY);
-  //     const afterSwapYt = await deployedYT.balanceOf(signers[0].getAddress());
-  //     console.log("after swap yt: " + afterSwapYt);
-
-  console.log("END");
-  //--------------------------//
-  // add liquidity single sy 300
-  const state1 = await deployedFractleMarket.readState(
-    actionAddRemoveLiqInstance.getAddress(),
+  // add liquidity single sy 10
+  const res_liquidityAdd = await preCalculationLiquidityAddRemoveSingle(
+    deployedFractleMarket,
+    deployedYT,
+    actionAddRemoveLiqInstance,
+    {
+      addLiquiditySingle: BigNumber("10000000000000000000"),
+    },
   );
+  const addLiquiditySingle =
+    await actionAddRemoveLiqInstance.addLiquiditySingleSy(
+      signers[0].getAddress(),
+      deployedFractleMarket.getAddress(),
+      10000000000000000000n,
+      0,
+      res_liquidityAdd.calldata0,
+      res_liquidityAdd.calldata_guessR,
+    );
+  await addLiquiditySingle.wait();
+  console.log("successfully added the liquidity single sy for 10");
 
-  const market1: MarketState = {
-    totalPt: BigNumber(state1.totalPt.toString()),
-    totalSy: BigNumber(state1.totalSy.toString()),
-    totalLp: BigNumber(state1.totalLp.toString()),
-    treasury: state1.treasury as `0x${string}`,
-    scalarRoot: BigNumber(state1.scalarRoot.toString()),
-    expiry: BigNumber(state1.expiry.toString()),
-    lifeCircle: BigNumber(state1.lifeCircle.toString()),
-    sAPR: BigNumber(state1.sAPR.toString()), //sAPR is 1e18 decimal
-    lnFeeRateRoot: BigNumber(state1.lnFeeRateRoot.toString()),
-    reserveFeePercent: BigNumber(state1.reserveFeePercent.toString()),
-    lastLnImpliedRate: BigNumber(state1.lastLnImpliedRate.toString()),
-  };
-
-  const sm1 = new MarketMathCore();
-  const lastGlobalInterestUpdatedDayIndexByOracle1 =
-    await deployedYT.lastGlobalInterestUpdatedDayIndexByOracle(); //so-called blockTime
-
-  const comp1 = sm1.getMarketPreCompute(
-    market1,
-    BigNumber("1100000000000000000"),
-    market1.sAPR,
-    BigNumber(lastGlobalInterestUpdatedDayIndexByOracle1.toString()),
+  // remove liquidity single sy 10
+  const res_liquidityRemove = await preCalculationLiquidityAddRemoveSingle(
+    deployedFractleMarket,
+    deployedYT,
+    actionAddRemoveLiqInstance,
+    {
+      removeLiquiditySingle: BigNumber("10000000000000000000"),
+    },
   );
-
-  // guess pt received from sy = net pt from swap
-  const s = sm1.calculateAddLiquiditySignleSy(
-    market1,
-    BigNumber("1100000000000000000"),
-    comp1,
-    BigNumber("300"),
-  );
-  console.log("guess pt received from sy :" + s.guessOffchain);
-
-  //use total pt received from sy to estimate new r
-  //actually use swap sy for exact pt here
-  // "calc trade" to get netSyOut etc.
-  const CalcTradeResult1 = sm1.calcTrade(
-    market1,
-    comp1,
-    BigNumber("1100000000000000000"),
-    BigNumber(s.guessOffchain),
-  );
-  console.log("calc trade result is :" + JSON.stringify(CalcTradeResult1));
-
-  //calculate new r
-  const estimatedNewImpliedRate1 = sm1.estimateNewImpliedRate(
-    market1,
-    comp1,
-    CalcTradeResult1,
-    BigNumber(s.guessOffchain),
-    BigNumber("1100000000000000000"),
-    BigNumber(lastGlobalInterestUpdatedDayIndexByOracle1.toString()),
-  );
-
-  console.log("estimated rate is :" + estimatedNewImpliedRate1.guessOffchain);
-
-  const calldata_guessR1 = {
-    guessMin: String(estimatedNewImpliedRate1.guessMin),
-    guessMax: String(estimatedNewImpliedRate1.guessMax),
-    guessOffchain: String(estimatedNewImpliedRate1.guessOffchain),
-    maxIteration: String(estimatedNewImpliedRate1.maxIteration),
-    eps: String(estimatedNewImpliedRate1.eps),
-  };
-
-  console.log(
-    "before add liquidity sy: " +
-      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
-  );
-  console.log(
-    "before add liqudity lp: " +
-      (await deployedFractleMarket.balanceOf(signers[0].getAddress())),
-  );
-
-  const calldataSingleSy = {
-    guessMin: String(s.guessMin),
-    guessMax: String(s.guessMax),
-    guessOffchain: String(s.guessOffchain),
-    maxIteration: String(s.maxIteration),
-    eps: String(s.eps),
-  };
-
-  await actionAddRemoveLiqInstance.addLiquiditySingleSy(
-    signers[0].getAddress(),
-    deployedFractleMarket.getAddress(),
-    300,
-    0,
-    calldataSingleSy,
-    calldata_guessR1,
-  );
-  console.log(
-    "after add liquidity sy: " +
-      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
-  );
-  console.log(
-    "after add liqudity lp: " +
-      (await deployedFractleMarket.balanceOf(signers[0].getAddress())),
-  );
-
-  //--------------------------------//
-
-  // swap sy for exact 100 pt --- swap sy for exact pt
-  // await FractleEUSDSY.approve(actionSwapPTInstance.getAddress(), ethers.parseEther("100000000000"));
-  // const state0 = await deployedFractleMarket.readState(actionSwapPTInstance.getAddress());
-
-  // //console.log(state0);
-  // const market0: MarketState = {
-  //     totalPt: BigNumber(state0.totalPt.toString()),
-  //     totalSy: BigNumber(state0.totalSy.toString()),
-  //     totalLp: BigNumber(state0.totalLp.toString()),
-  //     treasury: state0.treasury as `0x${string}`,
-  //     scalarRoot: BigNumber(state0.scalarRoot.toString()),
-  //     expiry: BigNumber(state0.expiry.toString()),
-  //     lifeCircle: BigNumber(state0.lifeCircle.toString()),
-  //     sAPR: BigNumber(state0.sAPR.toString()), //sAPR is 1e18 decimal
-  //     lnFeeRateRoot: BigNumber(state0.lnFeeRateRoot.toString()),
-  //     reserveFeePercent: BigNumber(state0.reserveFeePercent.toString()),
-  //     lastLnImpliedRate: BigNumber(state0.lastLnImpliedRate.toString()),
-  // };
-
-  // const sm0 = new MarketMathCore();
-  // const lastGlobalInterestUpdatedDayIndexByOracle = await deployedYT.lastGlobalInterestUpdatedDayIndexByOracle();//so-called blockTime
-  // const comp0 = sm0.getMarketPreCompute(
-  //     market0,
-  //     BigNumber("1100000000000000000"),
-  //     market0.sAPR,
-  //     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString())
-  // )
-  // //console.log("comp is :" + JSON.stringify(comp0));
-
-  // //  "calctrade" to get netSyIn etc.
-  // const CalcTradeResult0 = sm0.calcTrade(
-  //     market0,
-  //     comp0,
-  //     BigNumber("1100000000000000000"),
-  //     BigNumber("100")
-  // )
-  // console.log("calc trade result is :" + JSON.stringify(CalcTradeResult0));
-
-  // //estimate new implied rate
-  // const estimatedNewImpliedRate = sm0.estimateNewImpliedRate(
-  //     market0,
-  //     comp0,
-  //     CalcTradeResult0,
-  //     BigNumber("100"),
-  //     BigNumber("1100000000000000000"),
-  //     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()));
-
-  // console.log("estimated rate is :" + estimatedNewImpliedRate.guessOffchain);
-
-  // const beforeSwapSY0 = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  // console.log("before swap sy: " + beforeSwapSY0);
-  // const beforeSwapPt0 = await deployedPT.balanceOf(signers[0].getAddress());
-  // console.log("before swap pt: " + beforeSwapPt0);
-
-  // const calldata_guessR = {
-  //     guessMin: String(estimatedNewImpliedRate.guessMin),
-  //     guessMax: String(estimatedNewImpliedRate.guessMax),
-  //     guessOffchain: String(estimatedNewImpliedRate.guessOffchain),
-  //     maxIteration: String(estimatedNewImpliedRate.maxIteration),
-  //     eps: String(estimatedNewImpliedRate.eps)
-  // };
-
-  // await actionSwapPTInstance.swapSyForExactPt(signers[0].getAddress(), await deployedFractleMarket.getAddress(), 100, await FractleEUSDSY.totalSupply(), calldata_guessR);
-
-  // const afterSwapSY0 = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  // console.log("after swap sy: " + afterSwapSY0);
-  // const afterSwapPt0 = await deployedPT.balanceOf(signers[0].getAddress());
-  // console.log("after swap pt: " + afterSwapPt0);
-
-  //----------------------//
-
-  //short 100yt
-
-  // //deploy short yt contract
-  // const actionShortYt = await ethers.getContractFactory("ActionShortYT");
-  // const actionShortYtInstance = await actionShortYt.deploy(await actionSwapYTInstance.getAddress(), await actionSwapPTInstance.getAddress(), ethers.parseEther(String(0.1)));
-  // console.log("action short yt deployed at: " + await actionShortYtInstance.getAddress());
-
-  // //fund 2000 SY in
-  // await FractleEUSDSY.approve(await actionShortYtInstance.getAddress(), ethers.parseEther("100000000000"));
-  // await actionShortYtInstance.fundUnderlying(await FractleEUSDSY.getAddress(), 2000);
-  // const afterFundSY0 = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  // console.log("after fund sy: " + afterFundSY0);
-
-  // //do short 100 yt
-  // //estimate r first:
-  // const state0 = await deployedFractleMarket.readState(actionSwapPTInstance.getAddress());
-
-  // //console.log(state0);
-  // const market0: MarketState = {
-  //     totalPt: BigNumber(state0.totalPt.toString()),
-  //     totalSy: BigNumber(state0.totalSy.toString()),
-  //     totalLp: BigNumber(state0.totalLp.toString()),
-  //     treasury: state0.treasury as `0x${string}`,
-  //     scalarRoot: BigNumber(state0.scalarRoot.toString()),
-  //     expiry: BigNumber(state0.expiry.toString()),
-  //     lifeCircle: BigNumber(state0.lifeCircle.toString()),
-  //     sAPR: BigNumber(state0.sAPR.toString()), //sAPR is 1e18 decimal
-  //     lnFeeRateRoot: BigNumber(state0.lnFeeRateRoot.toString()),
-  //     reserveFeePercent: BigNumber(state0.reserveFeePercent.toString()),
-  //     lastLnImpliedRate: BigNumber(state0.lastLnImpliedRate.toString()),
-  // };
-
-  // const sm0 = new MarketMathCore();
-  // const lastGlobalInterestUpdatedDayIndexByOracle = await deployedYT.lastGlobalInterestUpdatedDayIndexByOracle();//so-called blockTime
-  // const comp0 = sm0.getMarketPreCompute(
-  //     market0,
-  //     BigNumber("1100000000000000000"),
-  //     market0.sAPR,
-  //     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString())
-  // )
-  // //console.log("comp is :" + JSON.stringify(comp0));
-
-  // //  "calctrade" to get netSyIn etc.
-  // const CalcTradeResult0 = sm0.calcTrade(
-  //     market0,
-  //     comp0,
-  //     BigNumber("1100000000000000000"),
-  //     BigNumber("100")
-  // )
-  // //console.log("calc trade result is :" + JSON.stringify(CalcTradeResult0));
-
-  // //estimate new implied rate
-  // const estimatedNewImpliedRate = sm0.estimateNewImpliedRate(
-  //     market0,
-  //     comp0,
-  //     CalcTradeResult0,
-  //     BigNumber("100"),
-  //     BigNumber("1100000000000000000"),
-  //     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()));
-
-  // console.log("estimated rate is :" + estimatedNewImpliedRate.guessOffchain);
-
-  // const calldata_guessR = {
-  //     guessMin: String(estimatedNewImpliedRate.guessMin),
-  //     guessMax: String(estimatedNewImpliedRate.guessMax),
-  //     guessOffchain: String(estimatedNewImpliedRate.guessOffchain),
-  //     maxIteration: String(estimatedNewImpliedRate.maxIteration),
-  //     eps: String(estimatedNewImpliedRate.eps)
-  // };
-
-  // const beforeShortSY0 = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  // console.log("before short sy: " + beforeShortSY0);
-  // const beforeShortPtInShortInstance = await deployedPT.balanceOf(await actionShortYtInstance.getAddress());
-  // console.log("before short pt: "+ beforeShortPtInShortInstance);
-
-  // await actionShortYtInstance.shortYT(await deployedFractleMarket.getAddress(), 100, calldata_guessR);
-
-  // const afterShortSY0 = await FractleEUSDSY.balanceOf(signers[0].getAddress());
-  // console.log("after short sy: " + afterShortSY0);
-  // const afterShortPtInShortInstance = await deployedPT.balanceOf(await actionShortYtInstance.getAddress());
-  // console.log("after short pt: "+ afterShortPtInShortInstance);
+  const removeLiquiditySingle =
+    await actionAddRemoveLiqInstance.removeLiquiditySingleSy(
+      signers[0].getAddress(),
+      await deployedFractleMarket.getAddress(),
+      10000000000000000000n,
+      0,
+      res_liquidityRemove.calldata_guessR,
+    );
+  await removeLiquiditySingle.wait();
+  console.log("successfully removed the liquidity single for 10");
 }
 
 main()
@@ -844,7 +549,7 @@ main()
   });
 
 export class PreCalculation_Pt {
-  exactSyIn?: BigNumber
+  exactSyIn?: BigNumber;
   exactPtIn?: BigNumber;
 }
 
@@ -853,6 +558,105 @@ export class PreCalculation_Yt {
   exactYtInForSy?: BigNumber;
   exactPtInForYt?: BigNumber;
   exactYtInForPt?: BigNumber;
+}
+
+export class LiquidityAddRemove {
+  addLiquiditySingle?: BigNumber;
+  removeLiquiditySingle?: BigNumber;
+}
+
+async function preCalculationLiquidityAddRemoveSingle(
+  deployedFractleMarket: FractleMarketV3 & {
+    deploymentTransaction(): ContractTransactionResponse;
+  },
+  deployedYt: FractleYieldTokenV3 & {
+    deploymentTransaction(): ContractTransactionResponse;
+  },
+  actionAddRemoveLiqInstance: ActionAddRemoveLiq & {
+    deploymentTransaction(): ContractTransactionResponse;
+  },
+  params: LiquidityAddRemove,
+) {
+  if (params.removeLiquiditySingle && params.addLiquiditySingle) {
+    throw new Error("insufficient params");
+  }
+  const core = new MarketMathCore();
+  const state0 = await deployedFractleMarket.readState(
+    actionAddRemoveLiqInstance.getAddress(),
+  );
+  const market0: MarketState = {
+    totalPt: BigNumber(state0.totalPt.toString()),
+    totalSy: BigNumber(state0.totalSy.toString()),
+    totalLp: BigNumber(state0.totalLp.toString()),
+    treasury: state0.treasury as `0x${string}`,
+    scalarRoot: BigNumber(state0.scalarRoot.toString()),
+    expiry: BigNumber(state0.expiry.toString()),
+    lifeCircle: BigNumber(state0.lifeCircle.toString()),
+    sAPR: BigNumber(state0.sAPR.toString()), //sAPR is 1e18 decimal
+    lnFeeRateRoot: BigNumber(state0.lnFeeRateRoot.toString()),
+    reserveFeePercent: BigNumber(state0.reserveFeePercent.toString()),
+    lastLnImpliedRate: BigNumber(state0.lastLnImpliedRate.toString()),
+  };
+
+  const lastGlobalInterestUpdatedDayIndexByOracle =
+    await deployedYt.lastGlobalInterestUpdatedDayIndexByOracle(); //so-called blockTime
+
+  const comp0 = core.getMarketPreCompute(
+    market0,
+    BigNumber("1100000000000000000"),
+    market0.sAPR,
+    BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()),
+  );
+
+  let guess, ptToSwap;
+  if (params.addLiquiditySingle) {
+    guess = core.calculateAddLiquiditySingleSy(
+      market0,
+      BigNumber("1100000000000000000"),
+      comp0,
+      params.addLiquiditySingle,
+    );
+  } else {
+    const resultOfDualRemove = core.calculateRemoveLiquidity(
+      market0,
+      params.removeLiquiditySingle as BigNumber,
+    );
+    ptToSwap = resultOfDualRemove.netPtToAccount.negated();
+  }
+
+  const estimatedNewImpliedRate = core.estimateNewImpliedRate(
+    market0,
+    comp0,
+    core.calcTrade(
+      market0,
+      comp0,
+      BigNumber("1100000000000000000"),
+      params.addLiquiditySingle
+        ? (guess?.guessOffchain as BigNumber)
+        : (ptToSwap as BigNumber),
+    ),
+    params.addLiquiditySingle
+      ? (guess?.guessOffchain as BigNumber)
+      : (ptToSwap as BigNumber),
+    BigNumber("1100000000000000000"),
+    BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()),
+  );
+  return {
+    calldata0: {
+      guessMin: String(guess?.guessMin),
+      guessMax: String(guess?.guessMax),
+      guessOffchain: String(guess?.guessOffchain),
+      maxIteration: String(guess?.maxIteration),
+      eps: String(guess?.eps),
+    },
+    calldata_guessR: {
+      guessMin: String(estimatedNewImpliedRate.guessMin),
+      guessMax: String(estimatedNewImpliedRate.guessMax),
+      guessOffchain: String(estimatedNewImpliedRate.guessOffchain),
+      maxIteration: String(estimatedNewImpliedRate.maxIteration),
+      eps: String(estimatedNewImpliedRate.eps),
+    },
+  };
 }
 
 async function preCalculationSwapYt(
@@ -884,7 +688,6 @@ async function preCalculationSwapYt(
     reserveFeePercent: BigNumber(state0.reserveFeePercent.toString()),
     lastLnImpliedRate: BigNumber(state0.lastLnImpliedRate.toString()),
   };
-  console.log(market0);
 
   const lastGlobalInterestUpdatedDayIndexByOracle =
     await deployedYt.lastGlobalInterestUpdatedDayIndexByOracle(); //so-called blockTime
@@ -902,7 +705,8 @@ async function preCalculationSwapYt(
     guess = new MarketMathCore().calculateSwapExactSyForYt(
       market0,
       BigNumber("1100000000000000000"),
-      comp0, params.exactSyInForYt
+      comp0,
+      params.exactSyInForYt,
     );
     net = guess.guessOffchain.multipliedBy(-1);
   } else if (params.exactPtInForYt) {
@@ -910,12 +714,9 @@ async function preCalculationSwapYt(
       market0,
       BigNumber("1100000000000000000"),
       comp0,
-      params.exactPtInForYt
+      params.exactPtInForYt,
     );
-    console.log("a")
-    console.log(guess.guessOffchain);
     net = guess.guessOffchain.multipliedBy(-1);
-    console.log(net);
   } else if (params.exactYtInForPt) {
     guess = core.calculateSwapExactYtForPt(
       market0,
@@ -942,22 +743,6 @@ async function preCalculationSwapYt(
     BigNumber("1100000000000000000"),
     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()),
   );
-  console.log(estimatedNewImpliedRate);
-  console.log({
-    guessMin: String(guess?.guessMin),
-    guessMax: String(guess?.guessMax),
-    guessOffchain: String(guess?.guessOffchain),
-    maxIteration: String(guess?.maxIteration),
-    eps: String(guess?.eps),
-  })
-  console.log({
-    guessMin: String(estimatedNewImpliedRate.guessMin),
-    guessMax: String(estimatedNewImpliedRate.guessMax),
-    guessOffchain: String(estimatedNewImpliedRate.guessOffchain),
-    maxIteration: String(estimatedNewImpliedRate.maxIteration),
-    eps: String(estimatedNewImpliedRate.eps),
-  })
-
   return {
     calldata0: {
       guessMin: String(guess?.guessMin),
@@ -1023,7 +808,7 @@ async function preCalculationSwapPt(
       market0,
       BigNumber("1100000000000000000"),
       comp0,
-        params.exactSyIn
+      params.exactSyIn,
     );
   }
   const estimateNewImpliedRate = new MarketMathCore().estimateNewImpliedRate(
@@ -1035,11 +820,11 @@ async function preCalculationSwapPt(
       BigNumber("1100000000000000000"),
       params.exactSyIn
         ? BigNumber(guessPt.guessOffchain)
-        : params.exactPtIn as BigNumber,
+        : (params.exactPtIn as BigNumber),
     ),
     params.exactSyIn
       ? BigNumber(guessPt.guessOffchain)
-      : params.exactPtIn as BigNumber,
+      : (params.exactPtIn as BigNumber),
     BigNumber("1100000000000000000"),
     BigNumber(lastGlobalInterestUpdatedDayIndexByOracle.toString()),
   );

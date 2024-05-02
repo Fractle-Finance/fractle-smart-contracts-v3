@@ -7,8 +7,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @dev Fractle's ERC20 implementation, modified from @openzeppelin implementation
  * Changes are:
@@ -163,8 +161,6 @@ contract FractleERC20 is Context, IERC20, IERC20Metadata {
     ) external virtual override nonReentrant returns (bool) {
         address spender = _msgSender();
         _spendAllowance(from, spender, amount);
-        console.log(amount);
-        console.log(IERC20(address(this)).balanceOf(from));
         _transfer(from, to, amount);
         return true;
     }

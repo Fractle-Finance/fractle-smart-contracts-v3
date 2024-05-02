@@ -602,7 +602,6 @@ export class MarketMathCore {
     input: BigNumber,
   ) {
     let [Q, a, b] = this.calculateSectionTwo(market, exchangeRate, comp, input);
-    console.log([Q,a,b]);
     const eq = Q.plus(1);
     const X = Q.multipliedBy(b).dividedBy(eq).minus(a);
 
@@ -616,19 +615,17 @@ export class MarketMathCore {
   }
 
   calculateSwapExactYtForPt(
-      market: MarketState,
-      exchangeRate: BigNumber,
-      comp: MarketPreCompute,
-      input: BigNumber,
+    market: MarketState,
+    exchangeRate: BigNumber,
+    comp: MarketPreCompute,
+    input: BigNumber,
   ) {
-    console.log("GG");
     let [Q, a, b] = this.calculateSectionFour(
-        market,
-        exchangeRate,
-        comp,
-        input,
+      market,
+      exchangeRate,
+      comp,
+      input,
     );
-    console.log([Q,a,b])
     const eq = Q.plus(1);
     const X = a.minus(Q.multipliedBy(b).dividedBy(eq));
 
@@ -665,9 +662,7 @@ export class MarketMathCore {
     };
   }
 
-
-
-  calculateAddLiquiditySignleSy(
+  calculateAddLiquiditySingleSy(
     market: MarketState,
     exchangeRate: BigNumber,
     comp: MarketPreCompute,
@@ -681,6 +676,24 @@ export class MarketMathCore {
       guessOffchain: X.integerValue(),
       maxIteration: BigNumber(7),
       eps: BigNumber(1e16),
+    };
+  }
+
+  calculateRemoveLiquidity(market: MarketState, lptoRemove: BigNumber) {
+    let netSyToAccount = lptoRemove
+      .multipliedBy(market.totalSy)
+      .dividedBy(market.totalLp);
+    let netPtToAccount = lptoRemove
+      .multipliedBy(market.totalPt)
+      .dividedBy(market.totalLp);
+
+    market.totalLp = market.totalLp.minus(lptoRemove);
+    market.totalSy = market.totalSy.minus(netSyToAccount);
+    market.totalPt = market.totalPt.minus(netPtToAccount);
+
+    return {
+      netSyToAccount: netSyToAccount,
+      netPtToAccount: netPtToAccount,
     };
   }
 }
