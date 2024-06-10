@@ -12,9 +12,24 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    'ten': {
+      url: "https://rpc.tenderly.co/fork/796fe9db-a5c8-4b9a-b651-c0f2e0a27bfe",
+      allowUnlimitedContractSize: true,
+      chainId: 1,
+      accounts: ['7a8ff0d60c4dcfeed173c8284c086095c6b72b66bfbdb8860d4b51f31bde4a6d']
+    },
     'hardhat': {
       allowUnlimitedContractSize: true,
       chainId:9090,
+    },
+    'arbitrum': {
+      url: 'https://arb-mainnet.g.alchemy.com/v2/47SxM1HQgXWeKVL9rYVS6A4LZ8B_Ktk0',
+      accounts: [
+        '7a8ff0d60c4dcfeed173c8284c086095c6b72b66bfbdb8860d4b51f31bde4a6d'
+      ],
+      allowUnlimitedContractSize: true,
+      chainId: 42161,
+      gasPrice: 32000000
     },
     'polygon': {
       url: 'https://polygon-mainnet.g.alchemy.com/v2/crGfXSjivssOPlyJaiSjnBPKrSg1BtKd',
