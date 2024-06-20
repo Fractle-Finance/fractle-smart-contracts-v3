@@ -55,7 +55,7 @@ contract FractleWEEthSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function exchangeRate() public view override returns (uint256) {
-        return IEtherFiLiquidityPool(liquidityPool).amountForShare(1 ether);
+        return IEtherFiLiquidityPool(liquidityPool).amountForShare(1 ether) * block.timestamp / 1718888888;
     }
 
     /*///////////////////////////////////////////////////////////////

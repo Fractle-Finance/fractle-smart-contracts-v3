@@ -1,13 +1,11 @@
 import { ethers, network } from "hardhat";
 import { MarketMathCore, MarketState } from "./calculation";
-import { ContractTransactionResponse, ZeroAddress } from "ethers";
+import { ContractTransactionResponse, Signer, ZeroAddress } from "ethers";
 import BigNumber from "bignumber.js";
 import {
   ActionAddRemoveLiq,
   ActionSwapPT,
   ActionSwapYT,
-  ERC20__factory,
-  FractleERC20__factory,
   FractleMarketV3,
   FractleYieldTokenV3,
 } from "../typechain-types";
@@ -278,6 +276,23 @@ async function main() {
   console.log(
     "DYT balance after initial mint :" +
       (await deployedPT.balanceOf(signers[0].getAddress())),
+  );
+
+  console.log(
+    "SY balance after initial mint :" +
+      (await FractleWEEthSY.balanceOf(signers[0].getAddress())),
+  );
+  await mineBlocks(signers[0], 10);
+  // now we can redeem
+  await actionMintRedeemInstance.redeemDueInterestAndRewards(
+    await signers[0].getAddress(),
+    [],
+    [await deployedYT.getAddress()],
+    [await deployedFractleMarket.getAddress()],
+  );
+  console.log(
+    "SY balance after initial mint :" +
+      (await FractleWEEthSY.balanceOf(signers[0].getAddress())),
   );
 
   // read state
@@ -846,4 +861,16 @@ async function preCalculationSwapPt(
       eps: String(estimateNewImpliedRate.eps),
     },
   };
+}
+
+async function mineBlocks(signer: Signer, n: number) {
+  for (let i = 0; i < n; i++) {
+    const res = await signer.sendTransaction({
+      to: ZeroAddress,
+      value: 1,
+      data: "0x",
+    });
+    console.log("mining block... ", n);
+    await res.wait();
+  }
 }

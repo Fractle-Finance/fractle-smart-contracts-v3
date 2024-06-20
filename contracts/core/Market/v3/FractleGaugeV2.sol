@@ -5,6 +5,7 @@ import "../../../interfaces/IPGauge.sol";
 import "../../../interfaces/IStandardizedYield.sol";
 import "../../../interfaces/IPMarketFactoryV2.sol";
 import "../../../interfaces/IPExternalRewardDistributor.sol";
+import "../../../interfaces/IPGaugeController.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 import "../../RewardManager/RewardManager.sol";
@@ -23,7 +24,7 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
     uint256 internal constant TOKENLESS_PRODUCTION = 40;
 
     address internal immutable FRACTLE;
-    address internal immutable externalRewardDistributor;
+    address internal immutable gaugeController;
 
     uint256 public totalActiveSupply;
     mapping(address => uint256) public activeBalance;
@@ -31,11 +32,11 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
     constructor(
         address _SY,
         address _FRACTLE,
-        address _externalRewardDistributor
+        address _gaugeController
     ) {
         SY = _SY;
         FRACTLE = _FRACTLE;
-        externalRewardDistributor = _externalRewardDistributor;
+        gaugeController = _gaugeController;
     }
 
     /**
@@ -73,7 +74,7 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
 
     function _redeemExternalReward() internal virtual override {
         IStandardizedYield(SY).claimRewards(address(this));
-//        IPExternalRewardDistributor(externalRewardDistributor).redeemRewards();
+        IPGaugeController(gaugeController).redeemMarketReward();
     }
 
     function _stakedBalance(address user) internal view virtual returns (uint256);

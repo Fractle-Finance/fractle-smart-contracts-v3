@@ -123,22 +123,11 @@ library Errors {
     // Liquidity Mining
     error VCInactivePool(address pool);
     error VCPoolAlreadyActive(address pool);
-    error VCZeroVeFractle(address user);
     error VCExceededMaxWeight(uint256 totalWeight, uint256 maxWeight);
     error VCEpochNotFinalized(uint256 wTime);
     error VCPoolAlreadyAddAndRemoved(address pool);
 
-    error VEInvalidNewExpiry(uint256 newExpiry);
-    error VEExceededMaxLockTime();
-    error VEInsufficientLockTime();
-    error VENotAllowedReduceExpiry();
-    error VEZeroAmountLocked();
-    error VEPositionNotExpired();
-    error VEZeroPosition();
-    error VEZeroSlope(uint128 bias, uint128 slope);
-    error VEReceiveOldSupply(uint256 msgTime);
-
-    error GCNotFractleMarket(address caller);
+    error GCNotPointsMarket(address caller);
     error GCNotVotingController(address caller);
 
     error InvalidWTime(uint256 wTime);
