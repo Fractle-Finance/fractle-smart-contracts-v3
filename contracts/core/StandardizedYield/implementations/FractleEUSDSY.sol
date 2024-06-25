@@ -39,7 +39,7 @@ contract FractleEUSDSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function exchangeRate() public view virtual override returns (uint256) {
-        return IEUSD(eUSD).getMintedEUSDByShares(1e18);
+        return IEUSD(eUSD).getMintedEUSDByShares(1e18) * block.timestamp / 1718888888;
     }
 
     /*///////////////////////////////////////////////////////////////

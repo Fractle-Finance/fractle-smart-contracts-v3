@@ -51,6 +51,8 @@ contract FractleYieldTokenV3 is
     uint128 public pyIndexLastUpdatedBlock;
     uint128 internal _pyIndexStored;
 
+    uint256 internal lastExchangeRate;
+
     PostExpiryData public postExpiry;
 
     uint256 internal _lastCollectedInterestIndex;
@@ -376,11 +378,16 @@ contract FractleYieldTokenV3 is
     //////////////////////////////////////////////////////////////*/
 
     function _pyIndexCurrent() internal returns (uint256 currentIndex) {
+        uint256 newExchangeRate = IStandardizedYield(SY).exchangeRate();
+        if (newExchangeRate != lastExchangeRate) {
+            lastExchangeRate = newExchangeRate;
+            _lastGlobalInterestUpdatedDayIndexByOracle ++;
+        }
         if (doCacheIndexSameBlock && pyIndexLastUpdatedBlock == block.number)
             return _pyIndexStored;
 
         uint128 index128 = PMath
-            .max(IStandardizedYield(SY).exchangeRate(), _pyIndexStored)
+            .max(lastExchangeRate, _pyIndexStored)
             .Uint128();
 
         currentIndex = index128;

@@ -704,7 +704,7 @@ class MiniHelpers {
     return expiry <= blockTime;
   }
   static isExpired(expiry: BigNumber, blockTime: BigNumber) {
-    return expiry <= blockTime;
+    return Number(expiry) <= Number(blockTime);
   }
   static isTimeInThePast(timestamp: BigNumber, blockTime: BigNumber) {
     return timestamp <= blockTime;

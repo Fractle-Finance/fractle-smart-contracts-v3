@@ -169,19 +169,17 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             uint256 accrued;
 
             (accrued, pyIndex) = _collectInterest();
-            //在收到了一笔accrued之后，要在FPT DYT之间做分配，更新两者的index
+            //  distribute between FPT and DYT and update the index
             index = globalInterestIndex;
             indexFPT = globalInterestIndexFPT;
             
-            //初始化
             if (index == 0) index = INITIAL_INTEREST_INDEX;
             if (indexFPT == 0) indexFPT = INITIAL_INTEREST_INDEX;
             
-            //要判断accrued中多少给FPT，多少给DYT。需要先看距离上次扰动，过了多少“天”
-            //"天数"的前进是由oracle监听SY index而得的。是一个完全外部性的东西，即使PFT DYT完全静止，它也会往前走
+            // update _lastGlobalInterestUpdatedDayIndexByOracle
             if (totalShares != 0){
-                uint256 delatDay = _lastGlobalInterestUpdatedDayIndexByOracle - _lastInterestDayIndex; // normal number without decimals
-                uint256 accruedForFPT = sAPRForFPT * delatDay;
+                uint256 deltaDay = _lastGlobalInterestUpdatedDayIndexByOracle - _lastInterestDayIndex; // normal number without decimals
+                uint256 accruedForFPT = sAPRForFPT * deltaDay;
                 uint256 accruedForDYT = accrued > accruedForFPT ? accrued-accruedForFPT : 0;
                 index += accruedForDYT.divDown(totalShares);
                 indexFPT += accruedForFPT.divDown(totalShares);

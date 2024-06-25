@@ -10,9 +10,6 @@ import "./FractleGaugeV3.sol";
 import "../OracleLib.sol";
 import "../../../router/base/MarketApproxLib.sol";
 
-import "hardhat/console.sol";
-
-
 /**
 Invariance to maintain:
 - Internal balances totalPt & totalSy not interfered by people transferring tokens in directly

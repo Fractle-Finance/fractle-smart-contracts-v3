@@ -1,6 +1,6 @@
 import { ethers, network } from "hardhat";
 import { MarketMathCore, MarketState } from "./calculation";
-import { ContractTransactionResponse, ZeroAddress } from "ethers";
+import { ContractTransactionResponse, Signer, ZeroAddress } from "ethers";
 import BigNumber from "bignumber.js";
 import {
   ActionAddRemoveLiq,
@@ -10,6 +10,7 @@ import {
   FractleYieldTokenV3,
 } from "../typechain-types";
 import { bignumber } from "mathjs";
+import { delay } from "@nomiclabs/hardhat-etherscan/dist/src/etherscan/EtherscanService";
 
 async function main() {
   console.log("detected network " + network.name);
@@ -279,6 +280,35 @@ async function main() {
   console.log(
     "DYT balance after initial mint :" +
       (await deployedPT.balanceOf(signers[0].getAddress())),
+  );
+
+  // dyt case
+  console.log(
+    "SY balance before initial mint :" +
+      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
+  );
+  await mineBlocks(signers[0], 100);
+  // now we can claim dyt tokens
+  await actionMintRedeemInstance.redeemDueInterestAndRewards(
+    await signers[0].getAddress(),
+    [],
+    [await deployedYT.getAddress()],
+    [await deployedFractleMarket.getAddress()],
+  );
+  console.log(
+    "SY balance after claim sy rewards:" +
+      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
+  );
+
+  await mineBlocks(signers[0], 100);
+  // now we can claim fpt tokens
+  await actionMintRedeemInstance.redeemFPTRewards(
+    await signers[0].getAddress(),
+    [await deployedPT.getAddress()],
+  );
+  console.log(
+    "SY balance after claim fpt rewards:" +
+      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
   );
 
   // read state
@@ -844,4 +874,16 @@ async function preCalculationSwapPt(
       eps: String(estimateNewImpliedRate.eps),
     },
   };
+}
+
+async function mineBlocks(signer: Signer, n: number) {
+  for (let i = 0; i < n; i++) {
+    const res = await signer.sendTransaction({
+      to: ZeroAddress,
+      value: 1,
+      data: "0x",
+    });
+    await delay(100);
+    await res.wait();
+  }
 }
