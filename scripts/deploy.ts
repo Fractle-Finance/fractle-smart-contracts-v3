@@ -287,7 +287,9 @@ async function main() {
     "SY balance before initial mint :" +
       (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
   );
-  await mineBlocks(signers[0], 100);
+
+  await EUSD.changeTotalSupply(10001);
+
   // now we can claim dyt tokens
   await actionMintRedeemInstance.redeemDueInterestAndRewards(
     await signers[0].getAddress(),
@@ -296,11 +298,12 @@ async function main() {
     [await deployedFractleMarket.getAddress()],
   );
   console.log(
-    "SY balance after claim sy rewards:" +
+    "SY balance after claim yt rewards:" +
       (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
   );
 
-  await mineBlocks(signers[0], 100);
+  await EUSD.changeTotalSupply(10001);
+
   // now we can claim fpt tokens
   await actionMintRedeemInstance.redeemFPTRewards(
     await signers[0].getAddress(),

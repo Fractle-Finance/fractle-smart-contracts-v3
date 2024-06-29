@@ -139,6 +139,10 @@ contract EUSDMock is IERC20, Context {
         return _totalSupply;
     }
 
+    function changeTotalSupply(uint256 rate) public {
+        _totalSupply = _totalSupply * rate / 10000;
+    }
+
     /**
      * @return the amount of tokens owned by the `_account`.
      *
