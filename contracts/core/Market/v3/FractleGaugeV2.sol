@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "../../../interfaces/IPGauge.sol";
 import "../../../interfaces/IStandardizedYield.sol";
 import "../../../interfaces/IPMarketFactoryV2.sol";
+import "../../../interfaces/IPPrincipalToken.sol";
 import "../../../interfaces/IPExternalRewardDistributor.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
@@ -19,6 +20,7 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
     using ArrayLib for address[];
 
     address private immutable SY;
+    address private PT;
 
     uint256 internal constant TOKENLESS_PRODUCTION = 40;
 
@@ -30,10 +32,12 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
 
     constructor(
         address _SY,
+        address _PT,
         address _FRACTLE,
         address _externalRewardDistributor
     ) {
         SY = _SY;
+        PT = _PT;
         FRACTLE = _FRACTLE;
         externalRewardDistributor = _externalRewardDistributor;
     }
@@ -73,7 +77,8 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
 
     function _redeemExternalReward() internal virtual override {
         IStandardizedYield(SY).claimRewards(address(this));
-//        IPExternalRewardDistributor(externalRewardDistributor).redeemRewards();
+        IPPrincipalToken(PT).redeemInterest(address(this), true);
+        // IPExternalRewardDistributor(externalRewardDistributor).redeemRewards();
     }
 
     function _stakedBalance(address user) internal view virtual returns (uint256);

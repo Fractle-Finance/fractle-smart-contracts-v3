@@ -9,12 +9,16 @@ import "../libraries/ArrayLib.sol";
 import "../../interfaces/IPExternalRewardDistributor.sol";
 import "../../interfaces/IPMarketFactory.sol";
 import "../../interfaces/IPMarket.sol";
+import "../../interfaces/IPFPTRewardInSY.sol";
+import {FractleERC20} from "../erc20/FractleERC20.sol";
 
 contract FractleExternalRewardDistributor is
     IPExternalRewardDistributor,
+    IPFPTRewardInSY,
     BoringOwnableUpgradeable,
     UUPSUpgradeable,
-    TokenHelper
+    TokenHelper,
+    FractleERC20
 {
     using PMath for uint256;
     using ArrayLib for address[];
@@ -35,7 +39,12 @@ contract FractleExternalRewardDistributor is
         _;
     }
 
-    constructor(address _marketFactory) initializer {
+    constructor(
+        address _marketFactory,
+        string memory _name,
+        string memory _symbol,
+        uint8 __decimals
+    ) FractleERC20(_name, _symbol, __decimals) initializer {
         marketFactory = _marketFactory;
     }
 
@@ -49,6 +58,22 @@ contract FractleExternalRewardDistributor is
         return rewardTokens[market];
     }
 
+    function mintForMarket(address market, uint256 amount) external override {
+        if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
+            revert("invalid caller");
+        }
+        _mint(market, amount);
+    }
+
+    function redeemForSy(address market, uint256 amount, address user) external override {
+        if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
+            revert("invalid caller");
+        }
+        _burn(msg.sender, amount);
+        _transfer(address(this), user, amount);
+    }
+
+    // there are only one kind of rewrds: point
     function redeemRewards() external {
         address market = msg.sender;
         address[] memory tokens = rewardTokens[market];

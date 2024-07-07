@@ -6,7 +6,7 @@ import "../../../interfaces/IPMarketFactory.sol";
 import "../../../interfaces/IPMarketSwapCallback.sol";
 import "../../erc20/FractleERC20.sol";
 
-import "./FractleGaugeV3.sol";
+import "./FractleGaugeV2.sol";
 import "../OracleLib.sol";
 import "../../../router/base/MarketApproxLib.sol";
 
@@ -69,6 +69,7 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         FractleERC20(NAME, SYMBOL, 18)
         FractleGaugeV2(
             IPPrincipalToken(_PT).SY(),
+            _PT,
             _FRACTLE,
             _externalRewardDistributor
         )

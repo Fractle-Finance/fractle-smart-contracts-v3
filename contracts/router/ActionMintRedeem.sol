@@ -147,20 +147,14 @@ contract ActionMintRedeem is IPActionMintRedeem, ActionBaseMintRedeem {
     }
 
     /**
- * @notice A unified interface for redeeming rewards and interests for any SYs,
+     * @notice A unified interface for redeeming rewards and interests for any SYs,
      * YTs, and markets alike for `user`.
      * @dev returns arrays of amounts claimed for each asset.
      */
-    function redeemFPTRewards(
-        address user,
-        address[] calldata pts
-    ) external {
+    function redeemFPTRewards(address user, address[] calldata pts) external {
         unchecked {
             for (uint256 i = 0; i < pts.length; ++i) {
-                IPPrincipalToken(pts[i]).redeemInterest(
-                    user,
-                    true
-                );
+                IPPrincipalToken(pts[i]).redeemInterest(user, true);
             }
         }
     }

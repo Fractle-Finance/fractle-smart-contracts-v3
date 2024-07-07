@@ -106,8 +106,5 @@ interface IPActionMintRedeem {
         address[] calldata markets
     ) external;
 
-    function redeemFPTRewards(
-        address user,
-        address[] calldata fpts
-    ) external;
+    function redeemFPTRewards(address user, address[] calldata fpts) external;
 }

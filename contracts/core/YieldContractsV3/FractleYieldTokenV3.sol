@@ -88,9 +88,11 @@ contract FractleYieldTokenV3 is
         uint256 _expiry,
         uint256 _sAPR,
         uint256 _lifeCircle,
-        bool _doCacheIndexSameBlock
+        bool _doCacheIndexSameBlock,
+        address externalRewardDistributor,
+        address marketFactory
     ) FractleERC20(_name, _symbol, __decimals)
-      InterestManagerYTV3(_sAPR) {
+      InterestManagerYTV3(_sAPR, externalRewardDistributor, marketFactory) {
         SY = _SY;
         PT = _PT;
         expiry = _expiry;

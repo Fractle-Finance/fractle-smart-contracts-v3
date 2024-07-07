@@ -5,6 +5,8 @@ import "../../interfaces/IPYieldTokenV3.sol";
 import "../../interfaces/IPPrincipalToken.sol";
 import "../../interfaces/IPInterestManagerYTV2.sol";
 import "../../interfaces/IPYieldContractFactory.sol";
+import "../../interfaces/IPMarketFactory.sol";
+import "../../interfaces/IPFPTRewardInSY.sol";
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -41,6 +43,10 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
 
     uint256 public globalInterestIndexFPT;
 
+    address private externalRewardDistributor;
+
+    address private marketFactory;
+
     //"day index" is index of day, 1,2,3,...,N
     //last interest day index is the day index of prev interest updating day.
     //it will be 0,1,2,3,....,N
@@ -59,8 +65,10 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
 
     uint256 internal constant INITIAL_INTEREST_INDEX = 1;
 
-    constructor(uint256 _sAPR){
+    constructor(uint256 _sAPR, address _externalRewardDistributor, address _marketFactory) {
         sAPRForFPT = _sAPR;
+        externalRewardDistributor = _externalRewardDistributor;
+        marketFactory = _marketFactory;
     }
 
     function lastGlobalInterestUpdatedDayIndexByOracle() public view returns(uint256){
@@ -108,7 +116,12 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
     ) internal returns (uint256 interestAmount) {
         interestAmount = userInterestFPT[user].accrued;
         userInterestFPT[user].accrued = 0;
-        _transferOut(SY, user, interestAmount);
+        if (IPMarketFactory(marketFactory).isValidMarket(user)) {
+            _transferOut(SY, externalRewardDistributor, interestAmount);
+            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(address(this), interestAmount);
+        } else {
+            _transferOut(SY, user, interestAmount);
+        }
     }
 
     // should only be callable from `_distributeInterestForTwo` & make sure user != address(0) && user != address(this)

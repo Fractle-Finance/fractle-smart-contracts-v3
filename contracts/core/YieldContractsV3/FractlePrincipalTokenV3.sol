@@ -74,7 +74,6 @@ contract FractlePrincipalTokenV3 is FractleERC20Permit, Initializable, IPPrincip
         address user,
         bool redeemInterest
     ) external nonReentrant updateData returns (uint256 interestOut) {
-
         if (redeemInterest) {
             IPYieldTokenV3(YT).updateAndDistributeInterestFPT(user);
             interestOut = IPYieldTokenV3(YT).doTransferOutInterestFPT(user, SY);

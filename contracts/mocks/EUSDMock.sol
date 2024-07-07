@@ -140,7 +140,7 @@ contract EUSDMock is IERC20, Context {
     }
 
     function changeTotalSupply(uint256 rate) public {
-        _totalSupply = _totalSupply * rate / 10000;
+        _totalSupply = (_totalSupply * rate) / 10000;
     }
 
     /**
