@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./RewardManagerAbstract.sol";
+import "../../interfaces/IPFPTRewardInSY.sol";
 
 /// NOTE: This RewardManager is used with SY & YTv2 & FractleMarket. For YTv1, it will use RewardManagerAbstract
 /// NOTE: RewardManager must not have duplicated rewardTokens
@@ -55,7 +56,8 @@ abstract contract RewardManager is RewardManagerAbstract {
     /// @dev this function also has to update rewardState.lastBalance
     function _doTransferOutRewards(
         address user,
-        address receiver
+        address receiver,
+        address externalRewardDistributor
     ) internal virtual override returns (uint256[] memory rewardAmounts) {
         address[] memory tokens = _getRewardTokens();
         rewardAmounts = new uint256[](tokens.length);
@@ -64,7 +66,12 @@ abstract contract RewardManager is RewardManagerAbstract {
             if (rewardAmounts[i] != 0) {
                 userReward[tokens[i]][user].accrued = 0;
                 rewardState[tokens[i]].lastBalance -= rewardAmounts[i].Uint128();
-                _transferOut(tokens[i], receiver, rewardAmounts[i]);
+                if (tokens[i] == externalRewardDistributor) {
+                    // we retrieve from the 'real' token from the externalRewardDistributor
+                    IPFPTRewardInSY(externalRewardDistributor).redeemForSy(rewardAmounts[i], user);
+                } else {
+                    _transferOut(tokens[i], receiver, rewardAmounts[i]);
+                }
             }
         }
     }

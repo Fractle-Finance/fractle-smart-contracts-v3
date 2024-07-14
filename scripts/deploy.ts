@@ -9,7 +9,6 @@ import {
   FractleMarketV3,
   FractleYieldTokenV3,
 } from "../typechain-types";
-import { bignumber } from "mathjs";
 import { delay } from "@nomiclabs/hardhat-etherscan/dist/src/etherscan/EtherscanService";
 
 async function main() {

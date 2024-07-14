@@ -9,7 +9,6 @@ import "../interfaces/IAddressProvider.sol";
 import "../interfaces/IPMarket.sol";
 import "../core/libraries/Errors.sol";
 
-import "./base/ActionBaseCallback.sol";
 import "../core/libraries/TokenHelper.sol";
 
 contract ActionShortYT is TokenHelper {

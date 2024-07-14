@@ -3,7 +3,6 @@ pragma solidity 0.8.17;
 
 import "../../../interfaces/IPMarket.sol";
 import "../../../interfaces/IPMarketFactory.sol";
-import "../../../interfaces/IPMarketSwapCallback.sol";
 import "../../erc20/FractleERC20.sol";
 
 import "./FractleGaugeV2.sol";
@@ -199,10 +198,6 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
 
         _writeState(market);
 
-        if (data.length > 0) {
-            IPMarketSwapCallback(msg.sender).swapCallback(exactPtIn.neg(), netSyOut.Int(), data);
-        }
-
         if (_selfBalance(PT) < market.totalPt.Uint())
             revert Errors.MarketInsufficientPtReceived(_selfBalance(PT), market.totalPt.Uint());
 
@@ -241,10 +236,6 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         IERC20(SY).safeTransfer(market.treasury, netSyToReserve);
 
         _writeState(market);
-
-        if (data.length > 0) {
-            IPMarketSwapCallback(msg.sender).swapCallback(exactPtOut.Int(), netSyIn.neg(), data);
-        }
 
         // have received enough SY
         if (_selfBalance(SY) < market.totalSy.Uint())

@@ -3,5 +3,5 @@ pragma solidity ^0.8.0;
 
 interface IPFPTRewardInSY {
     function mintForMarket(address market, uint256 amount) external;
-    function redeemForSy(address market, uint256 amount, address user) external;
+    function redeemForSy(uint256 amount, address user) external;
 }

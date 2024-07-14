@@ -8,13 +8,10 @@ import "../interfaces/IAddressProvider.sol";
 import "../interfaces/IPMarket.sol";
 import "../core/libraries/Errors.sol";
 
-import "./base/ActionBaseCallback.sol";
-
 /// @dev All swap actions will revert if market is expired
 contract ActionSwapYT is
-    ActionBaseCallback,
     IPActionSwapYT,
-    ActionBaseMintRedeem
+    ActionBaseMintRedeem, CallbackHelper
 {
     using PMath for uint256;
     using PMath for int256;
@@ -26,7 +23,7 @@ contract ActionSwapYT is
     constructor(
         IAddressProvider provider,
         uint256 providerId
-    ) ActionBaseCallback(_getMarketFactory(provider, providerId)) {}
+    ) {}
 
     function _getMarketFactory(
         IAddressProvider provider,
