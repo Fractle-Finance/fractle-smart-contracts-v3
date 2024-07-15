@@ -65,12 +65,12 @@ contract FractleExternalRewardDistributor is
         _mint(market, amount);
     }
 
-    function redeemForSy(address market, uint256 amount, address user) external override {
+    function redeemForSy(uint256 amount, address user) external override {
         if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
             revert("invalid caller");
         }
         _burn(msg.sender, amount);
-        _transfer(address(this), user, amount);
+        IERC20(msg.sender).transfer(user, amount);
     }
 
     // there are only one kind of rewrds: point

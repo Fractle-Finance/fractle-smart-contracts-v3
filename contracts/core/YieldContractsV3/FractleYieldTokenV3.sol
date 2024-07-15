@@ -56,6 +56,7 @@ contract FractleYieldTokenV3 is
     PostExpiryData public postExpiry;
 
     uint256 internal _lastCollectedInterestIndex;
+    address public externalRewardDistributor;
 
     modifier updateData() {
         if (isExpired()) _setPostExpiryData();
@@ -89,10 +90,10 @@ contract FractleYieldTokenV3 is
         uint256 _sAPR,
         uint256 _lifeCircle,
         bool _doCacheIndexSameBlock,
-        address externalRewardDistributor,
+        address _externalRewardDistributor,
         address marketFactory
     ) FractleERC20(_name, _symbol, __decimals)
-      InterestManagerYTV3(_sAPR, externalRewardDistributor, marketFactory) {
+      InterestManagerYTV3(_sAPR, _externalRewardDistributor, marketFactory) {
         SY = _SY;
         PT = _PT;
         expiry = _expiry;
@@ -100,6 +101,7 @@ contract FractleYieldTokenV3 is
         sAPR = _sAPR;
         lifeCircle = _lifeCircle;
         doCacheIndexSameBlock = _doCacheIndexSameBlock;
+        externalRewardDistributor = _externalRewardDistributor;
     }
 
     /**
@@ -197,7 +199,7 @@ contract FractleYieldTokenV3 is
         _updateAndDistributeRewards(user);
 
         if (redeemRewards) {
-            rewardsOut = _doTransferOutRewards(user, user);
+            rewardsOut = _doTransferOutRewards(user, user, externalRewardDistributor);
             emit RedeemRewards(user, rewardsOut);
         } else {
             address[] memory tokens = getRewardTokens();
