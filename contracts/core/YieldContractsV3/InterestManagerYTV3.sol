@@ -118,7 +118,8 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
         userInterestFPT[user].accrued = 0;
         if (IPMarketFactory(marketFactory).isValidMarket(user)) {
             _transferOut(SY, externalRewardDistributor, interestAmount);
-            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(address(this), interestAmount);
+            // mint for the address of the market.
+            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(user, interestAmount);
         } else {
             _transferOut(SY, user, interestAmount);
         }

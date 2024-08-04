@@ -9,14 +9,13 @@ import {
   FractleMarketV3,
   FractleYieldTokenV3,
 } from "../typechain-types";
-import { bignumber } from "mathjs";
 import { delay } from "@nomiclabs/hardhat-etherscan/dist/src/etherscan/EtherscanService";
 
 async function main() {
   console.log("detected network " + network.name);
   const signers = await ethers.getSigners();
 
-  // step0: deploy the EUSD
+  // Step0: deploy the EUSD
   const _EUSD = await ethers.getContractFactory("EUSDMock");
   const EUSD = await _EUSD.deploy(ZeroAddress);
   await EUSD.deploymentTransaction()?.wait();
@@ -30,6 +29,7 @@ async function main() {
   );
   await FractleEUSDSY.deploymentTransaction()?.wait();
   console.log("SY deployed at: " + (await FractleEUSDSY.getAddress()));
+
   // deploy oracleLib
   const _OracleLib = await ethers.getContractFactory("OracleLib");
   const OracleLib = await _OracleLib.deploy();
@@ -45,6 +45,7 @@ async function main() {
     "yield token factory deployed at: " +
       (await FractleYieldTokenFactoryV3.getAddress()),
   );
+
   // now we initialize the factory
   const initializationTx = await FractleYieldTokenFactoryV3.initialize(
     // a day
@@ -57,54 +58,6 @@ async function main() {
     await EUSD.getAddress(),
   );
   await initializationTx.wait();
-
-  // begin to deployPT and YT
-  const ptToDeploy = await ethers.getContractFactory("FractlePrincipalTokenV3");
-  const deployedPT = await ptToDeploy.deploy(
-    await FractleEUSDSY.getAddress(),
-    "EUSD1739145600",
-    "EUSD1739145600",
-    18,
-    1739145600,
-  ); //1739145600 is 20250208
-  await deployedPT.deploymentTransaction()?.wait();
-  console.log("successfully deployed pt", await deployedPT.getAddress());
-
-  // then we deploy the YT
-  const ytToDeploy = await ethers.getContractFactory("FractleYieldTokenV3");
-  const deployedYT = await ytToDeploy.deploy(
-    await FractleEUSDSY.getAddress(), //SY
-    await deployedPT.getAddress(), //PT
-    await FractleYieldTokenFactoryV3.getAddress(), //factory
-    "EUSD1739145600YT", //name
-    "EUSD1739145600YT", //symbol
-    18, //decimal
-    1739145600, //expiry
-    ethers.parseEther(String(0.02)), //sapr 2%
-    365, //lifeCircle
-    false,
-  );
-  await deployedYT.deploymentTransaction()?.wait();
-  console.log("successfully deployed yt", await deployedYT.getAddress());
-
-  // the use the YT to initialize the PT.
-  const initializationTxPTYT = await FractleYieldTokenFactoryV3.initializePTYT(
-    await FractleEUSDSY.getAddress(),
-    await deployedPT.getAddress(),
-    await deployedYT.getAddress(),
-    1739145600,
-  );
-  await initializationTxPTYT.wait();
-
-  // we can check if yt and sy address are stored in the pt address sucessfully.
-  const syAddressFromPt = await deployedPT.SY();
-  const ytAddressFromPt = await deployedPT.YT();
-  console.log("sy address from pt: " + syAddressFromPt);
-  console.log("yt address from pt: " + ytAddressFromPt);
-
-  const ytContract = await ethers.getContractFactory("FractleYieldTokenV3");
-  const yt = ytContract.attach(await deployedYT.getAddress());
-  console.log(await yt.isExpired());
 
   // we deploy and initialize the marketFactory.
   const _FractleMarketFactoryV3 = await ethers.getContractFactory(
@@ -134,18 +87,87 @@ async function main() {
       OracleLib: await OracleLib.getAddress(),
     },
   });
+
+  // begin to deployPT and YT
+  const ptToDeploy = await ethers.getContractFactory("FractlePrincipalTokenV3");
+  const deployedPT = await ptToDeploy.deploy(
+    await FractleEUSDSY.getAddress(),
+    "EUSD1739145600",
+    "EUSD1739145600",
+    18,
+    1739145600,
+  ); //1739145600 is 20250208
+  await deployedPT.deploymentTransaction()?.wait();
+  console.log("successfully deployed pt at", await deployedPT.getAddress());
+
+  const _externalRewardDistributor = await ethers.getContractFactory(
+    "FractleExternalRewardDistributor",
+  );
+  const externalRewardsDistributor = await _externalRewardDistributor.deploy(
+    await FractleMarketFactoryV3.getAddress(),
+    "ExternalRewards",
+    "ER",
+    18,
+  );
+  await externalRewardsDistributor.deploymentTransaction()?.wait();
+  console.log(
+    "externalRewardDistributor deployed at: " +
+      (await externalRewardsDistributor.getAddress()),
+  );
+
+  // then we deploy the YT
+  const ytToDeploy = await ethers.getContractFactory("FractleYieldTokenV3");
+  const deployedYT = await ytToDeploy.deploy(
+    await FractleEUSDSY.getAddress(), //SY
+    await deployedPT.getAddress(), //PT
+    await FractleYieldTokenFactoryV3.getAddress(), //factory
+    "EUSD1739145600YT", //name
+    "EUSD1739145600YT", //symbol
+    18, //decimal
+    1739145600, //expiry
+    ethers.parseEther(String(0.02)), //sapr 2%
+    365, //lifeCircle
+    false,
+    // external reward distributor
+    await externalRewardsDistributor.getAddress(),
+    // market factory
+    await FractleMarketFactoryV3.getAddress(),
+  );
+  await deployedYT.deploymentTransaction()?.wait();
+  console.log("successfully deployed yt", await deployedYT.getAddress());
+
+  // the use the YT to initialize the PT.
+  const initializationTxPTYT = await FractleYieldTokenFactoryV3.initializePTYT(
+    await FractleEUSDSY.getAddress(),
+    await deployedPT.getAddress(),
+    await deployedYT.getAddress(),
+    1739145600,
+  );
+  await initializationTxPTYT.wait();
+
   const deployedFractleMarket = await _FractleMarket.deploy(
     await deployedPT.getAddress(),
     ethers.parseEther(String(76.56895)),
     ethers.parseEther(String(1.04573897412)), //1.04573897412,absolutely 1 year round
     await EUSD.getAddress(),
-    await EUSD.getAddress(),
+    // external distributor,
+    await externalRewardsDistributor.getAddress(),
     await FractleMarketFactoryV3.getAddress(),
   );
   await deployedFractleMarket.deploymentTransaction()?.wait();
   console.log(
     "market deployed at :" + (await deployedFractleMarket.getAddress()),
   );
+
+  // we can check if yt and sy address are stored in the pt address sucessfully.
+  const syAddressFromPt = await deployedPT.SY();
+  const ytAddressFromPt = await deployedPT.YT();
+  console.log("sy address from pt: " + syAddressFromPt);
+  console.log("yt address from pt: " + ytAddressFromPt);
+
+  const ytContract = await ethers.getContractFactory("FractleYieldTokenV3");
+  const yt = ytContract.attach(await deployedYT.getAddress());
+  console.log(await yt.isExpired());
 
   const createMarket = await FractleMarketFactoryV3.createNewMarket(
     await deployedPT.getAddress(),
@@ -158,23 +180,46 @@ async function main() {
   // // then we begin to deploy actions
   // const actionInfoStatic = await ethers.getContractFactory("ActionInfoStatic");
   // const actionInfoStaticInstance = await actionInfoStatic.deploy();
-  // console.log("actionInfoStatic deployed at: " + await actionInfoStaticInstance.getAddress());
-
-  // const actionMarketAuxStatic = await ethers.getContractFactory("ActionMarketAuxStatic");
+  // console.log(
+  //   "actionInfoStatic deployed at: " +
+  //     (await actionInfoStaticInstance.getAddress()),
+  // );
+  //
+  // const actionMarketAuxStatic = await ethers.getContractFactory(
+  //   "ActionMarketAuxStatic",
+  // );
   // const actionMarketAuxStaticInstance = await actionMarketAuxStatic.deploy();
-  // console.log("auctionMarketStatic deployed at: " + await actionMarketAuxStaticInstance.getAddress());
-
-  // const actionMarketCoreStatic =  await ethers.getContractFactory("ActionMarketCoreStatic");
+  // console.log(
+  //   "auctionMarketStatic deployed at: " +
+  //     (await actionMarketAuxStaticInstance.getAddress()),
+  // );
+  //
+  // const actionMarketCoreStatic = await ethers.getContractFactory(
+  //   "ActionMarketCoreStatic",
+  // );
   // const actionMarketCoreStaticInstance = await actionMarketCoreStatic.deploy();
-  // console.log("actionMarketCoreStatic deployed at: " + await actionMarketCoreStaticInstance.getAddress());
-
-  // const actionMintRedeemStatic = await ethers.getContractFactory("ActionMintRedeemStatic");
+  // console.log(
+  //   "actionMarketCoreStatic deployed at: " +
+  //     (await actionMarketCoreStaticInstance.getAddress()),
+  // );
+  //
+  // const actionMintRedeemStatic = await ethers.getContractFactory(
+  //   "ActionMintRedeemStatic",
+  // );
   // const actionMintRedeemStaticInstance = await actionMintRedeemStatic.deploy();
-  // console.log("auctionMintRedeemStatic deployed at: " + await actionMintRedeemStaticInstance.getAddress());
-
-  // const actionStorageStatic = await ethers.getContractFactory("ActionStorageStatic");
+  // console.log(
+  //   "auctionMintRedeemStatic deployed at: " +
+  //     (await actionMintRedeemStaticInstance.getAddress()),
+  // );
+  //
+  // const actionStorageStatic = await ethers.getContractFactory(
+  //   "ActionStorageStatic",
+  // );
   // const actionStorageStaticInstance = await actionStorageStatic.deploy();
-  // console.log("actionStorageStatic deployed at: " + await actionStorageStaticInstance.getAddress());
+  // console.log(
+  //   "actionStorageStatic deployed at: " +
+  //     (await actionStorageStaticInstance.getAddress()),
+  // );
 
   const actionAddRemoveLiq =
     await ethers.getContractFactory("ActionAddRemoveLiq");

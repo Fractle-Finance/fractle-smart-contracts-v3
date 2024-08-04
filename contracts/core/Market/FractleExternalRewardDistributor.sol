@@ -59,7 +59,8 @@ contract FractleExternalRewardDistributor is
     }
 
     function mintForMarket(address market, uint256 amount) external override {
-        if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
+        // TODO: mintForMarket should only be called by a YT.
+        if (!IPMarketFactory(marketFactory).isValidMarket(market)) {
             revert("invalid caller");
         }
         _mint(market, amount);
