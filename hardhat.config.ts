@@ -5,6 +5,7 @@ const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.17',
     settings: {
+      viaIR: true,
       optimizer: {
         enabled: true,
         runs: 2000,
@@ -24,6 +25,14 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: true,
       chainId: 137,
       gasPrice: 300000000000
+    },
+    'arbitrum-sepolia': {
+      url: 'https://arb-sepolia.g.alchemy.com/v2/47SxM1HQgXWeKVL9rYVS6A4LZ8B_Ktk0',
+      accounts: [
+          "fa628709b5c2e17aeec2d28c07682ba66d291c86ac1f70ecbc915a4c096643d5",
+      ],
+      allowUnlimitedContractSize: true,
+      chainId: 421614,
     },
     'arbitrum-goerli': {
       url: 'https://arb-goerli.g.alchemy.com/v2/hegn8vBG_khxu0tXv8jXP_NUmRCUvJUb',
