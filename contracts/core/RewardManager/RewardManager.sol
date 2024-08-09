@@ -54,9 +54,6 @@ abstract contract RewardManager is RewardManagerAbstract {
             for (uint256 i = 0; i < tokens.length; i++)
                 indexes[i] = rewardState[tokens[i]].index;
         }
-
-        for (uint256 i = 0; i < tokens.length; i++)
-            indexes[i] = rewardState[tokens[i]].index;
     }
 
     /// @dev this function doesn't need redeemExternal since redeemExternal is bundled in updateRewardIndex
@@ -83,18 +80,10 @@ abstract contract RewardManager is RewardManagerAbstract {
                 } else {
                     _transferOut(tokens[i], receiver, rewardAmounts[i]);
                 }
-                rewardState[tokens[i]].lastBalance -= rewardAmounts[i]
-                    .Uint128();
-                _transferOut(tokens[i], receiver, rewardAmounts[i]);
             }
         }
     }
 
-    function _getRewardTokens()
-        internal
-        view
-        virtual
-        returns (address[] memory);
     function _getRewardTokens()
         internal
         view
