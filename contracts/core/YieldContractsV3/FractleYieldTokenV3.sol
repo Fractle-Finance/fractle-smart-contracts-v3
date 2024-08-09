@@ -56,6 +56,7 @@ contract FractleYieldTokenV3 is
     PostExpiryData public postExpiry;
 
     uint256 internal _lastCollectedInterestIndex;
+    address public externalRewardDistributor;
 
     modifier updateData() {
         if (isExpired()) _setPostExpiryData();
@@ -89,11 +90,11 @@ contract FractleYieldTokenV3 is
         uint256 _sAPR,
         uint256 _lifeCircle,
         bool _doCacheIndexSameBlock,
-        address externalRewardDistributor,
+        address _externalRewardDistributor,
         address marketFactory
     )
         FractleERC20(_name, _symbol, __decimals)
-        InterestManagerYTV3(_sAPR, externalRewardDistributor, marketFactory)
+        InterestManagerYTV3(_sAPR, _externalRewardDistributor, marketFactory)
     {
         SY = _SY;
         PT = _PT;
@@ -102,6 +103,7 @@ contract FractleYieldTokenV3 is
         sAPR = _sAPR;
         lifeCircle = _lifeCircle;
         doCacheIndexSameBlock = _doCacheIndexSameBlock;
+        externalRewardDistributor = _externalRewardDistributor;
     }
 
     /**
@@ -225,7 +227,11 @@ contract FractleYieldTokenV3 is
         _updateAndDistributeRewards(user);
 
         if (redeemRewards) {
-            rewardsOut = _doTransferOutRewards(user, user);
+            rewardsOut = _doTransferOutRewards(
+                user,
+                user,
+                externalRewardDistributor
+            );
             emit RedeemRewards(user, rewardsOut);
         } else {
             address[] memory tokens = getRewardTokens();
@@ -419,8 +425,8 @@ contract FractleYieldTokenV3 is
         PostExpiryData storage local = postExpiry;
         if (local.firstPYIndex != 0) return; // already set
 
-        _updateInterestIndex();
         _updateRewardIndex();
+        _updateInterestIndex();
 
         // by setting this, we have finished setting postExpiry data, all income will go to treasury
         local.firstPYIndex = _pyIndexCurrent().Uint128();
@@ -439,9 +445,7 @@ contract FractleYieldTokenV3 is
         if (doCacheIndexSameBlock && pyIndexLastUpdatedBlock == block.number)
             return _pyIndexStored;
 
-        uint128 index128 = PMath
-            .max(lastExchangeRate, _pyIndexStored)
-            .Uint128();
+        uint128 index128 = PMath.max(newExchangeRate, _pyIndexStored).Uint128();
 
         currentIndex = index128;
         _pyIndexStored = index128;
@@ -451,7 +455,7 @@ contract FractleYieldTokenV3 is
     function _collectInterest()
         internal
         override
-        returns (uint256 accuredAmount, uint256 currentIndex)
+        returns (uint256 accruedAmount, uint256 currentIndex)
     {
         uint256 prevIndex = _lastCollectedInterestIndex;
         currentIndex = _pyIndexCurrent();
@@ -469,7 +473,7 @@ contract FractleYieldTokenV3 is
                 currentIndex
             );
             uint256 feeAmount = totalInterest.mulDown(interestFeeRate);
-            accuredAmount = totalInterest - feeAmount;
+            accruedAmount = totalInterest - feeAmount;
 
             _transferOut(SY, treasury, feeAmount);
             _updateSyReserve();

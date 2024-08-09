@@ -12,7 +12,7 @@ abstract contract TokenHelper {
     function _transferIn(address token, address from, uint256 amount) internal {
         if (token == NATIVE) require(msg.value == amount, "eth mismatch");
         else if (amount != 0)
-            IERC20(token).transferFrom(from, address(this), amount);
+            IERC20(token).safeTransferFrom(from, address(this), amount);
     }
 
     function _transferFrom(

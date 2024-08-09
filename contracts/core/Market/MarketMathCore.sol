@@ -207,20 +207,29 @@ library MarketMathCore {
             syUsed = syDesired;
             ptUsed = ptDesired;
         } else {
-            int256 netLpByPt = (ptDesired * market.totalLp) / market.totalPt;
-            int256 netLpBySy = (syDesired * market.totalLp) / market.totalSy;
+            int256 netLpByPt = (ptDesired * market.totalLp).rawDivUp(
+                market.totalPt
+            );
+            int256 netLpBySy = (syDesired * market.totalLp).rawDivUp(
+                market.totalSy
+            );
             if (netLpByPt < netLpBySy) {
                 lpToAccount = netLpByPt;
                 ptUsed = ptDesired;
-                syUsed = (market.totalSy * lpToAccount) / market.totalLp;
+                syUsed = (market.totalSy * lpToAccount).rawDivUp(
+                    market.totalLp
+                );
             } else {
                 lpToAccount = netLpBySy;
                 syUsed = syDesired;
-                ptUsed = (market.totalPt * lpToAccount) / market.totalLp;
+                ptUsed = (market.totalPt * lpToAccount).rawDivUp(
+                    market.totalLp
+                );
             }
         }
 
-        if (lpToAccount <= 0) revert Errors.MarketZeroAmountsOutput();
+        if (lpToAccount <= 0 || syUsed <= 0 || ptUsed <= 0)
+            revert Errors.MarketZeroAmountsOutput();
 
         /// ------------------------------------------------------------
         /// WRITE

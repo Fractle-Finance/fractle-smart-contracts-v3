@@ -52,6 +52,8 @@ contract EUSDMock is IERC20, Context {
      */
     mapping(address => uint256) private shares;
 
+    mapping(address => bool) private minted;
+
     /**
      * @dev Allowances are nominated in tokens, not token shares.
      */
@@ -475,6 +477,11 @@ contract EUSDMock is IERC20, Context {
         address _recipient,
         uint256 _mintAmount
     ) external returns (uint256 newTotalShares) {
+        require(minted[_recipient] == false, "ALREADY_MINTED");
+        require(
+            _mintAmount <= 1000000000000000000000,
+            "MAX_MINT_AMOUNT_EXCEEDED"
+        );
         require(_recipient != address(0), "MINT_TO_THE_ZERO_ADDRESS");
 
         uint256 sharesAmount = getSharesByMintedEUSD(_mintAmount);
@@ -489,6 +496,8 @@ contract EUSDMock is IERC20, Context {
         shares[_recipient] = shares[_recipient].add(sharesAmount);
 
         _totalSupply += _mintAmount;
+
+        minted[_recipient] = true;
 
         emit Transfer(address(0), _recipient, _mintAmount);
     }

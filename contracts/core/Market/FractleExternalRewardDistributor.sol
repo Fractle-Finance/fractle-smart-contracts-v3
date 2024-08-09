@@ -60,22 +60,19 @@ contract FractleExternalRewardDistributor is
     }
 
     function mintForMarket(address market, uint256 amount) external override {
-        if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
+        // TODO: mintForMarket should only be called by a YT.
+        if (!IPMarketFactory(marketFactory).isValidMarket(market)) {
             revert("invalid caller");
         }
         _mint(market, amount);
     }
 
-    function redeemForSy(
-        address market,
-        uint256 amount,
-        address user
-    ) external override {
+    function redeemForSy(uint256 amount, address user) external override {
         if (!IPMarketFactory(marketFactory).isValidMarket(msg.sender)) {
             revert("invalid caller");
         }
         _burn(msg.sender, amount);
-        _transfer(address(this), user, amount);
+        IERC20(msg.sender).transfer(user, amount);
     }
 
     // there are only one kind of rewrds: point

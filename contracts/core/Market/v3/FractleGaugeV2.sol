@@ -52,7 +52,11 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
     ) internal virtual returns (uint256[] memory rewardsOut) {
         _updateAndDistributeRewards(user);
         _updateUserActiveBalance(user);
-        rewardsOut = _doTransferOutRewards(user, user);
+        rewardsOut = _doTransferOutRewards(
+            user,
+            user,
+            externalRewardDistributor
+        );
         emit RedeemRewards(user, rewardsOut);
     }
 

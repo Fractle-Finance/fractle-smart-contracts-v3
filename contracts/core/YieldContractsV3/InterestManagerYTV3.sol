@@ -120,8 +120,10 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
         address SY
     ) internal returns (uint256 interestAmount) {
         interestAmount = userInterest[user].accrued;
-        userInterest[user].accrued = 0;
-        _transferOut(SY, user, interestAmount);
+        if (interestAmount > 0) {
+            userInterest[user].accrued = 0;
+            _transferOut(SY, user, interestAmount);
+        }
     }
 
     function _doTransferOutInterestFPT(
@@ -129,15 +131,18 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
         address SY
     ) internal returns (uint256 interestAmount) {
         interestAmount = userInterestFPT[user].accrued;
-        userInterestFPT[user].accrued = 0;
-        if (IPMarketFactory(marketFactory).isValidMarket(user)) {
-            _transferOut(SY, externalRewardDistributor, interestAmount);
-            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(
-                address(this),
-                interestAmount
-            );
-        } else {
-            _transferOut(SY, user, interestAmount);
+        if (interestAmount > 0) {
+            userInterestFPT[user].accrued = 0;
+            if (IPMarketFactory(marketFactory).isValidMarket(user)) {
+                _transferOut(SY, externalRewardDistributor, interestAmount);
+                // mint for the address of the market.
+                IPFPTRewardInSY(externalRewardDistributor).mintForMarket(
+                    user,
+                    interestAmount
+                );
+            } else {
+                _transferOut(SY, user, interestAmount);
+            }
         }
     }
 

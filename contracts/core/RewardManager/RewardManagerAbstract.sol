@@ -67,7 +67,7 @@ abstract contract RewardManagerAbstract is IRewardManager, TokenHelper {
                 userIndex = INITIAL_REWARD_INDEX.Uint128();
             }
 
-            if (userIndex == index) continue;
+            if (userIndex >= index) continue;
 
             uint256 deltaIndex = index - userIndex;
             uint256 rewardDelta = userShares.mulDown(deltaIndex);
@@ -90,7 +90,8 @@ abstract contract RewardManagerAbstract is IRewardManager, TokenHelper {
 
     function _doTransferOutRewards(
         address user,
-        address receiver
+        address receiver,
+        address externalRewardDistributor
     ) internal virtual returns (uint256[] memory rewardAmounts);
 
     function _rewardSharesUser(

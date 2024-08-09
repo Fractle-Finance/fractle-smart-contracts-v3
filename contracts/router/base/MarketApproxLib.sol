@@ -384,6 +384,12 @@ library MarketApproxPtInLib {
             if (calcSlope(comp, market.totalPt, int256(mid)) < 0) hi = mid - 1;
             else low = mid;
         }
+        low = PMath
+            .min(
+                int(low),
+                ((market.totalPt + comp.totalAsset) * 96) / 100 - market.totalPt
+            )
+            .Uint();
         return low;
     }
 
