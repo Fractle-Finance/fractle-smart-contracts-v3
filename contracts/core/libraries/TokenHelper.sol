@@ -11,24 +11,34 @@ abstract contract TokenHelper {
 
     function _transferIn(address token, address from, uint256 amount) internal {
         if (token == NATIVE) require(msg.value == amount, "eth mismatch");
-        else if (amount != 0) IERC20(token).transferFrom(from, address(this), amount);
+        else if (amount != 0)
+            IERC20(token).safeTransferFrom(from, address(this), amount);
     }
 
-    function _transferFrom(IERC20 token, address from, address to, uint256 amount) internal {
+    function _transferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 amount
+    ) internal {
         if (amount != 0) token.safeTransferFrom(from, to, amount);
     }
 
     function _transferOut(address token, address to, uint256 amount) internal {
         if (amount == 0) return;
         if (token == NATIVE) {
-            (bool success, ) = to.call{ value: amount }("");
+            (bool success, ) = to.call{value: amount}("");
             require(success, "eth send failed");
         } else {
             IERC20(token).safeTransfer(to, amount);
         }
     }
 
-    function _transferOut(address[] memory tokens, address to, uint256[] memory amounts) internal {
+    function _transferOut(
+        address[] memory tokens,
+        address to,
+        uint256[] memory amounts
+    ) internal {
         uint256 numTokens = tokens.length;
         require(numTokens == amounts.length, "length mismatch");
         for (uint256 i = 0; i < numTokens; ) {
@@ -40,7 +50,10 @@ abstract contract TokenHelper {
     }
 
     function _selfBalance(address token) internal view returns (uint256) {
-        return (token == NATIVE) ? address(this).balance : IERC20(token).balanceOf(address(this));
+        return
+            token == NATIVE
+                ? address(this).balance
+                : IERC20(token).balanceOf(address(this));
     }
 
     function _selfBalance(IERC20 token) internal view returns (uint256) {
@@ -53,7 +66,10 @@ abstract contract TokenHelper {
         (bool success, bytes memory data) = token.call(
             abi.encodeWithSelector(IERC20.approve.selector, to, value)
         );
-        require(success && (data.length == 0 || abi.decode(data, (bool))), "Safe Approve");
+        require(
+            success && (data.length == 0 || abi.decode(data, (bool))),
+            "Safe Approve"
+        );
     }
 
     function _safeApproveInf(address token, address to) internal {
@@ -64,8 +80,12 @@ abstract contract TokenHelper {
         }
     }
 
-    function _wrap_unwrap_ETH(address tokenIn, address tokenOut, uint256 netTokenIn) internal {
-        if (tokenIn == NATIVE) IWETH(tokenOut).deposit{ value: netTokenIn }();
+    function _wrap_unwrap_ETH(
+        address tokenIn,
+        address tokenOut,
+        uint256 netTokenIn
+    ) internal {
+        if (tokenIn == NATIVE) IWETH(tokenOut).deposit{value: netTokenIn}();
         else IWETH(tokenIn).withdraw(netTokenIn);
     }
 }

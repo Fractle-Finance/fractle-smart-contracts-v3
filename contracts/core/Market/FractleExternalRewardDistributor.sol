@@ -28,7 +28,8 @@ contract FractleExternalRewardDistributor is
     address public immutable marketFactory;
 
     mapping(address => address[]) internal rewardTokens;
-    mapping(address => mapping(address => MarketRewardData)) internal rewardData;
+    mapping(address => mapping(address => MarketRewardData))
+        internal rewardData;
 
     modifier onlyValidMarket(address market) {
         require(
@@ -81,7 +82,10 @@ contract FractleExternalRewardDistributor is
         for (uint256 i = 0; i < tokens.length; ++i) {
             address token = tokens[i];
 
-            MarketRewardData memory rwd = _getUpdatedMarketReward(market, token);
+            MarketRewardData memory rwd = _getUpdatedMarketReward(
+                market,
+                token
+            );
             uint256 amountToDistribute = rwd.accumulatedReward;
 
             if (amountToDistribute > 0) {
@@ -115,8 +119,14 @@ contract FractleExternalRewardDistributor is
 
         uint256 totalWeight = weights.sum();
         for (uint256 i = 0; i < markets.length; ++i) {
-            uint256 rewardToDistribute = (totalRewardToDistribute * weights[i]) / totalWeight;
-            _addRewardToMarket(markets[i], token, rewardToDistribute.Uint128(), WEEK);
+            uint256 rewardToDistribute = (totalRewardToDistribute *
+                weights[i]) / totalWeight;
+            _addRewardToMarket(
+                markets[i],
+                token,
+                rewardToDistribute.Uint128(),
+                WEEK
+            );
         }
     }
 
@@ -131,9 +141,13 @@ contract FractleExternalRewardDistributor is
         }
 
         MarketRewardData memory rwd = _getUpdatedMarketReward(market, token);
-        require(block.timestamp + duration > rwd.incentiveEndsAt, "Invalid incentive duration");
+        require(
+            block.timestamp + duration > rwd.incentiveEndsAt,
+            "Invalid incentive duration"
+        );
 
-        uint128 leftover = (rwd.incentiveEndsAt - rwd.lastUpdated) * rwd.rewardPerSec;
+        uint128 leftover = (rwd.incentiveEndsAt - rwd.lastUpdated) *
+            rwd.rewardPerSec;
         uint128 newSpeed = (leftover + rewardAmount) / duration;
 
         rewardData[market][token] = MarketRewardData({
@@ -151,8 +165,12 @@ contract FractleExternalRewardDistributor is
         address token
     ) internal view returns (MarketRewardData memory) {
         MarketRewardData memory rwd = rewardData[market][token];
-        uint128 newLastUpdated = uint128(PMath.min(uint128(block.timestamp), rwd.incentiveEndsAt));
-        rwd.accumulatedReward += rwd.rewardPerSec * (newLastUpdated - rwd.lastUpdated);
+        uint128 newLastUpdated = uint128(
+            PMath.min(uint128(block.timestamp), rwd.incentiveEndsAt)
+        );
+        rwd.accumulatedReward +=
+            rwd.rewardPerSec *
+            (newLastUpdated - rwd.lastUpdated);
         rwd.lastUpdated = newLastUpdated;
         return rwd;
     }

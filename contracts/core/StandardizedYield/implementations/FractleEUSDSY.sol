@@ -60,28 +60,44 @@ contract FractleEUSDSY is SYBase {
         return IEUSD(eUSD).getMintedEUSDByShares(amountSharesToRedeem);
     }
 
-    function getTokensIn() public view virtual override returns (address[] memory res) {
+    function getTokensIn()
+        public
+        view
+        virtual
+        override
+        returns (address[] memory res)
+    {
         res = new address[](1);
         res[0] = eUSD;
     }
 
-    function getTokensOut() public view virtual override returns (address[] memory res) {
+    function getTokensOut()
+        public
+        view
+        virtual
+        override
+        returns (address[] memory res)
+    {
         res = new address[](1);
         res[0] = eUSD;
     }
 
-    function isValidTokenIn(address token) public view virtual override returns (bool) {
+    function isValidTokenIn(
+        address token
+    ) public view virtual override returns (bool) {
         return token == eUSD;
     }
 
-    function isValidTokenOut(address token) public view virtual override returns (bool) {
+    function isValidTokenOut(
+        address token
+    ) public view virtual override returns (bool) {
         return token == eUSD;
     }
 
     function assetInfo()
-    external
-    view
-    returns (AssetType assetType, address assetAddress, uint8 assetDecimals)
+        external
+        view
+        returns (AssetType assetType, address assetAddress, uint8 assetDecimals)
     {
         assetType = AssetType.TOKEN;
         assetAddress = eUSD;

@@ -88,7 +88,11 @@ library OracleLib {
         uint32 target,
         uint16 index,
         uint16 cardinality
-    ) public view returns (Observation memory beforeOrAt, Observation memory atOrAfter) {
+    )
+        public
+        view
+        returns (Observation memory beforeOrAt, Observation memory atOrAfter)
+    {
         uint256 l = (index + 1) % cardinality; // oldest observation
         uint256 r = l + cardinality - 1; // newest observation
         uint256 i;
@@ -121,7 +125,11 @@ library OracleLib {
         uint96 lnImpliedRate,
         uint16 index,
         uint16 cardinality
-    ) public view returns (Observation memory beforeOrAt, Observation memory atOrAfter) {
+    )
+        public
+        view
+        returns (Observation memory beforeOrAt, Observation memory atOrAfter)
+    {
         // optimistically set before to the newest observation
         beforeOrAt = self[index];
 
@@ -132,7 +140,10 @@ library OracleLib {
                 return (beforeOrAt, atOrAfter);
             } else {
                 // otherwise, we need to transform
-                return (beforeOrAt, transform(beforeOrAt, target, lnImpliedRate));
+                return (
+                    beforeOrAt,
+                    transform(beforeOrAt, target, lnImpliedRate)
+                );
             }
         }
 
@@ -159,20 +170,25 @@ library OracleLib {
         if (secondsAgo == 0) {
             Observation memory last = self[index];
             if (last.blockTimestamp != time) {
-                return transform(last, time, lnImpliedRate).lnImpliedRateCumulative;
+                return
+                    transform(last, time, lnImpliedRate)
+                        .lnImpliedRateCumulative;
             }
             return last.lnImpliedRateCumulative;
         }
 
         uint32 target = time - secondsAgo;
 
-        (Observation memory beforeOrAt, Observation memory atOrAfter) = getSurroundingObservations(
-            self,
-            target,
-            lnImpliedRate,
-            index,
-            cardinality
-        );
+        (
+            Observation memory beforeOrAt,
+            Observation memory atOrAfter
+        ) = getSurroundingObservations(
+                self,
+                target,
+                lnImpliedRate,
+                index,
+                cardinality
+            );
 
         if (target == beforeOrAt.blockTimestamp) {
             // we're at the left boundary
@@ -185,7 +201,8 @@ library OracleLib {
             return (beforeOrAt.lnImpliedRateCumulative +
                 uint216(
                     (uint256(
-                        atOrAfter.lnImpliedRateCumulative - beforeOrAt.lnImpliedRateCumulative
+                        atOrAfter.lnImpliedRateCumulative -
+                            beforeOrAt.lnImpliedRateCumulative
                     ) * (target - beforeOrAt.blockTimestamp)) /
                         (atOrAfter.blockTimestamp - beforeOrAt.blockTimestamp)
                 ));

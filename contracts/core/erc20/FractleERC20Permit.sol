@@ -45,7 +45,14 @@ contract FractleERC20Permit is FractleERC20, IERC20Permit, EIP712 {
         require(block.timestamp <= deadline, "ERC20Permit: expired deadline");
 
         bytes32 structHash = keccak256(
-            abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline)
+            abi.encode(
+                _PERMIT_TYPEHASH,
+                owner,
+                spender,
+                value,
+                _useNonce(owner),
+                deadline
+            )
         );
 
         bytes32 hash = _hashTypedDataV4(structHash);
@@ -59,7 +66,9 @@ contract FractleERC20Permit is FractleERC20, IERC20Permit, EIP712 {
     /**
      * @dev See {IERC20Permit-nonces}.
      */
-    function nonces(address owner) public view virtual override returns (uint256) {
+    function nonces(
+        address owner
+    ) public view virtual override returns (uint256) {
         return _nonces[owner].current();
     }
 
@@ -76,7 +85,9 @@ contract FractleERC20Permit is FractleERC20, IERC20Permit, EIP712 {
      *
      * _Available since v4.1._
      */
-    function _useNonce(address owner) internal virtual returns (uint256 current) {
+    function _useNonce(
+        address owner
+    ) internal virtual returns (uint256 current) {
         Counters.Counter storage nonce = _nonces[owner];
         current = nonce.current();
         nonce.increment();

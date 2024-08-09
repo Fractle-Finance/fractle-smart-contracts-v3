@@ -29,11 +29,19 @@ library ExpiryUtils {
         string memory _delimiter
     ) internal pure returns (string memory result) {
         result = string(
-            abi.encodePacked(_bt, _delimiter, _yt, _delimiter, toRFC2822String(_expiry))
+            abi.encodePacked(
+                _bt,
+                _delimiter,
+                _yt,
+                _delimiter,
+                toRFC2822String(_expiry)
+            )
         );
     }
 
-    function toRFC2822String(uint256 _timestamp) internal pure returns (string memory s) {
+    function toRFC2822String(
+        uint256 _timestamp
+    ) internal pure returns (string memory s) {
         Date memory d = parseTimestamp(_timestamp);
         string memory day = uintToString(d.day);
         string memory month = monthName(d);
@@ -41,7 +49,10 @@ library ExpiryUtils {
         s = string(abi.encodePacked(day, month, year));
     }
 
-    function getDaysInMonth(uint8 _month, uint16 _year) private pure returns (uint8) {
+    function getDaysInMonth(
+        uint8 _month,
+        uint16 _year
+    ) private pure returns (uint8) {
         if (
             _month == 1 ||
             _month == 3 ||
@@ -71,7 +82,9 @@ library ExpiryUtils {
         numLeapYears = leapYearsBefore(year) - leapYearsBefore(ORIGIN_YEAR);
 
         secondsAccountedFor += LEAP_YEAR_IN_SECONDS * numLeapYears;
-        secondsAccountedFor += YEAR_IN_SECONDS * (year - ORIGIN_YEAR - numLeapYears);
+        secondsAccountedFor +=
+            YEAR_IN_SECONDS *
+            (year - ORIGIN_YEAR - numLeapYears);
 
         while (secondsAccountedFor > _timestamp) {
             if (isLeapYear(uint16(year - 1))) {
@@ -111,7 +124,9 @@ library ExpiryUtils {
         return months[d.month - 1];
     }
 
-    function parseTimestamp(uint256 _timestamp) private pure returns (Date memory d) {
+    function parseTimestamp(
+        uint256 _timestamp
+    ) private pure returns (Date memory d) {
         uint256 secondsAccountedFor = 0;
         uint256 buf;
         uint8 i;

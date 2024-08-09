@@ -28,14 +28,15 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
     mapping(address => FeeConfig) public overriddenFee;
 
     // PT -> scalarRoot -> initialAnchor
-    mapping(address => mapping(int256 => mapping(int256 => address))) internal markets;
+    mapping(address => mapping(int256 => mapping(int256 => address)))
+        internal markets;
     EnumerableSet.AddressSet internal allMarkets;
 
-    constructor(
-        address _yieldContractFactory
-    ) {
+    constructor(address _yieldContractFactory) {
         yieldContractFactory = _yieldContractFactory;
-        maxLnFeeRateRoot = uint256(LogExpMath.ln(int256((105 * PMath.IONE) / 100))); // ln(1.05)
+        maxLnFeeRateRoot = uint256(
+            LogExpMath.ln(int256((105 * PMath.IONE) / 100))
+        ); // ln(1.05)
     }
 
     function initialize(
@@ -63,13 +64,17 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
     ) external {
         if (!IPYieldContractFactory(yieldContractFactory).isPT(PT))
             revert Errors.MarketFactoryInvalidPt();
-        if (IPPrincipalToken(PT).isExpired()) revert Errors.MarketFactoryExpiredPt();
+        if (IPPrincipalToken(PT).isExpired())
+            revert Errors.MarketFactoryExpiredPt();
 
         if (markets[PT][scalarRoot][initialAnchor] != address(0))
             revert Errors.MarketFactoryMarketExists();
 
         if (initialAnchor < minInitialAnchor)
-            revert Errors.MarketFactoryInitialAnchorTooLow(initialAnchor, minInitialAnchor);
+            revert Errors.MarketFactoryInitialAnchorTooLow(
+                initialAnchor,
+                minInitialAnchor
+            );
 
         markets[PT][scalarRoot][initialAnchor] = market;
 
@@ -80,7 +85,15 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
 
     function getMarketConfig(
         address router
-    ) external view returns (address _treasury, uint80 _lnFeeRateRoot, uint8 _reserveFeePercent) {
+    )
+        external
+        view
+        returns (
+            address _treasury,
+            uint80 _lnFeeRateRoot,
+            uint8 _reserveFeePercent
+        )
+    {
         (_treasury, _lnFeeRateRoot, _reserveFeePercent) = (
             treasury,
             defaultFee.lnFeeRateRoot,
@@ -89,7 +102,10 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
 
         FeeConfig memory over = overriddenFee[router];
         if (over.active) {
-            (_lnFeeRateRoot, _reserveFeePercent) = (over.lnFeeRateRoot, over.reserveFeePercent);
+            (_lnFeeRateRoot, _reserveFeePercent) = (
+                over.lnFeeRateRoot,
+                over.reserveFeePercent
+            );
         }
     }
 
@@ -99,13 +115,17 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
     }
 
     function setTreasury(address newTreasury) public onlyOwner {
-        if (newTreasury == address(0)) revert Errors.MarketFactoryZeroTreasury();
+        if (newTreasury == address(0))
+            revert Errors.MarketFactoryZeroTreasury();
 
         treasury = newTreasury;
         _emitNewMarketConfigEvent();
     }
 
-    function setDefaultFee(uint80 newLnFeeRateRoot, uint8 newReserveFeePercent) public onlyOwner {
+    function setDefaultFee(
+        uint80 newLnFeeRateRoot,
+        uint8 newReserveFeePercent
+    ) public onlyOwner {
         _verifyFeeConfig(newLnFeeRateRoot, newReserveFeePercent);
         defaultFee = FeeConfig(newLnFeeRateRoot, newReserveFeePercent, true);
         _emitNewMarketConfigEvent();
@@ -117,7 +137,11 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
         uint8 newReserveFeePercent
     ) public onlyOwner {
         _verifyFeeConfig(newLnFeeRateRoot, newReserveFeePercent);
-        overriddenFee[router] = FeeConfig(newLnFeeRateRoot, newReserveFeePercent, true);
+        overriddenFee[router] = FeeConfig(
+            newLnFeeRateRoot,
+            newReserveFeePercent,
+            true
+        );
         emit SetOverriddenFee(router, newLnFeeRateRoot, newReserveFeePercent);
     }
 
@@ -126,9 +150,15 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
         emit UnsetOverriddenFee(router);
     }
 
-    function _verifyFeeConfig(uint80 newLnFeeRateRoot, uint8 newReserveFeePercent) internal view {
+    function _verifyFeeConfig(
+        uint80 newLnFeeRateRoot,
+        uint8 newReserveFeePercent
+    ) internal view {
         if (newLnFeeRateRoot > maxLnFeeRateRoot)
-            revert Errors.MarketFactoryLnFeeRateRootTooHigh(newLnFeeRateRoot, maxLnFeeRateRoot);
+            revert Errors.MarketFactoryLnFeeRateRootTooHigh(
+                newLnFeeRateRoot,
+                maxLnFeeRateRoot
+            );
         if (newReserveFeePercent > maxReserveFeePercent)
             revert Errors.MarketFactoryReserveFeePercentTooHigh(
                 newReserveFeePercent,
@@ -137,6 +167,10 @@ contract FractleMarketFactoryV3 is BoringOwnableUpgradeable, IPMarketFactory {
     }
 
     function _emitNewMarketConfigEvent() internal {
-        emit NewMarketConfig(treasury, defaultFee.lnFeeRateRoot, defaultFee.reserveFeePercent);
+        emit NewMarketConfig(
+            treasury,
+            defaultFee.lnFeeRateRoot,
+            defaultFee.reserveFeePercent
+        );
     }
 }

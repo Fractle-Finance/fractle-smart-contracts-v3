@@ -8,8 +8,14 @@ contract BoringOwnableUpgradeableData {
     address public pendingOwner;
 }
 
-abstract contract BoringOwnableUpgradeable is BoringOwnableUpgradeableData, Initializable {
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+abstract contract BoringOwnableUpgradeable is
+    BoringOwnableUpgradeableData,
+    Initializable
+{
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     function __BoringOwnable_init() internal onlyInitializing {
         owner = msg.sender;
@@ -20,10 +26,17 @@ abstract contract BoringOwnableUpgradeable is BoringOwnableUpgradeableData, Init
     /// @param newOwner Address of the new owner.
     /// @param direct True if `newOwner` should be set immediately. False if `newOwner` needs to use `claimOwnership`.
     /// @param renounce Allows the `newOwner` to be `address(0)` if `direct` and `renounce` is True. Has no effect otherwise.
-    function transferOwnership(address newOwner, bool direct, bool renounce) public onlyOwner {
+    function transferOwnership(
+        address newOwner,
+        bool direct,
+        bool renounce
+    ) public onlyOwner {
         if (direct) {
             // Checks
-            require(newOwner != address(0) || renounce, "Ownable: zero address");
+            require(
+                newOwner != address(0) || renounce,
+                "Ownable: zero address"
+            );
 
             // Effects
             emit OwnershipTransferred(owner, newOwner);
@@ -40,7 +53,10 @@ abstract contract BoringOwnableUpgradeable is BoringOwnableUpgradeableData, Init
         address _pendingOwner = pendingOwner;
 
         // Checks
-        require(msg.sender == _pendingOwner, "Ownable: caller != pending owner");
+        require(
+            msg.sender == _pendingOwner,
+            "Ownable: caller != pending owner"
+        );
 
         // Effects
         emit OwnershipTransferred(owner, _pendingOwner);

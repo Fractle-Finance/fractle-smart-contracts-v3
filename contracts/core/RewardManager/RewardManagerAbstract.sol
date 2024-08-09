@@ -32,8 +32,14 @@ abstract contract RewardManagerAbstract is IRewardManager, TokenHelper {
         _updateAndDistributeRewardsForTwo(user, address(0));
     }
 
-    function _updateAndDistributeRewardsForTwo(address user1, address user2) internal virtual {
-        (address[] memory tokens, uint256[] memory indexes) = _updateRewardIndex();
+    function _updateAndDistributeRewardsForTwo(
+        address user1,
+        address user2
+    ) internal virtual {
+        (
+            address[] memory tokens,
+            uint256[] memory indexes
+        ) = _updateRewardIndex();
         if (tokens.length == 0) return;
 
         if (user1 != address(0) && user1 != address(this))
@@ -61,11 +67,12 @@ abstract contract RewardManagerAbstract is IRewardManager, TokenHelper {
                 userIndex = INITIAL_REWARD_INDEX.Uint128();
             }
 
-            if (userIndex == index) continue;
+            if (userIndex >= index) continue;
 
             uint256 deltaIndex = index - userIndex;
             uint256 rewardDelta = userShares.mulDown(deltaIndex);
-            uint256 rewardAccrued = userReward[token][user].accrued + rewardDelta;
+            uint256 rewardAccrued = userReward[token][user].accrued +
+                rewardDelta;
 
             userReward[token][user] = UserReward({
                 index: index.Uint128(),
@@ -87,5 +94,7 @@ abstract contract RewardManagerAbstract is IRewardManager, TokenHelper {
         address externalRewardDistributor
     ) internal virtual returns (uint256[] memory rewardAmounts);
 
-    function _rewardSharesUser(address user) internal view virtual returns (uint256);
+    function _rewardSharesUser(
+        address user
+    ) internal view virtual returns (uint256);
 }

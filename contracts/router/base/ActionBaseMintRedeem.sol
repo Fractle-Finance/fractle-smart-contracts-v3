@@ -45,7 +45,7 @@ abstract contract ActionBaseMintRedeem is TokenHelper {
         TokenInput calldata inp
     ) private returns (uint256 netSyOut) {
         uint256 netNative = inp.tokenMintSy == NATIVE ? netTokenMintSy : 0;
-        netSyOut = IStandardizedYield(SY).deposit{ value: netNative }(
+        netSyOut = IStandardizedYield(SY).deposit{value: netNative}(
             receiver,
             inp.tokenMintSy,
             netTokenMintSy,
@@ -74,7 +74,10 @@ abstract contract ActionBaseMintRedeem is TokenHelper {
         _transferOut(out.tokenOut, receiver, netTokenOut);
 
         if (netTokenOut < out.minTokenOut) {
-            revert Errors.RouterInsufficientTokenOut(netTokenOut, out.minTokenOut);
+            revert Errors.RouterInsufficientTokenOut(
+                netTokenOut,
+                out.minTokenOut
+            );
         }
     }
 
@@ -126,7 +129,8 @@ abstract contract ActionBaseMintRedeem is TokenHelper {
         }
 
         netPyOut = IPYieldToken(YT).mintPY(receiver, receiver);
-        if (netPyOut < minPyOut) revert Errors.RouterInsufficientPYOut(netPyOut, minPyOut);
+        if (netPyOut < minPyOut)
+            revert Errors.RouterInsufficientPYOut(netPyOut, minPyOut);
     }
 
     function _redeemPyToSy(
@@ -143,6 +147,7 @@ abstract contract ActionBaseMintRedeem is TokenHelper {
         if (needToBurnYt) _transferFrom(IERC20(YT), msg.sender, YT, netPyIn);
 
         netSyOut = IPYieldToken(YT).redeemPY(receiver);
-        if (netSyOut < minSyOut) revert Errors.RouterInsufficientSyOut(netSyOut, minSyOut);
+        if (netSyOut < minSyOut)
+            revert Errors.RouterInsufficientSyOut(netSyOut, minSyOut);
     }
 }

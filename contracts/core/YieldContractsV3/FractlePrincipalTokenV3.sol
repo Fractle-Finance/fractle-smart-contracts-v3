@@ -11,9 +11,12 @@ import "../erc20/FractleERC20Permit.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract FractlePrincipalTokenV3 is FractleERC20Permit, Initializable, IPPrincipalToken {
-
-    event RedeemInterestFPT(address indexed user,uint256 interestOut);
+contract FractlePrincipalTokenV3 is
+    FractleERC20Permit,
+    Initializable,
+    IPPrincipalToken
+{
+    event RedeemInterestFPT(address indexed user, uint256 interestOut);
 
     address public immutable SY;
     address public immutable factory;
@@ -83,9 +86,12 @@ contract FractlePrincipalTokenV3 is FractleERC20Permit, Initializable, IPPrincip
         }
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256) internal override {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
         if (isExpired()) IPYieldTokenV3(YT).setPostExpiryData();
         IPYieldTokenV3(YT).updateAndDistributeInterestForTwoFPT(from, to);
     }
-
 }

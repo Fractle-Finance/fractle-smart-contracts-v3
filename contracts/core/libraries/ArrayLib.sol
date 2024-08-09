@@ -14,7 +14,10 @@ library ArrayLib {
     }
 
     /// @notice return index of the element if found, else return uint256.max
-    function find(address[] memory array, address element) internal pure returns (uint256 index) {
+    function find(
+        address[] memory array,
+        address element
+    ) internal pure returns (uint256 index) {
         uint256 length = array.length;
         for (uint256 i = 0; i < length; ) {
             if (array[i] == element) return i;
@@ -52,7 +55,7 @@ library ArrayLib {
         unchecked {
             uint256 countUnidenticalB = 0;
             bool[] memory isUnidentical = new bool[](b.length);
-            for(uint256 i = 0; i < b.length; ++i) {
+            for (uint256 i = 0; i < b.length; ++i) {
                 if (!contains(a, b[i])) {
                     countUnidenticalB++;
                     isUnidentical[i] = true;
@@ -60,11 +63,11 @@ library ArrayLib {
             }
 
             out = new address[](a.length + countUnidenticalB);
-            for(uint256 i = 0; i < a.length; ++i) {
+            for (uint256 i = 0; i < a.length; ++i) {
                 out[i] = a[i];
             }
             uint256 id = a.length;
-            for(uint256 i = 0; i < b.length; ++i) {
+            for (uint256 i = 0; i < b.length; ++i) {
                 if (isUnidentical[i]) {
                     out[id++] = b[i];
                 }
@@ -73,7 +76,10 @@ library ArrayLib {
     }
 
     // various version of contains
-    function contains(address[] memory array, address element) internal pure returns (bool) {
+    function contains(
+        address[] memory array,
+        address element
+    ) internal pure returns (bool) {
         uint256 length = array.length;
         for (uint256 i = 0; i < length; ) {
             if (array[i] == element) return true;
@@ -84,7 +90,10 @@ library ArrayLib {
         return false;
     }
 
-    function contains(bytes4[] memory array, bytes4 element) internal pure returns (bool) {
+    function contains(
+        bytes4[] memory array,
+        bytes4 element
+    ) internal pure returns (bool) {
         uint256 length = array.length;
         for (uint256 i = 0; i < length; ) {
             if (array[i] == element) return true;
