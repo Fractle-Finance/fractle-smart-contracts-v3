@@ -41,8 +41,8 @@ contract FractleYieldTokenV3 is
     address public immutable PT;
     address public immutable factory;
     uint256 public immutable expiry;
-    uint256 public immutable sAPR;//sAPR is for FPT
-    uint256 public immutable lifeCircle;//total days this YT lives, normal number without decimals
+    uint256 public immutable sAPR; //sAPR is for FPT
+    uint256 public immutable lifeCircle; //total days this YT lives, normal number without decimals
 
     bool public immutable doCacheIndexSameBlock;
 
@@ -91,8 +91,10 @@ contract FractleYieldTokenV3 is
         bool _doCacheIndexSameBlock,
         address externalRewardDistributor,
         address marketFactory
-    ) FractleERC20(_name, _symbol, __decimals)
-      InterestManagerYTV3(_sAPR, externalRewardDistributor, marketFactory) {
+    )
+        FractleERC20(_name, _symbol, __decimals)
+        InterestManagerYTV3(_sAPR, externalRewardDistributor, marketFactory)
+    {
         SY = _SY;
         PT = _PT;
         expiry = _expiry;
@@ -109,7 +111,13 @@ contract FractleYieldTokenV3 is
     function mintPY(
         address receiverPT,
         address receiverYT
-    ) external nonReentrant notExpired updateData returns (uint256 amountPYOut) {
+    )
+        external
+        nonReentrant
+        notExpired
+        updateData
+        returns (uint256 amountPYOut)
+    {
         address[] memory receiverPTs = new address[](1);
         address[] memory receiverYTs = new address[](1);
         uint256[] memory amountSyToMints = new uint256[](1);
@@ -120,7 +128,11 @@ contract FractleYieldTokenV3 is
             _getFloatingSyAmount()
         );
 
-        uint256[] memory amountPYOuts = _mintPY(receiverPTs, receiverYTs, amountSyToMints);
+        uint256[] memory amountPYOuts = _mintPY(
+            receiverPTs,
+            receiverYTs,
+            amountSyToMints
+        );
         amountPYOut = amountPYOuts[0];
     }
 
@@ -129,7 +141,13 @@ contract FractleYieldTokenV3 is
         address[] calldata receiverPTs,
         address[] calldata receiverYTs,
         uint256[] calldata amountSyToMints
-    ) external nonReentrant notExpired updateData returns (uint256[] memory amountPYOuts) {
+    )
+        external
+        nonReentrant
+        notExpired
+        updateData
+        returns (uint256[] memory amountPYOuts)
+    {
         uint256 length = receiverPTs.length;
 
         if (length == 0) revert Errors.ArrayEmpty();
@@ -138,7 +156,10 @@ contract FractleYieldTokenV3 is
 
         uint256 totalSyToMint = amountSyToMints.sum();
         if (totalSyToMint > _getFloatingSyAmount())
-            revert Errors.YieldContractInsufficientSy(totalSyToMint, _getFloatingSyAmount());
+            revert Errors.YieldContractInsufficientSy(
+                totalSyToMint,
+                _getFloatingSyAmount()
+            );
 
         amountPYOuts = _mintPY(receiverPTs, receiverYTs, amountSyToMints);
     }
@@ -170,7 +191,8 @@ contract FractleYieldTokenV3 is
         address[] calldata receivers,
         uint256[] calldata amountPYToRedeems
     ) external nonReentrant updateData returns (uint256[] memory amountSyOuts) {
-        if (receivers.length != amountPYToRedeems.length) revert Errors.ArrayLengthMismatch();
+        if (receivers.length != amountPYToRedeems.length)
+            revert Errors.ArrayLengthMismatch();
         if (receivers.length == 0) revert Errors.ArrayEmpty();
         amountSyOuts = _redeemPY(receivers, amountPYToRedeems);
     }
@@ -189,8 +211,14 @@ contract FractleYieldTokenV3 is
         address user,
         bool redeemInterest,
         bool redeemRewards
-    ) external nonReentrant updateData returns (uint256 interestOut, uint256[] memory rewardsOut) {
-        if (!redeemInterest && !redeemRewards) revert Errors.YCNothingToRedeem();
+    )
+        external
+        nonReentrant
+        updateData
+        returns (uint256 interestOut, uint256[] memory rewardsOut)
+    {
+        if (!redeemInterest && !redeemRewards)
+            revert Errors.YCNothingToRedeem();
 
         // if redeemRewards == true, this line must be here for obvious reason
         // if redeemInterest == true, this line must be here because of the reason above
@@ -217,7 +245,11 @@ contract FractleYieldTokenV3 is
      * @dev All rewards and interests accrued post-expiry goes to the treasury.
      * Reverts if called pre-expiry.
      */
-    function redeemInterestAndRewardsPostExpiryForTreasury() external nonReentrant updateData {
+    function redeemInterestAndRewardsPostExpiryForTreasury()
+        external
+        nonReentrant
+        updateData
+    {
         if (!isExpired()) revert Errors.YCNotExpired();
 
         _collectInterest();
@@ -225,7 +257,12 @@ contract FractleYieldTokenV3 is
     }
 
     /// @notice updates and returns the reward indexes
-    function rewardIndexesCurrent() external override nonReentrant returns (uint256[] memory) {
+    function rewardIndexesCurrent()
+        external
+        override
+        nonReentrant
+        returns (uint256[] memory)
+    {
         return IStandardizedYield(SY).rewardIndexesCurrent();
     }
 
@@ -237,7 +274,11 @@ contract FractleYieldTokenV3 is
      * and has no state changes on the second call onwards (within the same block).
      * @dev see `pyIndexStored()` for view function for cached value.
      */
-    function pyIndexCurrent() public nonReentrant returns (uint256 currentIndex) {
+    function pyIndexCurrent()
+        public
+        nonReentrant
+        returns (uint256 currentIndex)
+    {
         currentIndex = _pyIndexCurrent();
     }
 
@@ -262,7 +303,8 @@ contract FractleYieldTokenV3 is
      * @return firstPYIndex the earliest PY index post-expiry
      */
     function getPostExpiryData() external view returns (uint256 firstPYIndex) {
-        if (postExpiry.firstPYIndex == 0) revert Errors.YCPostExpiryDataNotSet();
+        if (postExpiry.firstPYIndex == 0)
+            revert Errors.YCPostExpiryDataNotSet();
         firstPYIndex = postExpiry.firstPYIndex;
     }
 
@@ -320,7 +362,12 @@ contract FractleYieldTokenV3 is
             _transferOut(SY, receivers[i], amountSyOuts[i]);
             totalSyInterestPostExpiry += syInterestPostExpiry;
 
-            emit Burn(msg.sender, receivers[i], amountPYToRedeems[i], amountSyOuts[i]);
+            emit Burn(
+                msg.sender,
+                receivers[i],
+                amountPYToRedeems[i],
+                amountSyOuts[i]
+            );
         }
 
         address treasury = IPYieldContractFactory(factory).treasury();
@@ -341,13 +388,17 @@ contract FractleYieldTokenV3 is
     ) internal view returns (uint256 syToUser, uint256 syInterestPostExpiry) {
         syToUser = SYUtils.assetToSy(indexCurrent, amountPY);
         if (isExpired()) {
-            uint256 totalSyRedeemable = SYUtils.assetToSy(postExpiry.firstPYIndex, amountPY);
+            uint256 totalSyRedeemable = SYUtils.assetToSy(
+                postExpiry.firstPYIndex,
+                amountPY
+            );
             syInterestPostExpiry = totalSyRedeemable - syToUser;
         }
     }
 
     function _getAmountPYToRedeem() internal view returns (uint256) {
-        if (!isExpired()) return PMath.min(_selfBalance(PT), balanceOf(address(this)));
+        if (!isExpired())
+            return PMath.min(_selfBalance(PT), balanceOf(address(this)));
         else return _selfBalance(PT);
     }
 
@@ -383,7 +434,7 @@ contract FractleYieldTokenV3 is
         uint256 newExchangeRate = IStandardizedYield(SY).exchangeRate();
         if (newExchangeRate != lastExchangeRate) {
             lastExchangeRate = newExchangeRate;
-            _lastGlobalInterestUpdatedDayIndexByOracle ++;
+            _lastGlobalInterestUpdatedDayIndexByOracle++;
         }
         if (doCacheIndexSameBlock && pyIndexLastUpdatedBlock == block.number)
             return _pyIndexStored;
@@ -412,7 +463,11 @@ contract FractleYieldTokenV3 is
                 ? IPYieldContractFactory(factory).interestFeeRate()
                 : PMath.ONE;
 
-            uint256 totalInterest = _calcInterest(totalSupply(), prevIndex, currentIndex);
+            uint256 totalInterest = _calcInterest(
+                totalSupply(),
+                prevIndex,
+                currentIndex
+            );
             uint256 feeAmount = totalInterest.mulDown(interestFeeRate);
             accuredAmount = totalInterest - feeAmount;
 
@@ -429,14 +484,19 @@ contract FractleYieldTokenV3 is
         uint256 prevIndex,
         uint256 currentIndex
     ) internal pure returns (uint256) {
-        return (principal * (currentIndex - prevIndex)).divDown(prevIndex * currentIndex);
+        return
+            (principal * (currentIndex - prevIndex)).divDown(
+                prevIndex * currentIndex
+            );
     }
 
     function _YTbalance(address user) internal view override returns (uint256) {
         return balanceOf(user);
     }
 
-    function _FPTbalance(address user) internal view override returns(uint256) {
+    function _FPTbalance(
+        address user
+    ) internal view override returns (uint256) {
         return IPPrincipalToken(PT).balanceOf(user);
     }
 
@@ -444,7 +504,13 @@ contract FractleYieldTokenV3 is
         return totalSupply();
     }
 
-    function _getGlobalPYIndex() internal view virtual override returns (uint256) {
+    function _getGlobalPYIndex()
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return _pyIndexStored;
     }
 
@@ -468,7 +534,8 @@ contract FractleYieldTokenV3 is
 
         for (uint256 i = 0; i < rewardTokens.length; ++i) {
             address token = rewardTokens[i];
-            uint256 accruedReward = _selfBalance(token) - rewardState[token].lastBalance;
+            uint256 accruedReward = _selfBalance(token) -
+                rewardState[token].lastBalance;
 
             uint256 amountRewardFee = accruedReward.mulDown(rewardFeeRate);
 
@@ -478,22 +545,42 @@ contract FractleYieldTokenV3 is
     }
 
     /// @dev effectively returning the amount of SY generating rewards for this user
-    function _rewardSharesUser(address user) internal view virtual override returns (uint256) {
+    function _rewardSharesUser(
+        address user
+    ) internal view virtual override returns (uint256) {
         uint256 index = userInterest[user].pyIndex;
         if (index == 0) return 0;
-        return SYUtils.assetToSy(index, balanceOf(user)) + userInterest[user].accrued;
+        return
+            SYUtils.assetToSy(index, balanceOf(user)) +
+            userInterest[user].accrued;
     }
 
-    function _rewardSharesTotal() internal view virtual override returns (uint256) {
+    function _rewardSharesTotal()
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return syReserve;
     }
 
-    function _getRewardTokens() internal view virtual override returns (address[] memory) {
+    function _getRewardTokens()
+        internal
+        view
+        virtual
+        override
+        returns (address[] memory)
+    {
         return IStandardizedYield(SY).getRewardTokens();
     }
 
     //solhint-disable-next-line ordering
-    function _beforeTokenTransfer(address from, address to, uint256) internal override {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
         if (isExpired()) _setPostExpiryData();
         _updateAndDistributeRewardsForTwo(from, to);
         _updateAndDistributeInterestForTwo(from, to);
@@ -503,11 +590,17 @@ contract FractleYieldTokenV3 is
         _updateAndDistributeInterestFPT(user);
     }
 
-    function doTransferOutInterestFPT(address user,address SY) external onlyPT returns(uint256 interestAmount) {
-        return _doTransferOutInterestFPT(user,SY);
+    function doTransferOutInterestFPT(
+        address user,
+        address SY
+    ) external onlyPT returns (uint256 interestAmount) {
+        return _doTransferOutInterestFPT(user, SY);
     }
 
-    function updateAndDistributeInterestForTwoFPT(address user1, address user2) external onlyPT {
+    function updateAndDistributeInterestForTwoFPT(
+        address user1,
+        address user2
+    ) external onlyPT {
         _updateAndDistributeInterestForTwoFPT(user1, user2);
     }
 }

@@ -8,8 +8,10 @@ import "../libraries/TokenHelper.sol";
 
 abstract contract StEthHelper is TokenHelper {
     address internal constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address internal constant WSTETH = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
-    address internal constant STETH = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84;
+    address internal constant WSTETH =
+        0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
+    address internal constant STETH =
+        0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84;
 
     constructor() {
         _safeApproveInf(STETH, WSTETH);
@@ -26,8 +28,12 @@ abstract contract StEthHelper is TokenHelper {
         } else {
             if (tokenIn == WETH) IWETH(WETH).withdraw(amountDep);
 
-            uint256 amountStEthSharesOut = IStETH(STETH).submit{ value: amountDep }(address(0));
-            amountStETH = IStETH(STETH).getPooledEthByShares(amountStEthSharesOut);
+            uint256 amountStEthSharesOut = IStETH(STETH).submit{
+                value: amountDep
+            }(address(0));
+            amountStETH = IStETH(STETH).getPooledEthByShares(
+                amountStEthSharesOut
+            );
         }
         amountOut = IWstETH(WSTETH).wrap(amountStETH);
     }
@@ -37,7 +43,8 @@ abstract contract StEthHelper is TokenHelper {
         uint256 amountRedeem
     ) internal virtual returns (uint256 amountTokenOut) {
         amountTokenOut = IWstETH(WSTETH).unwrap(amountRedeem);
-        if (receiver != address(this)) _transferOut(STETH, receiver, amountTokenOut);
+        if (receiver != address(this))
+            _transferOut(STETH, receiver, amountTokenOut);
     }
 
     /// @dev tokenIn must be either ETH, WETH or STETH
@@ -49,19 +56,24 @@ abstract contract StEthHelper is TokenHelper {
             assert(tokenIn == WETH || tokenIn == NATIVE);
             uint256 totalShares = IStETH(STETH).getTotalShares();
             uint256 totalPooledEth = IStETH(STETH).getTotalPooledEther();
-            uint256 amountStEthSharesOut = IStETH(STETH).getSharesByPooledEth(amountDep);
+            uint256 amountStEthSharesOut = IStETH(STETH).getSharesByPooledEth(
+                amountDep
+            );
 
             totalShares += amountStEthSharesOut;
             totalPooledEth += amountDep;
 
-            uint256 stEthBalance = (amountStEthSharesOut * totalPooledEth) / totalShares;
+            uint256 stEthBalance = (amountStEthSharesOut * totalPooledEth) /
+                totalShares;
             amountOut = (stEthBalance * totalShares) / totalPooledEth;
         } else {
             amountOut = IStETH(STETH).getSharesByPooledEth(amountDep);
         }
     }
 
-    function _previewRedeemWstETH(uint256 amountRedeem) internal view returns (uint256 amountOut) {
+    function _previewRedeemWstETH(
+        uint256 amountRedeem
+    ) internal view returns (uint256 amountOut) {
         amountOut = IStETH(STETH).getPooledEthByShares(amountRedeem);
     }
 }

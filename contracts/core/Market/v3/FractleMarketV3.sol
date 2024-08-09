@@ -44,7 +44,7 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
 
     address public immutable factory;
     uint256 public immutable expiry;
-    uint256 public immutable sAPR;//new
+    uint256 public immutable sAPR; //new
     uint256 public immutable lifeCircle;
     int256 public immutable scalarRoot;
     int256 public immutable initialAnchor;
@@ -79,10 +79,13 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         YT = IPYieldTokenV3(PT.YT());
         sAPR = YT.sAPR();
 
-        (_storage.observationCardinality, _storage.observationCardinalityNext) = observations
-            .initialize(uint32(block.timestamp));
+        (
+            _storage.observationCardinality,
+            _storage.observationCardinalityNext
+        ) = observations.initialize(uint32(block.timestamp));
 
-        if (_scalarRoot <= 0) revert Errors.MarketScalarRootBelowZero(_scalarRoot);
+        if (_scalarRoot <= 0)
+            revert Errors.MarketScalarRootBelowZero(_scalarRoot);
 
         scalarRoot = _scalarRoot;
         initialAnchor = _initialAnchor;
@@ -123,7 +126,12 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
 
         // initializing the market
         if (lpToReserve != 0) {
-            market.setInitialLnImpliedRate(index, initialAnchor,guessInitialImpliedRate,sAPR);//don't need blockTime now
+            market.setInitialLnImpliedRate(
+                index,
+                initialAnchor,
+                guessInitialImpliedRate,
+                sAPR
+            ); //don't need blockTime now
             _mint(address(1), lpToReserve);
         }
 
@@ -132,9 +140,15 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         _writeState(market);
 
         if (_selfBalance(SY) < market.totalSy.Uint())
-            revert Errors.MarketInsufficientSyReceived(_selfBalance(SY), market.totalSy.Uint());
+            revert Errors.MarketInsufficientSyReceived(
+                _selfBalance(SY),
+                market.totalSy.Uint()
+            );
         if (_selfBalance(PT) < market.totalPt.Uint())
-            revert Errors.MarketInsufficientPtReceived(_selfBalance(PT), market.totalPt.Uint());
+            revert Errors.MarketInsufficientPtReceived(
+                _selfBalance(PT),
+                market.totalPt.Uint()
+            );
 
         emit Mint(receiver, netLpOut, netSyUsed, netPtUsed);
     }
@@ -154,8 +168,10 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
 
         (netSyOut, netPtOut) = market.removeLiquidity(netLpToBurn);
 
-        if (receiverSy != address(this)) IERC20(SY).safeTransfer(receiverSy, netSyOut);
-        if (receiverPt != address(this)) IERC20(PT).safeTransfer(receiverPt, netPtOut);
+        if (receiverSy != address(this))
+            IERC20(SY).safeTransfer(receiverSy, netSyOut);
+        if (receiverPt != address(this))
+            IERC20(PT).safeTransfer(receiverPt, netPtOut);
 
         _writeState(market);
 
@@ -178,7 +194,12 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         uint256 exactPtIn,
         ApproxParams calldata guessNewImpliedRate,
         bytes calldata data
-    ) external nonReentrant notExpired returns (uint256 netSyOut, uint256 netSyFee) {
+    )
+        external
+        nonReentrant
+        notExpired
+        returns (uint256 netSyOut, uint256 netSyFee)
+    {
         MarketState memory market = readState(msg.sender);
 
         uint256 netSyToReserve;
@@ -190,23 +211,38 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
             //block.timestamp should be replaced by "the current day index"
             //"day index" is calculated in oracle-index-changing view
             //it should be "the day index of last interest index update activity"
-            //block.timestamp 
+            //block.timestamp
             YT.lastGlobalInterestUpdatedDayIndexByOracle()
         );
 
-        if (receiver != address(this)) IERC20(SY).safeTransfer(receiver, netSyOut);
+        if (receiver != address(this))
+            IERC20(SY).safeTransfer(receiver, netSyOut);
         IERC20(SY).safeTransfer(market.treasury, netSyToReserve);
 
         _writeState(market);
 
         if (data.length > 0) {
-            IPMarketSwapCallback(msg.sender).swapCallback(exactPtIn.neg(), netSyOut.Int(), data);
+            IPMarketSwapCallback(msg.sender).swapCallback(
+                exactPtIn.neg(),
+                netSyOut.Int(),
+                data
+            );
         }
 
         if (_selfBalance(PT) < market.totalPt.Uint())
-            revert Errors.MarketInsufficientPtReceived(_selfBalance(PT), market.totalPt.Uint());
+            revert Errors.MarketInsufficientPtReceived(
+                _selfBalance(PT),
+                market.totalPt.Uint()
+            );
 
-        emit Swap(msg.sender, receiver, exactPtIn.neg(), netSyOut.Int(), netSyFee, netSyToReserve);
+        emit Swap(
+            msg.sender,
+            receiver,
+            exactPtIn.neg(),
+            netSyOut.Int(),
+            netSyFee,
+            netSyToReserve
+        );
     }
 
     /**
@@ -224,7 +260,12 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         uint256 exactPtOut,
         ApproxParams calldata guessNewImpliedRate,
         bytes calldata data
-    ) external nonReentrant notExpired returns (uint256 netSyIn, uint256 netSyFee) {
+    )
+        external
+        nonReentrant
+        notExpired
+        returns (uint256 netSyIn, uint256 netSyFee)
+    {
         MarketState memory market = readState(msg.sender);
 
         uint256 netSyToReserve;
@@ -237,20 +278,35 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
             YT.lastGlobalInterestUpdatedDayIndexByOracle()
         );
 
-        if (receiver != address(this)) IERC20(PT).safeTransfer(receiver, exactPtOut);
+        if (receiver != address(this))
+            IERC20(PT).safeTransfer(receiver, exactPtOut);
         IERC20(SY).safeTransfer(market.treasury, netSyToReserve);
 
         _writeState(market);
 
         if (data.length > 0) {
-            IPMarketSwapCallback(msg.sender).swapCallback(exactPtOut.Int(), netSyIn.neg(), data);
+            IPMarketSwapCallback(msg.sender).swapCallback(
+                exactPtOut.Int(),
+                netSyIn.neg(),
+                data
+            );
         }
 
         // have received enough SY
         if (_selfBalance(SY) < market.totalSy.Uint())
-            revert Errors.MarketInsufficientSyReceived(_selfBalance(SY), market.totalSy.Uint());
+            revert Errors.MarketInsufficientSyReceived(
+                _selfBalance(SY),
+                market.totalSy.Uint()
+            );
 
-        emit Swap(msg.sender, receiver, exactPtOut.Int(), netSyIn.neg(), netSyFee, netSyToReserve);
+        emit Swap(
+            msg.sender,
+            receiver,
+            exactPtOut.Int(),
+            netSyIn.neg(),
+            netSyFee,
+            netSyToReserve
+        );
     }
 
     /// @notice forces balances to match reserves
@@ -266,7 +322,9 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
      * @notice redeems the user's reward
      * @return amount of reward token redeemed, in the same order as `getRewardTokens()`
      */
-    function redeemRewards(address user) external nonReentrant returns (uint256[] memory) {
+    function redeemRewards(
+        address user
+    ) external nonReentrant returns (uint256[] memory) {
         return _redeemRewards(user);
     }
 
@@ -292,12 +350,20 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
             );
     }
 
-    function increaseObservationsCardinalityNext(uint16 cardinalityNext) external nonReentrant {
+    function increaseObservationsCardinalityNext(
+        uint16 cardinalityNext
+    ) external nonReentrant {
         uint16 cardinalityNextOld = _storage.observationCardinalityNext;
-        uint16 cardinalityNextNew = observations.grow(cardinalityNextOld, cardinalityNext);
+        uint16 cardinalityNextNew = observations.grow(
+            cardinalityNextOld,
+            cardinalityNext
+        );
         if (cardinalityNextOld != cardinalityNextNew) {
             _storage.observationCardinalityNext = cardinalityNextNew;
-            emit IncreaseObservationCardinalityNext(cardinalityNextOld, cardinalityNextNew);
+            emit IncreaseObservationCardinalityNext(
+                cardinalityNextOld,
+                cardinalityNextNew
+            );
         }
     }
 
@@ -308,14 +374,18 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
     /**
      * @notice read the state of the market from storage into memory for gas-efficient manipulation
      */
-    function readState(address router) public view returns (MarketState memory market) {
+    function readState(
+        address router
+    ) public view returns (MarketState memory market) {
         market.totalPt = _storage.totalPt;
         market.totalSy = _storage.totalSy;
         market.totalLp = totalSupply().Int();
 
-        (market.treasury, market.lnFeeRateRoot, market.reserveFeePercent) = IPMarketFactory(
-            factory
-        ).getMarketConfig(router);
+        (
+            market.treasury,
+            market.lnFeeRateRoot,
+            market.reserveFeePercent
+        ) = IPMarketFactory(factory).getMarketConfig(router);
 
         market.scalarRoot = scalarRoot;
         market.expiry = expiry;
@@ -331,13 +401,14 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         int128 totalPt128 = market.totalPt.Int128();
         int128 totalSy128 = market.totalSy.Int128();
 
-        (uint16 observationIndex, uint16 observationCardinality) = observations.write(
-            _storage.observationIndex,
-            uint32(block.timestamp),
-            _storage.lastLnImpliedRate,
-            _storage.observationCardinality,
-            _storage.observationCardinalityNext
-        );
+        (uint16 observationIndex, uint16 observationCardinality) = observations
+            .write(
+                _storage.observationIndex,
+                uint32(block.timestamp),
+                _storage.lastLnImpliedRate,
+                _storage.observationCardinality,
+                _storage.observationCardinalityNext
+            );
 
         _storage.totalPt = totalPt128;
         _storage.totalSy = totalSy128;
@@ -355,7 +426,11 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
     function readTokens()
         external
         view
-        returns (IStandardizedYield _SY, IPPrincipalToken _PT, IPYieldTokenV3 _YT)
+        returns (
+            IStandardizedYield _SY,
+            IPPrincipalToken _PT,
+            IPYieldTokenV3 _YT
+        )
     {
         _SY = SY;
         _PT = PT;
@@ -370,7 +445,9 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
                     FRACTLE GAUGE - RELATED
     //////////////////////////////////////////////////////////////*/
 
-    function _stakedBalance(address user) internal view override returns (uint256) {
+    function _stakedBalance(
+        address user
+    ) internal view override returns (uint256) {
         return balanceOf(user);
     }
 

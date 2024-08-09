@@ -57,7 +57,7 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
     //it will be 0,1,2,3,....,N
     uint256 internal _lastGlobalInterestUpdatedDayIndexByOracle;
 
-    uint256 internal sAPRForFPT;//sAPR is for FPT, wei decimal
+    uint256 internal sAPRForFPT; //sAPR is for FPT, wei decimal
 
     mapping(address => UserInterest) public userInterest;
 
@@ -65,13 +65,21 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
 
     uint256 internal constant INITIAL_INTEREST_INDEX = 1;
 
-    constructor(uint256 _sAPR, address _externalRewardDistributor, address _marketFactory) {
+    constructor(
+        uint256 _sAPR,
+        address _externalRewardDistributor,
+        address _marketFactory
+    ) {
         sAPRForFPT = _sAPR;
         externalRewardDistributor = _externalRewardDistributor;
         marketFactory = _marketFactory;
     }
 
-    function lastGlobalInterestUpdatedDayIndexByOracle() public view returns(uint256){
+    function lastGlobalInterestUpdatedDayIndexByOracle()
+        public
+        view
+        returns (uint256)
+    {
         return _lastGlobalInterestUpdatedDayIndexByOracle;
     }
 
@@ -81,9 +89,12 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
 
     function _updateAndDistributeInterestFPT(address user) internal virtual {
         _updateAndDistributeInterestForTwoFPT(user, address(0));
-    }    
+    }
 
-    function _updateAndDistributeInterestForTwo(address user1, address user2) internal virtual {
+    function _updateAndDistributeInterestForTwo(
+        address user1,
+        address user2
+    ) internal virtual {
         (uint256 index, , uint256 pyIndex) = _updateInterestIndex();
 
         if (user1 != address(0) && user1 != address(this))
@@ -92,8 +103,11 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             _distributeInterestPrivate(user2, index, pyIndex);
     }
 
-    function _updateAndDistributeInterestForTwoFPT(address user1, address user2) internal virtual {
-        (,uint256 indexFPT, uint256 pyIndex) = _updateInterestIndex();
+    function _updateAndDistributeInterestForTwoFPT(
+        address user1,
+        address user2
+    ) internal virtual {
+        (, uint256 indexFPT, uint256 pyIndex) = _updateInterestIndex();
 
         if (user1 != address(0) && user1 != address(this))
             _distributeInterestPrivateFPT(user1, indexFPT, pyIndex);
@@ -118,7 +132,10 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
         userInterestFPT[user].accrued = 0;
         if (IPMarketFactory(marketFactory).isValidMarket(user)) {
             _transferOut(SY, externalRewardDistributor, interestAmount);
-            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(address(this), interestAmount);
+            IPFPTRewardInSY(externalRewardDistributor).mintForMarket(
+                address(this),
+                interestAmount
+            );
         } else {
             _transferOut(SY, user, interestAmount);
         }
@@ -143,7 +160,9 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             return;
         }
 
-        userInterest[user].accrued += _YTbalance(user).mulDown(currentIndex - prevIndex).Uint128();
+        userInterest[user].accrued += _YTbalance(user)
+            .mulDown(currentIndex - prevIndex)
+            .Uint128();
         userInterest[user].index = currentIndex.Uint128();
         userInterest[user].pyIndex = pyIndex;
     }
@@ -166,14 +185,19 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             return;
         }
 
-        userInterestFPT[user].accrued += _FPTbalance(user).mulDown(currentIndex - prevIndex).Uint128();
+        userInterestFPT[user].accrued += _FPTbalance(user)
+            .mulDown(currentIndex - prevIndex)
+            .Uint128();
         userInterestFPT[user].index = currentIndex.Uint128();
         userInterestFPT[user].pyIndex = pyIndex;
     }
-  
+
     //update index and collect doest not seperate for FPT/DYT
-    //need to deal with FPT DYT userInterest data 
-    function _updateInterestIndex() internal returns (uint256 index, uint256 indexFPT, uint256 pyIndex) {
+    //need to deal with FPT DYT userInterest data
+    function _updateInterestIndex()
+        internal
+        returns (uint256 index, uint256 indexFPT, uint256 pyIndex)
+    {
         if (lastInterestBlock != block.number) {
             // if we have not yet update the index for this block
             lastInterestBlock = block.number;
@@ -185,15 +209,18 @@ abstract contract InterestManagerYTV3 is TokenHelper, IPInterestManagerYTV2 {
             //  distribute between FPT and DYT and update the index
             index = globalInterestIndex;
             indexFPT = globalInterestIndexFPT;
-            
+
             if (index == 0) index = INITIAL_INTEREST_INDEX;
             if (indexFPT == 0) indexFPT = INITIAL_INTEREST_INDEX;
-            
+
             // update _lastGlobalInterestUpdatedDayIndexByOracle
-            if (totalShares != 0){
-                uint256 deltaDay = _lastGlobalInterestUpdatedDayIndexByOracle - _lastInterestDayIndex; // normal number without decimals
+            if (totalShares != 0) {
+                uint256 deltaDay = _lastGlobalInterestUpdatedDayIndexByOracle -
+                    _lastInterestDayIndex; // normal number without decimals
                 uint256 accruedForFPT = sAPRForFPT * deltaDay;
-                uint256 accruedForDYT = accrued > accruedForFPT ? accrued-accruedForFPT : 0;
+                uint256 accruedForDYT = accrued > accruedForFPT
+                    ? accrued - accruedForFPT
+                    : 0;
                 index += accruedForDYT.divDown(totalShares);
                 indexFPT += accruedForFPT.divDown(totalShares);
                 _lastInterestDayIndex = _lastGlobalInterestUpdatedDayIndexByOracle;

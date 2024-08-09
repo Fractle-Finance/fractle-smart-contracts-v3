@@ -13,7 +13,6 @@ abstract contract RewardManager is RewardManagerAbstract {
 
     mapping(address => RewardState) public rewardState;
 
-
     function _updateRewardIndex()
         internal
         virtual
@@ -37,7 +36,8 @@ abstract contract RewardManager is RewardManagerAbstract {
                 address token = tokens[i];
 
                 // the entire token balance of the contract must be the rewards of the contract
-                uint256 accrued = _selfBalance(tokens[i]) - rewardState[token].lastBalance;
+                uint256 accrued = _selfBalance(tokens[i]) -
+                    rewardState[token].lastBalance;
                 uint256 index = rewardState[token].index;
 
                 if (index == 0) index = INITIAL_REWARD_INDEX;
@@ -48,7 +48,8 @@ abstract contract RewardManager is RewardManagerAbstract {
             }
         }
 
-        for (uint256 i = 0; i < tokens.length; i++) indexes[i] = rewardState[tokens[i]].index;
+        for (uint256 i = 0; i < tokens.length; i++)
+            indexes[i] = rewardState[tokens[i]].index;
     }
 
     /// @dev this function doesn't need redeemExternal since redeemExternal is bundled in updateRewardIndex
@@ -63,13 +64,18 @@ abstract contract RewardManager is RewardManagerAbstract {
             rewardAmounts[i] = userReward[tokens[i]][user].accrued;
             if (rewardAmounts[i] != 0) {
                 userReward[tokens[i]][user].accrued = 0;
-                rewardState[tokens[i]].lastBalance -= rewardAmounts[i].Uint128();
+                rewardState[tokens[i]].lastBalance -= rewardAmounts[i]
+                    .Uint128();
                 _transferOut(tokens[i], receiver, rewardAmounts[i]);
             }
         }
     }
 
-    function _getRewardTokens() internal view virtual returns (address[] memory);
+    function _getRewardTokens()
+        internal
+        view
+        virtual
+        returns (address[] memory);
 
     function _rewardSharesTotal() internal view virtual returns (uint256);
 }

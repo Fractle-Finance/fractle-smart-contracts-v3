@@ -39,7 +39,10 @@ import "./FractlePrincipalTokenV3.sol";
 import "./FractleYieldTokenV3.sol";
 
 /// @dev If this contract is ever made upgradeable, please pay attention to the numContractDeployed variable
-contract FractleYieldContractFactoryV3 is BoringOwnableUpgradeable, IPYieldContractFactory {
+contract FractleYieldContractFactoryV3 is
+    BoringOwnableUpgradeable,
+    IPYieldContractFactory
+{
     using ExpiryUtils for string;
     using StringLib for string;
     using StringLib for StringLib.slice;
@@ -90,11 +93,14 @@ contract FractleYieldContractFactoryV3 is BoringOwnableUpgradeable, IPYieldContr
         address YT,
         uint32 expiry
     ) external {
-        if (MiniHelpers.isTimeInThePast(expiry) || expiry % expiryDivisor != 0) {
+        if (
+            MiniHelpers.isTimeInThePast(expiry) || expiry % expiryDivisor != 0
+        ) {
             revert Errors.YCFactoryInvalidExpiry();
         }
 
-        if (getPT[SY][expiry] != address(0)) revert Errors.YCFactoryYieldContractExisted();
+        if (getPT[SY][expiry] != address(0))
+            revert Errors.YCFactoryYieldContractExisted();
 
         IStandardizedYield _SY = IStandardizedYield(SY);
 
@@ -122,7 +128,10 @@ contract FractleYieldContractFactoryV3 is BoringOwnableUpgradeable, IPYieldContr
 
     function setInterestFeeRate(uint128 newInterestFeeRate) public onlyOwner {
         if (newInterestFeeRate > maxInterestFeeRate)
-            revert Errors.YCFactoryInterestFeeRateTooHigh(newInterestFeeRate, maxInterestFeeRate);
+            revert Errors.YCFactoryInterestFeeRateTooHigh(
+                newInterestFeeRate,
+                maxInterestFeeRate
+            );
 
         interestFeeRate = newInterestFeeRate;
         emit SetInterestFeeRate(newInterestFeeRate);
@@ -130,7 +139,10 @@ contract FractleYieldContractFactoryV3 is BoringOwnableUpgradeable, IPYieldContr
 
     function setRewardFeeRate(uint128 newRewardFeeRate) public onlyOwner {
         if (newRewardFeeRate > maxRewardFeeRate)
-            revert Errors.YCFactoryRewardFeeRateTooHigh(newRewardFeeRate, maxRewardFeeRate);
+            revert Errors.YCFactoryRewardFeeRateTooHigh(
+                newRewardFeeRate,
+                maxRewardFeeRate
+            );
 
         rewardFeeRate = newRewardFeeRate;
         emit SetRewardFeeRate(newRewardFeeRate);
@@ -143,7 +155,9 @@ contract FractleYieldContractFactoryV3 is BoringOwnableUpgradeable, IPYieldContr
         emit SetTreasury(newTreasury);
     }
 
-    function _stripSYPrefix(string memory _str) internal pure returns (string memory) {
+    function _stripSYPrefix(
+        string memory _str
+    ) internal pure returns (string memory) {
         StringLib.slice memory str = _str.toSlice();
         StringLib.slice memory delim_name = SY_NAME_PREF.toSlice();
         StringLib.slice memory delim_symbol = SY_SYMBOL_PREF.toSlice();

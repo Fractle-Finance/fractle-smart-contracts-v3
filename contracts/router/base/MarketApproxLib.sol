@@ -52,17 +52,37 @@ library MarketApproxPtInLib {
         uint256 blockTime,
         ApproxParams memory approx,
         uint256 sAPR
-    ) internal pure returns (uint256 /*netPtIn*/, uint256 /*netSyOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
+    )
+        internal
+        pure
+        returns (
+            uint256 /*netPtIn*/,
+            uint256 /*netSyOut*/,
+            uint256 /*netSyFee*/
+        )
+    {
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             // no limit on min
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtIn(market, comp)
+            );
             validateApprox(approx);
         }
 
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
-            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(market, comp, index, guess);
+            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(
+                market,
+                comp,
+                index,
+                guess
+            );
 
             if (netSyOut >= minSyOut) {
                 if (PMath.isAGreaterApproxB(netSyOut, minSyOut, approx.eps))
@@ -92,10 +112,20 @@ library MarketApproxPtInLib {
         ApproxParams memory approx,
         uint256 sAPR
     ) internal pure returns (uint256 /*netYtOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index,sAPR,blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
-            approx.guessMin = PMath.max(approx.guessMin, index.syToAsset(exactSyIn));
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
+            approx.guessMin = PMath.max(
+                approx.guessMin,
+                index.syToAsset(exactSyIn)
+            );
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtIn(market, comp)
+            );
             validateApprox(approx);
         }
 
@@ -104,7 +134,12 @@ library MarketApproxPtInLib {
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
 
-            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(market, comp, index, guess);
+            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(
+                market,
+                comp,
+                index,
+                guess
+            );
 
             uint256 netSyToTokenizePt = index.assetToSyUp(guess);
 
@@ -140,12 +175,23 @@ library MarketApproxPtInLib {
     )
         internal
         pure
-        returns (uint256 /*netPtSwap*/, uint256 /*netSyFromSwap*/, uint256 /*netSyFee*/)
+        returns (
+            uint256 /*netPtSwap*/,
+            uint256 /*netSyFromSwap*/,
+            uint256 /*netSyFee*/
+        )
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index,sAPR,blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             // no limit on min
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtIn(market, comp)
+            );
             approx.guessMax = PMath.min(approx.guessMax, totalPtIn);
             validateApprox(approx);
             require(market.totalLp != 0, "no existing lp");
@@ -193,10 +239,17 @@ library MarketApproxPtInLib {
             uint256 netSyToReserve
         )
     {
-        (netSyOut, netSyFee, netSyToReserve) = calcSyOut(market, comp, index, guess);
+        (netSyOut, netSyFee, netSyToReserve) = calcSyOut(
+            market,
+            comp,
+            index,
+            guess
+        );
 
         uint256 newTotalPt = uint256(market.totalPt) + guess;
-        uint256 newTotalSy = (uint256(market.totalSy) - netSyOut - netSyToReserve);
+        uint256 newTotalSy = (uint256(market.totalSy) -
+            netSyOut -
+            netSyToReserve);
 
         // it is desired that
         // netSyOut / newTotalSy = netPtRemaining / newTotalPt
@@ -233,19 +286,35 @@ library MarketApproxPtInLib {
     )
         internal
         pure
-        returns (uint256 /*netYtOut*/, uint256 /*totalPtToSwap*/, uint256 /*netSyFee*/)
+        returns (
+            uint256 /*netYtOut*/,
+            uint256 /*totalPtToSwap*/,
+            uint256 /*netSyFee*/
+        )
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index,sAPR,blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             approx.guessMin = PMath.max(approx.guessMin, exactPtIn);
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtIn(market, comp));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtIn(market, comp)
+            );
             validateApprox(approx);
         }
 
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
 
-            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(market, comp, index, guess);
+            (uint256 netSyOut, uint256 netSyFee, ) = calcSyOut(
+                market,
+                comp,
+                index,
+                guess
+            );
 
             uint256 netAssetOut = index.syToAsset(netSyOut);
 
@@ -270,20 +339,25 @@ library MarketApproxPtInLib {
         MarketPreCompute memory comp,
         PYIndex index,
         uint256 netPtIn
-    ) internal pure returns (uint256 netSyOut, uint256 netSyFee, uint256 netSyToReserve) {
-        (int256 _netSyOut, int256 _netSyFee, int256 _netSyToReserve) = market.calcTrade(
-            comp,
-            index,
-            -int256(netPtIn)
-        );
+    )
+        internal
+        pure
+        returns (uint256 netSyOut, uint256 netSyFee, uint256 netSyToReserve)
+    {
+        (int256 _netSyOut, int256 _netSyFee, int256 _netSyToReserve) = market
+            .calcTrade(comp, index, -int256(netPtIn));
         netSyOut = uint256(_netSyOut);
         netSyFee = uint256(_netSyFee);
         netSyToReserve = uint256(_netSyToReserve);
     }
 
-    function nextGuess(ApproxParams memory approx, uint256 iter) internal pure returns (uint256) {
+    function nextGuess(
+        ApproxParams memory approx,
+        uint256 iter
+    ) internal pure returns (uint256) {
         if (iter == 0 && approx.guessOffchain != 0) return approx.guessOffchain;
-        if (approx.guessMin <= approx.guessMax) return (approx.guessMin + approx.guessMax) / 2;
+        if (approx.guessMin <= approx.guessMax)
+            return (approx.guessMin + approx.guessMax) / 2;
         revert Errors.ApproxFail();
     }
 
@@ -291,7 +365,11 @@ library MarketApproxPtInLib {
 
     function validateApprox(ApproxParams memory approx) internal pure {
         if (approx.guessMin > approx.guessMax || approx.eps > PMath.ONE)
-            revert Errors.ApproxParamsInvalid(approx.guessMin, approx.guessMax, approx.eps);
+            revert Errors.ApproxParamsInvalid(
+                approx.guessMin,
+                approx.guessMax,
+                approx.eps
+            );
     }
 
     function calcMaxPtIn(
@@ -348,21 +426,33 @@ library MarketApproxPtOutLib {
         MarketState memory market,
         PYIndex index,
         uint256 exactSyIn,
-        uint256 blockTime,//daily,newest interest day index
+        uint256 blockTime, //daily,newest interest day index
         ApproxParams memory approx,
         uint256 sAPR
     ) internal pure returns (uint256 /*netPtOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             // no limit on min
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtOut(comp, market.totalPt)
+            );
             validateApprox(approx);
         }
 
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
 
-            (uint256 netSyIn, uint256 netSyFee, ) = calcSyIn(market, comp, index, guess);
+            (uint256 netSyIn, uint256 netSyFee, ) = calcSyIn(
+                market,
+                comp,
+                index,
+                guess
+            );
 
             if (netSyIn <= exactSyIn) {
                 if (PMath.isASmallerApproxB(netSyIn, exactSyIn, approx.eps))
@@ -391,22 +481,48 @@ library MarketApproxPtOutLib {
         uint256 blockTime,
         ApproxParams memory approx,
         uint256 sAPR
-    ) internal pure returns (uint256 /*netYtIn*/, uint256 /*netSyOut*/, uint256 /*netSyFee*/) {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR, blockTime);
+    )
+        internal
+        pure
+        returns (
+            uint256 /*netYtIn*/,
+            uint256 /*netSyOut*/,
+            uint256 /*netSyFee*/
+        )
+    {
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             // no limit on min
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtOut(comp, market.totalPt)
+            );
             validateApprox(approx);
         }
-        
+
         return _calculateNetSyOut(market, comp, index, approx, minSyOut);
         revert Errors.ApproxFail();
     }
 
-    function _calculateNetSyOut(MarketState memory market, MarketPreCompute memory comp, PYIndex index, ApproxParams memory approx, uint256 minSyOut) internal pure returns (uint256, uint256, uint256) {
+    function _calculateNetSyOut(
+        MarketState memory market,
+        MarketPreCompute memory comp,
+        PYIndex index,
+        ApproxParams memory approx,
+        uint256 minSyOut
+    ) internal pure returns (uint256, uint256, uint256) {
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
-            (uint256 netSyOwed, uint256 netSyFee, ) = calcSyIn(market, comp, index, guess);
+            (uint256 netSyOwed, uint256 netSyFee, ) = calcSyIn(
+                market,
+                comp,
+                index,
+                guess
+            );
             uint256 netAssetToRepay = index.syToAssetUp(netSyOwed);
             uint256 netSyOut = index.assetToSy(guess - netAssetToRepay);
             if (netSyOut >= minSyOut) {
@@ -446,14 +562,32 @@ library MarketApproxPtOutLib {
     )
         internal
         pure
-        returns (uint256 /*netPtFromSwap*/, uint256 /*netSySwap*/, uint256 /*netSyFee*/)
+        returns (
+            uint256 /*netPtFromSwap*/,
+            uint256 /*netSySwap*/,
+            uint256 /*netSyFee*/
+        )
     {
-        Args6 memory a = Args6(_market, _index, _totalSyIn, _blockTime, _approx,_sAPR);
+        Args6 memory a = Args6(
+            _market,
+            _index,
+            _totalSyIn,
+            _blockTime,
+            _approx,
+            _sAPR
+        );
 
-        MarketPreCompute memory comp = a.market.getMarketPreCompute(a.index,a.sAPR, a.blockTime);
+        MarketPreCompute memory comp = a.market.getMarketPreCompute(
+            a.index,
+            a.sAPR,
+            a.blockTime
+        );
         if (a.approx.guessOffchain == 0) {
             // no limit on min
-            a.approx.guessMax = PMath.min(a.approx.guessMax, calcMaxPtOut(comp, a.market.totalPt));
+            a.approx.guessMax = PMath.min(
+                a.approx.guessMax,
+                calcMaxPtOut(comp, a.market.totalPt)
+            );
             validateApprox(a.approx);
             require(a.market.totalLp != 0, "no existing lp");
         }
@@ -461,12 +595,11 @@ library MarketApproxPtOutLib {
         for (uint256 iter = 0; iter < a.approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(a.approx, iter);
 
-            (uint256 netSyIn, uint256 netSyFee, uint256 netSyToReserve) = calcSyIn(
-                a.market,
-                comp,
-                a.index,
-                guess
-            );
+            (
+                uint256 netSyIn,
+                uint256 netSyFee,
+                uint256 netSyToReserve
+            ) = calcSyIn(a.market, comp, a.index, guess);
 
             if (netSyIn > a.totalSyIn) {
                 a.approx.guessMax = guess - 1;
@@ -478,7 +611,9 @@ library MarketApproxPtOutLib {
 
             {
                 uint256 newTotalPt = uint256(a.market.totalPt) - guess;
-                uint256 netTotalSy = uint256(a.market.totalSy) + netSyIn - netSyToReserve;
+                uint256 netTotalSy = uint256(a.market.totalSy) +
+                    netSyIn -
+                    netSyToReserve;
 
                 // it is desired that
                 // netPtFromSwap / newTotalPt = netSyRemaining / netTotalSy
@@ -522,19 +657,35 @@ library MarketApproxPtOutLib {
     )
         internal
         pure
-        returns (uint256 /*netPtOut*/, uint256 /*totalPtSwapped*/, uint256 /*netSyFee*/)
+        returns (
+            uint256 /*netPtOut*/,
+            uint256 /*totalPtSwapped*/,
+            uint256 /*netSyFee*/
+        )
     {
-        MarketPreCompute memory comp = market.getMarketPreCompute(index, sAPR,blockTime);
+        MarketPreCompute memory comp = market.getMarketPreCompute(
+            index,
+            sAPR,
+            blockTime
+        );
         if (approx.guessOffchain == 0) {
             approx.guessMin = PMath.max(approx.guessMin, exactYtIn);
-            approx.guessMax = PMath.min(approx.guessMax, calcMaxPtOut(comp, market.totalPt));
+            approx.guessMax = PMath.min(
+                approx.guessMax,
+                calcMaxPtOut(comp, market.totalPt)
+            );
             validateApprox(approx);
         }
 
         for (uint256 iter = 0; iter < approx.maxIteration; ++iter) {
             uint256 guess = nextGuess(approx, iter);
 
-            (uint256 netSyOwed, uint256 netSyFee, ) = calcSyIn(market, comp, index, guess);
+            (uint256 netSyOwed, uint256 netSyFee, ) = calcSyIn(
+                market,
+                comp,
+                index,
+                guess
+            );
 
             uint256 netYtToPull = index.syToAssetUp(netSyOwed);
 
@@ -556,12 +707,13 @@ library MarketApproxPtOutLib {
         MarketPreCompute memory comp,
         PYIndex index,
         uint256 netPtOut
-    ) internal pure returns (uint256 netSyIn, uint256 netSyFee, uint256 netSyToReserve) {
-        (int256 _netSyIn, int256 _netSyFee, int256 _netSyToReserve) = market.calcTrade(
-            comp,
-            index,
-            int256(netPtOut)
-        );
+    )
+        internal
+        pure
+        returns (uint256 netSyIn, uint256 netSyFee, uint256 netSyToReserve)
+    {
+        (int256 _netSyIn, int256 _netSyFee, int256 _netSyToReserve) = market
+            .calcTrade(comp, index, int256(netPtOut));
 
         // all safe since totalPt and totalSy is int128
         netSyIn = uint256(-_netSyIn);
@@ -573,7 +725,9 @@ library MarketApproxPtOutLib {
         MarketPreCompute memory comp,
         int256 totalPt
     ) internal pure returns (uint256) {
-        int256 logitP = (comp.feeRate - comp.rateAnchor).mulDown(comp.rateScalar).exp();
+        int256 logitP = (comp.feeRate - comp.rateAnchor)
+            .mulDown(comp.rateScalar)
+            .exp();
         int256 proportion = logitP.divDown(logitP + PMath.IONE);
         int256 numerator = proportion.mulDown(totalPt + comp.totalAsset);
         int256 maxPtOut = totalPt - numerator;
@@ -581,14 +735,22 @@ library MarketApproxPtOutLib {
         return (uint256(maxPtOut) * 999) / 1000;
     }
 
-    function nextGuess(ApproxParams memory approx, uint256 iter) internal pure returns (uint256) {
+    function nextGuess(
+        ApproxParams memory approx,
+        uint256 iter
+    ) internal pure returns (uint256) {
         if (iter == 0 && approx.guessOffchain != 0) return approx.guessOffchain;
-        if (approx.guessMin <= approx.guessMax) return (approx.guessMin + approx.guessMax) / 2;
+        if (approx.guessMin <= approx.guessMax)
+            return (approx.guessMin + approx.guessMax) / 2;
         revert Errors.ApproxFail();
     }
 
     function validateApprox(ApproxParams memory approx) internal pure {
         if (approx.guessMin > approx.guessMax || approx.eps > PMath.ONE)
-            revert Errors.ApproxParamsInvalid(approx.guessMin, approx.guessMax, approx.eps);
+            revert Errors.ApproxParamsInvalid(
+                approx.guessMin,
+                approx.guessMax,
+                approx.eps
+            );
     }
 }

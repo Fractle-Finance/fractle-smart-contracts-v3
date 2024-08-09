@@ -24,7 +24,9 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     /**
      * @dev See {IStandardizedYield-claimRewards}
      */
-    function claimRewards(address user)
+    function claimRewards(
+        address user
+    )
         external
         virtual
         override
@@ -53,13 +55,9 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     /**
      * @dev See {IStandardizedYield-accruedRewards}
      */
-    function accruedRewards(address user)
-        external
-        view
-        virtual
-        override
-        returns (uint256[] memory rewardAmounts)
-    {
+    function accruedRewards(
+        address user
+    ) external view virtual override returns (uint256[] memory rewardAmounts) {
         address[] memory rewardTokens = _getRewardTokens();
         rewardAmounts = new uint256[](rewardTokens.length);
         for (uint256 i = 0; i < rewardTokens.length; ) {
@@ -101,7 +99,13 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
      * @notice returns the total number of reward shares
      * @dev this is simply the total supply of shares, as rewards shares are equivalent to SY shares
      */
-    function _rewardSharesTotal() internal view virtual override returns (uint256) {
+    function _rewardSharesTotal()
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return totalSupply();
     }
 
@@ -109,7 +113,9 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
      * @notice returns the reward shares of (`user`)
      * @dev this is simply the SY balance of (`user`), as rewards shares are equivalent to SY shares
      */
-    function _rewardSharesUser(address user) internal view virtual override returns (uint256) {
+    function _rewardSharesUser(
+        address user
+    ) internal view virtual override returns (uint256) {
         return balanceOf(user);
     }
 

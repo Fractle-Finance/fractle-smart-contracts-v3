@@ -25,7 +25,14 @@ abstract contract SYBase is
         string memory _name,
         string memory _symbol,
         address _yieldToken
-    ) FractleERC20Permit(_name, _symbol, IERC20Metadata(_yieldToken).decimals()) initializer {
+    )
+        FractleERC20Permit(
+            _name,
+            _symbol,
+            IERC20Metadata(_yieldToken).decimals()
+        )
+        initializer
+    {
         yieldToken = _yieldToken;
         __BoringOwnable_init();
     }
@@ -53,10 +60,19 @@ abstract contract SYBase is
 
         amountSharesOut = _deposit(tokenIn, amountTokenToDeposit);
         if (amountSharesOut < minSharesOut)
-            revert Errors.SYInsufficientSharesOut(amountSharesOut, minSharesOut);
+            revert Errors.SYInsufficientSharesOut(
+                amountSharesOut,
+                minSharesOut
+            );
 
         _mint(receiver, amountSharesOut);
-        emit Deposit(msg.sender, receiver, tokenIn, amountTokenToDeposit, amountSharesOut);
+        emit Deposit(
+            msg.sender,
+            receiver,
+            tokenIn,
+            amountTokenToDeposit,
+            amountSharesOut
+        );
     }
 
     /**
@@ -69,7 +85,8 @@ abstract contract SYBase is
         uint256 minTokenOut,
         bool burnFromInternalBalance
     ) external nonReentrant returns (uint256 amountTokenOut) {
-        if (!isValidTokenOut(tokenOut)) revert Errors.SYInvalidTokenOut(tokenOut);
+        if (!isValidTokenOut(tokenOut))
+            revert Errors.SYInvalidTokenOut(tokenOut);
         if (amountSharesToRedeem == 0) revert Errors.SYZeroRedeem();
 
         if (burnFromInternalBalance) {
@@ -81,7 +98,13 @@ abstract contract SYBase is
         amountTokenOut = _redeem(receiver, tokenOut, amountSharesToRedeem);
         if (amountTokenOut < minTokenOut)
             revert Errors.SYInsufficientTokenOut(amountTokenOut, minTokenOut);
-        emit Redeem(msg.sender, receiver, tokenOut, amountSharesToRedeem, amountTokenOut);
+        emit Redeem(
+            msg.sender,
+            receiver,
+            tokenOut,
+            amountSharesToRedeem,
+            amountTokenOut
+        );
     }
 
     /**
@@ -114,7 +137,12 @@ abstract contract SYBase is
     /**
      * @dev See {IStandardizedYield-exchangeRate}
      */
-    function exchangeRate() external view virtual override returns (uint256 res);
+    function exchangeRate()
+        external
+        view
+        virtual
+        override
+        returns (uint256 res);
 
     /*///////////////////////////////////////////////////////////////
                                REWARDS-RELATED
@@ -151,7 +179,12 @@ abstract contract SYBase is
         rewardAmounts = new uint256[](0);
     }
 
-    function rewardIndexesCurrent() external virtual override returns (uint256[] memory indexes) {
+    function rewardIndexesCurrent()
+        external
+        virtual
+        override
+        returns (uint256[] memory indexes)
+    {
         indexes = new uint256[](0);
     }
 
@@ -181,7 +214,8 @@ abstract contract SYBase is
         address tokenOut,
         uint256 amountSharesToRedeem
     ) external view virtual returns (uint256 amountTokenOut) {
-        if (!isValidTokenOut(tokenOut)) revert Errors.SYInvalidTokenOut(tokenOut);
+        if (!isValidTokenOut(tokenOut))
+            revert Errors.SYInvalidTokenOut(tokenOut);
         return _previewRedeem(tokenOut, amountSharesToRedeem);
     }
 

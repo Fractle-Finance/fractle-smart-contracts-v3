@@ -12,7 +12,11 @@ import "./CallbackHelper.sol";
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, TokenHelper {
+abstract contract ActionBaseCallback is
+    IPMarketSwapCallback,
+    CallbackHelper,
+    TokenHelper
+{
     using PMath for int256;
     using PMath for uint256;
     using PYIndexLib for PYIndex;
@@ -61,13 +65,19 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         int256 /*syToAccount*/,
         bytes calldata data
     ) internal {
-        (address receiver, uint256 minYtOut, IPYieldTokenV3 YT) = _decodeSwapExactSyForYt(data);
+        (
+            address receiver,
+            uint256 minYtOut,
+            IPYieldTokenV3 YT
+        ) = _decodeSwapExactSyForYt(data);
 
         uint256 ptOwed = ptToAccount.abs();
         uint256 netPyOut = YT.mintPY(msg.sender, receiver);
 
-        if (netPyOut < ptOwed) revert Errors.RouterInsufficientPtRepay(netPyOut, ptOwed);
-        if (netPyOut < minYtOut) revert Errors.RouterInsufficientYtOut(netPyOut, minYtOut);
+        if (netPyOut < ptOwed)
+            revert Errors.RouterInsufficientPtRepay(netPyOut, ptOwed);
+        if (netPyOut < minYtOut)
+            revert Errors.RouterInsufficientYtOut(netPyOut, minYtOut);
     }
 
     /// @dev refer to _swapSyForExactYt
@@ -109,7 +119,8 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         }
 
         uint256 netPyOut = YT.mintPY(msg.sender, receiver);
-        if (netPyOut < ptOwed) revert Errors.RouterInsufficientPtRepay(netPyOut, ptOwed);
+        if (netPyOut < ptOwed)
+            revert Errors.RouterInsufficientPtRepay(netPyOut, ptOwed);
     }
 
     /// @dev refer to _swapExactYtForSy or _swapYtForExactSy
@@ -118,7 +129,11 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         int256 syToAccount,
         bytes calldata data
     ) internal {
-        (address receiver, uint256 minSyOut, IPYieldTokenV3 YT) = _decodeSwapYtForSy(data);
+        (
+            address receiver,
+            uint256 minSyOut,
+            IPYieldTokenV3 YT
+        ) = _decodeSwapYtForSy(data);
         PYIndex pyIndex = YT.newIndex();
 
         uint256 syOwed = syToAccount.neg().Uint();
@@ -126,13 +141,19 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         address[] memory receivers = new address[](2);
         uint256[] memory amountPYToRedeems = new uint256[](2);
 
-        (receivers[0], amountPYToRedeems[0]) = (msg.sender, pyIndex.syToAssetUp(syOwed));
+        (receivers[0], amountPYToRedeems[0]) = (
+            msg.sender,
+            pyIndex.syToAssetUp(syOwed)
+        );
         (receivers[1], amountPYToRedeems[1]) = (
             receiver,
             ptToAccount.Uint() - amountPYToRedeems[0]
         );
 
-        uint256[] memory amountSyOuts = YT.redeemPYMulti(receivers, amountPYToRedeems);
+        uint256[] memory amountSyOuts = YT.redeemPYMulti(
+            receivers,
+            amountPYToRedeems
+        );
         if (amountSyOuts[1] < minSyOut)
             revert Errors.RouterInsufficientSyOut(amountSyOuts[1], minSyOut);
     }
@@ -151,9 +172,13 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
         uint256 netPtOwed = ptToAccount.abs();
 
         uint256 netPyOut = YT.mintPY(msg.sender, receiver);
-        if (netPyOut < minYtOut) revert Errors.RouterInsufficientYtOut(netPyOut, minYtOut);
+        if (netPyOut < minYtOut)
+            revert Errors.RouterInsufficientYtOut(netPyOut, minYtOut);
         if (exactPtIn + netPyOut < netPtOwed)
-            revert Errors.RouterInsufficientPtRepay(exactPtIn + netPyOut, netPtOwed);
+            revert Errors.RouterInsufficientPtRepay(
+                exactPtIn + netPyOut,
+                netPtOwed
+            );
     }
 
     function _callbackSwapExactYtForPt(
@@ -178,7 +203,8 @@ abstract contract ActionBaseCallback is IPMarketSwapCallback, CallbackHelper, To
             revert Errors.RouterInsufficientSyRepay(netSyToMarket, netSyOwed);
 
         uint256 netPtOut = ptToAccount.Uint() - exactYtIn;
-        if (netPtOut < minPtOut) revert Errors.RouterInsufficientPtOut(netPtOut, minPtOut);
+        if (netPtOut < minPtOut)
+            revert Errors.RouterInsufficientPtOut(netPtOut, minPtOut);
 
         _transferOut(address(PT), receiver, netPtOut);
     }

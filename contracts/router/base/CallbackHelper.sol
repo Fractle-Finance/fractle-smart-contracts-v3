@@ -36,7 +36,11 @@ abstract contract CallbackHelper {
 
     function _decodeSwapExactSyForYt(
         bytes calldata data
-    ) internal pure returns (address receiver, uint256 minYtOut, IPYieldTokenV3 YT) {
+    )
+        internal
+        pure
+        returns (address receiver, uint256 minYtOut, IPYieldTokenV3 YT)
+    {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))
@@ -114,7 +118,11 @@ abstract contract CallbackHelper {
 
     function _decodeSwapYtForSy(
         bytes calldata data
-    ) internal pure returns (address receiver, uint256 minSyOut, IPYieldTokenV3 YT) {
+    )
+        internal
+        pure
+        returns (address receiver, uint256 minSyOut, IPYieldTokenV3 YT)
+    {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))
@@ -189,7 +197,12 @@ abstract contract CallbackHelper {
     )
         internal
         pure
-        returns (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldTokenV3 YT)
+        returns (
+            address receiver,
+            uint256 exactPtIn,
+            uint256 minYtOut,
+            IPYieldTokenV3 YT
+        )
     {
         assembly {
             // first 32 bytes is ActionType
@@ -203,7 +216,9 @@ abstract contract CallbackHelper {
     /// ------------------------------------------------------------
     /// Misc functions
     /// ------------------------------------------------------------
-    function _getActionType(bytes calldata data) internal pure returns (ActionType actionType) {
+    function _getActionType(
+        bytes calldata data
+    ) internal pure returns (ActionType actionType) {
         assembly {
             actionType := calldataload(data.offset)
         }

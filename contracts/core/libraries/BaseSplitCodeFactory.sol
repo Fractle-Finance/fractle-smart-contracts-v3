@@ -214,7 +214,12 @@ library BaseSplitCodeFactory {
 
                 // Next, we concatenate the creation code stored in A and B.
                 let dataStart := add(code, 32)
-                extcodecopy(creationCodeContractA, dataStart, 0, creationCodeSizeA)
+                extcodecopy(
+                    creationCodeContractA,
+                    dataStart,
+                    0,
+                    creationCodeSizeA
+                )
                 extcodecopy(
                     creationCodeContractB,
                     add(dataStart, creationCodeSizeA),
@@ -229,10 +234,17 @@ library BaseSplitCodeFactory {
             uint256 constructorArgsCodeDataPtr;
             assembly {
                 constructorArgsDataPtr := add(constructorArgs, 32)
-                constructorArgsCodeDataPtr := add(add(code, 32), creationCodeSize)
+                constructorArgsCodeDataPtr := add(
+                    add(code, 32),
+                    creationCodeSize
+                )
             }
 
-            _memcpy(constructorArgsCodeDataPtr, constructorArgsDataPtr, constructorArgsSize);
+            _memcpy(
+                constructorArgsCodeDataPtr,
+                constructorArgsDataPtr,
+                constructorArgsSize
+            );
         }
     }
 

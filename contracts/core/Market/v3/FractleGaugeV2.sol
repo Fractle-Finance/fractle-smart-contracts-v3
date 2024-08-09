@@ -6,7 +6,7 @@ import "../../../interfaces/IStandardizedYield.sol";
 import "../../../interfaces/IPMarketFactoryV2.sol";
 import "../../../interfaces/IPPrincipalToken.sol";
 import "../../../interfaces/IPExternalRewardDistributor.sol";
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../../RewardManager/RewardManager.sol";
 
@@ -47,7 +47,9 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
         rewards is updated
      * @dev It's intended to have user's activeBalance updated when rewards is redeemed
      */
-    function _redeemRewards(address user) internal virtual returns (uint256[] memory rewardsOut) {
+    function _redeemRewards(
+        address user
+    ) internal virtual returns (uint256[] memory rewardsOut) {
         _updateAndDistributeRewards(user);
         _updateUserActiveBalance(user);
         rewardsOut = _doTransferOutRewards(user, user);
@@ -58,9 +60,14 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
         _updateUserActiveBalanceForTwo(user, address(0));
     }
 
-    function _updateUserActiveBalanceForTwo(address user1, address user2) internal virtual {
-        if (user1 != address(0) && user1 != address(this)) _updateUserActiveBalancePrivate(user1);
-        if (user2 != address(0) && user2 != address(this)) _updateUserActiveBalancePrivate(user2);
+    function _updateUserActiveBalanceForTwo(
+        address user1,
+        address user2
+    ) internal virtual {
+        if (user1 != address(0) && user1 != address(this))
+            _updateUserActiveBalancePrivate(user1);
+        if (user2 != address(0) && user2 != address(this))
+            _updateUserActiveBalancePrivate(user2);
     }
 
     /**
@@ -81,15 +88,25 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
         // IPExternalRewardDistributor(externalRewardDistributor).redeemRewards();
     }
 
-    function _stakedBalance(address user) internal view virtual returns (uint256);
+    function _stakedBalance(
+        address user
+    ) internal view virtual returns (uint256);
 
     function _totalStaked() internal view virtual returns (uint256);
 
-    function _rewardSharesTotal() internal view virtual override returns (uint256) {
+    function _rewardSharesTotal()
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return totalActiveSupply;
     }
 
-    function _rewardSharesUser(address user) internal view virtual override returns (uint256) {
+    function _rewardSharesUser(
+        address user
+    ) internal view virtual override returns (uint256) {
         return activeBalance[user];
     }
 
@@ -101,19 +118,27 @@ abstract contract FractleGaugeV2 is RewardManager, IPGauge {
         returns (address[] memory rewardTokens)
     {
         address[] memory SYRewards = IStandardizedYield(SY).getRewardTokens();
-//        address[] memory externalRewards = IPExternalRewardDistributor(externalRewardDistributor)
-//            .getRewardTokens(address(this));
+        //        address[] memory externalRewards = IPExternalRewardDistributor(externalRewardDistributor)
+        //            .getRewardTokens(address(this));
 
-//        rewardTokens = SYRewards.merge(externalRewards);
+        //        rewardTokens = SYRewards.merge(externalRewards);
         if (rewardTokens.contains(FRACTLE)) return rewardTokens;
         return rewardTokens.append(FRACTLE);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256) internal virtual {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal virtual {
         _updateAndDistributeRewardsForTwo(from, to);
     }
 
-    function _afterTokenTransfer(address from, address to, uint256) internal virtual {
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal virtual {
         _updateUserActiveBalanceForTwo(from, to);
     }
 }
