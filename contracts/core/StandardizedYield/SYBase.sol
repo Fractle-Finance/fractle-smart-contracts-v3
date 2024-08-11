@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 import "../../interfaces/IStandardizedYield.sol";
 
+import "hardhat/console.sol";
 import "../erc20/FractleERC20Permit.sol";
 
 import "../libraries/math/PMath.sol";
@@ -55,9 +56,7 @@ abstract contract SYBase is
     ) external payable nonReentrant returns (uint256 amountSharesOut) {
         if (!isValidTokenIn(tokenIn)) revert Errors.SYInvalidTokenIn(tokenIn);
         if (amountTokenToDeposit == 0) revert Errors.SYZeroDeposit();
-
         _transferIn(tokenIn, msg.sender, amountTokenToDeposit);
-
         amountSharesOut = _deposit(tokenIn, amountTokenToDeposit);
         if (amountSharesOut < minSharesOut)
             revert Errors.SYInsufficientSharesOut(

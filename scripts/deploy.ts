@@ -1,6 +1,11 @@
 import { ethers, network } from "hardhat";
 import { MarketMathCore, MarketState } from "./calculation";
-import { ContractTransactionResponse, Signer, ZeroAddress } from "ethers";
+import {
+  ContractTransactionResponse,
+  Signer,
+  toBigInt,
+  ZeroAddress,
+} from "ethers";
 import BigNumber from "bignumber.js";
 import {
   ActionAddRemoveLiq,
@@ -15,32 +20,74 @@ async function main() {
   console.log("detected network " + network.name);
   const signers = await ethers.getSigners();
 
-  // Step0: deploy the EUSD
-  const _EUSD = await ethers.getContractFactory("EUSDMock");
-  const EUSD = await _EUSD.deploy(ZeroAddress);
-  await EUSD.deploymentTransaction()?.wait(3);
-  console.log("EUSD deployed at: " + (await EUSD.getAddress()));
-  // step1: deploy the SY, in this case we deploy the FractleEUSDSY.sol
-  const _FractleEUSDSY = await ethers.getContractFactory("FractleEUSDSY");
-  const FractleEUSDSY = await _FractleEUSDSY.deploy(
-    "EUSDSY",
-    "EUSDSY",
-    await EUSD.getAddress(),
+  const actionAddRemoveLiq =
+    await ethers.getContractFactory("ActionAddRemoveLiq");
+  const actionAddRemoveLiqInstance = await actionAddRemoveLiq.deploy();
+  await actionAddRemoveLiqInstance.deploymentTransaction()?.wait();
+  console.log(
+    "actionAddRemoveLiq deployed at: " +
+      (await actionAddRemoveLiqInstance.getAddress()),
   );
-  await FractleEUSDSY.deploymentTransaction()?.wait(3);
-  console.log("SY deployed at: " + (await FractleEUSDSY.getAddress()));
+
+  const actionMintRedeem = await ethers.getContractFactory("ActionMintRedeem");
+  const actionMintRedeemInstance = await actionMintRedeem.deploy();
+  await actionMintRedeemInstance.deploymentTransaction()?.wait();
+  console.log(
+    "actionMintRedeem deployed at: " +
+      (await actionMintRedeemInstance.getAddress()),
+  );
+
+  const actionMisc = await ethers.getContractFactory("ActionMisc");
+  const actionMiscInstance = await actionMisc.deploy();
+  await actionMiscInstance.deploymentTransaction()?.wait();
+  console.log(
+    "actionMisc deployed at: " + (await actionMiscInstance.getAddress()),
+  );
+
+  const actionSwapPT = await ethers.getContractFactory("ActionSwapPT");
+  const actionSwapPTInstance = await actionSwapPT.deploy();
+  await actionSwapPTInstance.deploymentTransaction()?.wait();
+  console.log(
+    "actionSwapPT deployed at: " + (await actionSwapPTInstance.getAddress()),
+  );
+
+  const addressProvider = await ethers.getContractFactory("AddressProvider");
+  const addressProviderInstance = await addressProvider.deploy();
+  await addressProviderInstance.deploymentTransaction()?.wait();
+  console.log(
+    "addressProvider deployed at: " +
+      (await addressProviderInstance.getAddress()),
+  );
+
+  // Step0: deploy the STETH
+  const _STETH = await ethers.getContractFactory("STETHMock");
+  const STETH = await _STETH.deploy(
+    ZeroAddress,
+    await actionMintRedeemInstance.getAddress(),
+  );
+  await STETH.deploymentTransaction()?.wait();
+  console.log("STETH deployed at: " + (await STETH.getAddress()));
+  // step1: deploy the SY, in this case we deploy the FractleEUSDSY.sol
+  const _FractleSTETHSY = await ethers.getContractFactory("FractleSTETHSY");
+  const FractleSTETHSY = await _FractleSTETHSY.deploy(
+    "STETHSY",
+    "STETHSY",
+    await STETH.getAddress(),
+  );
+  await FractleSTETHSY.deploymentTransaction()?.wait();
+  console.log("SY deployed at: " + (await FractleSTETHSY.getAddress()));
 
   // deploy oracleLib
   const _OracleLib = await ethers.getContractFactory("OracleLib");
   const OracleLib = await _OracleLib.deploy();
-  await OracleLib.deploymentTransaction()?.wait(3);
+  await OracleLib.deploymentTransaction()?.wait();
   console.log("OracleLib deployed to:", await OracleLib.getAddress());
 
   const _FractleYieldTokenFactoryV3 = await ethers.getContractFactory(
     "FractleYieldContractFactoryV3",
   );
   const FractleYieldTokenFactoryV3 = await _FractleYieldTokenFactoryV3.deploy();
-  await FractleYieldTokenFactoryV3.deploymentTransaction()?.wait(3);
+  await FractleYieldTokenFactoryV3.deploymentTransaction()?.wait();
   console.log(
     "yield token factory deployed at: " +
       (await FractleYieldTokenFactoryV3.getAddress()),
@@ -55,9 +102,9 @@ async function main() {
     // 2%
     ethers.parseEther(String(0.02)),
     // treasury
-    await EUSD.getAddress(),
+    await STETH.getAddress(),
   );
-  await initializationTx.wait(3);
+  await initializationTx.wait();
 
   // we deploy and initialize the marketFactory.
   const _FractleMarketFactoryV3 = await ethers.getContractFactory(
@@ -66,20 +113,20 @@ async function main() {
   const FractleMarketFactoryV3 = await _FractleMarketFactoryV3.deploy(
     await FractleYieldTokenFactoryV3.getAddress(),
   );
-  await FractleMarketFactoryV3.deploymentTransaction()?.wait(3);
+  await FractleMarketFactoryV3.deploymentTransaction()?.wait();
   console.log(
     "market factory deployed at: " +
       (await FractleMarketFactoryV3.getAddress()),
   );
   // now we initialize the factory
   const initializeFractleMarket = await FractleMarketFactoryV3.initialize(
-    await EUSD.getAddress(),
+    await STETH.getAddress(),
     ethers.parseEther(String(0.000999500333083533)),
     80,
     // external rewards distributor, don't need to set it currently.
-    await EUSD.getAddress(),
+    await STETH.getAddress(),
   );
-  await initializeFractleMarket.wait(3);
+  await initializeFractleMarket.wait();
 
   // we have to deploy the market manually.
   const _FractleMarket = await ethers.getContractFactory("FractleMarketV3", {
@@ -91,13 +138,13 @@ async function main() {
   // begin to deployPT and YT
   const ptToDeploy = await ethers.getContractFactory("FractlePrincipalTokenV3");
   const deployedPT = await ptToDeploy.deploy(
-    await FractleEUSDSY.getAddress(),
+    await FractleSTETHSY.getAddress(),
     "EUSD1739145600",
     "EUSD1739145600",
     18,
     1739145600,
   ); //1739145600 is 20250208
-  await deployedPT.deploymentTransaction()?.wait(3);
+  await deployedPT.deploymentTransaction()?.wait();
   console.log("successfully deployed pt at", await deployedPT.getAddress());
 
   const _externalRewardDistributor = await ethers.getContractFactory(
@@ -109,7 +156,7 @@ async function main() {
     "ER",
     18,
   );
-  await externalRewardsDistributor.deploymentTransaction()?.wait(3);
+  await externalRewardsDistributor.deploymentTransaction()?.wait();
   console.log(
     "externalRewardDistributor deployed at: " +
       (await externalRewardsDistributor.getAddress()),
@@ -118,7 +165,7 @@ async function main() {
   // then we deploy the YT
   const ytToDeploy = await ethers.getContractFactory("FractleYieldTokenV3");
   const deployedYT = await ytToDeploy.deploy(
-    await FractleEUSDSY.getAddress(), //SY
+    await FractleSTETHSY.getAddress(), //SY
     await deployedPT.getAddress(), //PT
     await FractleYieldTokenFactoryV3.getAddress(), //factory
     "EUSD1739145600YT", //name
@@ -133,28 +180,28 @@ async function main() {
     // market factory
     await FractleMarketFactoryV3.getAddress(),
   );
-  await deployedYT.deploymentTransaction()?.wait(3);
+  await deployedYT.deploymentTransaction()?.wait();
   console.log("successfully deployed yt", await deployedYT.getAddress());
 
   // the use the YT to initialize the PT.
   const initializationTxPTYT = await FractleYieldTokenFactoryV3.initializePTYT(
-    await FractleEUSDSY.getAddress(),
+    await FractleSTETHSY.getAddress(),
     await deployedPT.getAddress(),
     await deployedYT.getAddress(),
     1739145600,
   );
-  await initializationTxPTYT.wait(3);
+  await initializationTxPTYT.wait();
 
   const deployedFractleMarket = await _FractleMarket.deploy(
     await deployedPT.getAddress(),
     ethers.parseEther(String(76.56895)),
     ethers.parseEther(String(1.04573897412)), //1.04573897412,absolutely 1 year round
-    await EUSD.getAddress(),
+    await STETH.getAddress(),
     // external distributor,
     await externalRewardsDistributor.getAddress(),
     await FractleMarketFactoryV3.getAddress(),
   );
-  await deployedFractleMarket.deploymentTransaction()?.wait(3);
+  await deployedFractleMarket.deploymentTransaction()?.wait();
   console.log(
     "market deployed at :" + (await deployedFractleMarket.getAddress()),
   );
@@ -175,7 +222,7 @@ async function main() {
     ethers.parseEther(String(76.56895)),
     ethers.parseEther(String(1.04573897412)),
   );
-  await createMarket.wait(3);
+  await createMarket.wait();
 
   // // then we begin to deploy actions
   // const actionInfoStatic = await ethers.getContractFactory("ActionInfoStatic");
@@ -221,100 +268,58 @@ async function main() {
   //     (await actionStorageStaticInstance.getAddress()),
   // );
 
-  const actionAddRemoveLiq =
-    await ethers.getContractFactory("ActionAddRemoveLiq");
-  const actionAddRemoveLiqInstance = await actionAddRemoveLiq.deploy();
-  await actionAddRemoveLiqInstance.deploymentTransaction()?.wait(3);
-  console.log(
-    "actionAddRemoveLiq deployed at: " +
-      (await actionAddRemoveLiqInstance.getAddress()),
-  );
-
-  const actionMintRedeem = await ethers.getContractFactory("ActionMintRedeem");
-  const actionMintRedeemInstance = await actionMintRedeem.deploy();
-  await actionMintRedeemInstance.deploymentTransaction()?.wait(3);
-  console.log(
-    "actionMintRedeem deployed at: " +
-      (await actionMintRedeemInstance.getAddress()),
-  );
-
-  const actionMisc = await ethers.getContractFactory("ActionMisc");
-  const actionMiscInstance = await actionMisc.deploy();
-  await actionMiscInstance.deploymentTransaction()?.wait(3);
-  console.log(
-    "actionMisc deployed at: " + (await actionMiscInstance.getAddress()),
-  );
-
-  const actionSwapPT = await ethers.getContractFactory("ActionSwapPT");
-  const actionSwapPTInstance = await actionSwapPT.deploy();
-  await actionSwapPTInstance.deploymentTransaction()?.wait(3);
-  console.log(
-    "actionSwapPT deployed at: " + (await actionSwapPTInstance.getAddress()),
-  );
-
-  const addressProvider = await ethers.getContractFactory("AddressProvider");
-  const addressProviderInstance = await addressProvider.deploy();
-  await addressProviderInstance.deploymentTransaction()?.wait(3);
-  console.log(
-    "addressProvider deployed at: " +
-      (await addressProviderInstance.getAddress()),
-  );
-
   // set market factory
   const initializeProviderInstance = await addressProviderInstance.initialize();
-  await initializeProviderInstance.wait(3);
+  await initializeProviderInstance.wait();
   const setProviderInstance = await addressProviderInstance.set(
     10086,
     await FractleMarketFactoryV3.getAddress(),
   );
-  await setProviderInstance.wait(3);
+  await setProviderInstance.wait();
 
   const actionSwapYT = await ethers.getContractFactory("ActionSwapYT");
   const actionSwapYTInstance = await actionSwapYT.deploy(
     await addressProviderInstance.getAddress(),
     10086,
   );
-  await actionSwapYTInstance.deploymentTransaction()?.wait(3);
+  await actionSwapYTInstance.deploymentTransaction()?.wait();
   console.log(
     "actionSwapYT deployed at: " + (await actionSwapYTInstance.getAddress()),
   );
 
-  const approval1 = await EUSD.approve(
-    await FractleEUSDSY.getAddress(),
+  const approval1 = await STETH.approve(
+    await FractleSTETHSY.getAddress(),
     ethers.parseEther("1000000000000000000000000000000000"),
   );
-  await approval1.wait(3);
-  const approval2 = await EUSD.approve(
+  await approval1.wait();
+  const approval2 = await STETH.approve(
     await actionMintRedeemInstance.getAddress(),
     ethers.parseEther("10000000000000000000000000000"),
   );
-  await approval2.wait(3);
+  await approval2.wait();
 
-  // first of all, we have to mint sy from token.
-  const input = {
-    tokenIn: await EUSD.getAddress(),
-    netTokenIn: 10000000000000000000000n,
-    tokenMintSy: await EUSD.getAddress(),
-  };
-  const mintedToken = await actionMintRedeemInstance.mintSyFromToken(
-    signers[0].getAddress(),
-    await FractleEUSDSY.getAddress(),
-    0,
-    input,
+  const signer = signers[0];
+  const mintedToken = await STETH.mintAndWrap(
+    await FractleSTETHSY.getAddress(),
+    signer.getAddress(),
   );
-  await mintedToken.wait(3);
-  console.log(await FractleEUSDSY.balanceOf(signers[0].getAddress()));
 
+  await mintedToken.wait();
+  console.log(
+    "successfully minted sy from stETH",
+    await FractleSTETHSY.balanceOf(signers[0].getAddress()),
+  );
+
+  const balance = await FractleSTETHSY.balanceOf(signers[0].getAddress());
   /**
    * @notice Tokenize SY into PT + YT of equal qty. Every unit of asset of SY will create 1 PT + 1 YT
    * @dev SY must be transferred to this contract prior to calling
-   * 要先把SY转到合约中，然后再mintPTYT，否则出错。
    */
-  const transfer = await FractleEUSDSY.transfer(
+  const transfer = await FractleSTETHSY.transfer(
     await deployedYT.getAddress(),
-    5000000000000000000000n,
+    balance / BigInt(5),
   );
-  await transfer.wait(3);
+  await transfer.wait();
 
   // begin to mint ptyt
   await deployedYT.mintPY(signers[0].getAddress(), signers[0].getAddress());
@@ -330,10 +335,10 @@ async function main() {
   // dyt case
   console.log(
     "SY balance before initial mint :" +
-      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
+      (await FractleSTETHSY.balanceOf(signers[0].getAddress())),
   );
 
-  await EUSD.changeTotalSupply(10001);
+  await STETH.changeTotalSupply(10001);
 
   // now we can claim dyt tokens
   await actionMintRedeemInstance.redeemDueInterestAndRewards(
@@ -344,10 +349,10 @@ async function main() {
   );
   console.log(
     "SY balance after claim yt rewards:" +
-      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
+      (await FractleSTETHSY.balanceOf(signers[0].getAddress())),
   );
 
-  await EUSD.changeTotalSupply(10001);
+  await STETH.changeTotalSupply(10001);
 
   // now we can claim fpt tokens
   await actionMintRedeemInstance.redeemFPTRewards(
@@ -356,7 +361,7 @@ async function main() {
   );
   console.log(
     "SY balance after claim fpt rewards:" +
-      (await FractleEUSDSY.balanceOf(signers[0].getAddress())),
+      (await FractleSTETHSY.balanceOf(signers[0].getAddress())),
   );
 
   // read state
@@ -381,22 +386,22 @@ async function main() {
     await actionAddRemoveLiqInstance.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalPTtoPool.wait(3);
-  const approvalEUSDSYtoPool = await FractleEUSDSY.approve(
+  await approvalPTtoPool.wait();
+  const approvalEUSDSYtoPool = await FractleSTETHSY.approve(
     await actionAddRemoveLiqInstance.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalEUSDSYtoPool.wait(3);
+  await approvalEUSDSYtoPool.wait();
   const approvalPTtoMarket = await deployedPT.approve(
     await deployedFractleMarket.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalPTtoMarket.wait(3);
-  const approvalEUSDSYtoMarket = await FractleEUSDSY.approve(
+  await approvalPTtoMarket.wait();
+  const approvalEUSDSYtoMarket = await FractleSTETHSY.approve(
     await deployedFractleMarket.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalEUSDSYtoMarket.wait(3);
+  await approvalEUSDSYtoMarket.wait();
 
   //actually, we'd better get this approx data with a calculation function
   //but if we have determined the inital implied rata. we are sure what to fill in here
@@ -409,33 +414,37 @@ async function main() {
     maxIteration: String(BigNumber(7)),
     eps: String(BigNumber(1e14)),
   };
+  console.log((balance / BigInt(5)) * BigInt(3));
+  console.log(balance / BigInt(5));
+  console.log("begin add liquidity");
   const addLiquidity = await actionAddRemoveLiqInstance.addLiquidityDualSyAndPt(
     signers[0].getAddress(),
     await deployedFractleMarket.getAddress(),
-    300000000000000000000n,
-    100000000000000000000n,
+    (balance / BigInt(5)) * BigInt(3),
+    balance / BigInt(5),
     0,
     calldata00,
   );
-  await addLiquidity.wait(3);
+  console.log("end addliquidity");
+  await addLiquidity.wait();
 
   // how much lp do we have? // 172205
   const approvalToMarket = await deployedFractleMarket.approve(
     await actionAddRemoveLiqInstance.getAddress(),
     ethers.parseEther("100000000"),
   );
-  await approvalToMarket.wait(3);
+  await approvalToMarket.wait();
 
   const approvalPT = await deployedPT.approve(
     actionSwapPTInstance.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalPT.wait(3);
-  const approvalSY = await FractleEUSDSY.approve(
+  await approvalPT.wait();
+  const approvalSY = await FractleSTETHSY.approve(
     actionSwapPTInstance.getAddress(),
     ethers.parseEther("100000000000"),
   );
-  await approvalSY.wait(3);
+  await approvalSY.wait();
 
   // begin to swap 0.01 Pt for Sy
   const res_swapPtForSy = await preCalculationSwapPt(
@@ -453,7 +462,7 @@ async function main() {
     0,
     res_swapPtForSy.calldata_guessR,
   );
-  await actionSwapPtForSy.wait(3);
+  await actionSwapPtForSy.wait();
   console.log("successfully swap 0.01 pt for sy");
 
   // swap exact 0.01 Sy for Pt
@@ -473,7 +482,7 @@ async function main() {
     res_swapSyForPt.calldata0,
     res_swapSyForPt.calldata_guessR,
   );
-  await actionSwapSyForPt.wait(3);
+  await actionSwapSyForPt.wait();
   console.log("success swap 0.01 sy for pt");
 
   //------swap exact 1yt for sy-------------//
@@ -496,11 +505,11 @@ async function main() {
     0,
     res_swapYtForSy.calldata_guessR,
   );
-  await actionSwapYtForSy.wait(3);
+  await actionSwapYtForSy.wait();
   console.log("successfully swap 1yt for sy");
 
   //-----swap exact 0.01sy for yt-------//
-  await FractleEUSDSY.approve(
+  await FractleSTETHSY.approve(
     actionSwapYTInstance.getAddress(),
     ethers.parseEther("1000000000000000000"),
   );
@@ -518,7 +527,7 @@ async function main() {
     res_swapSyForYt.calldata0,
     res_swapSyForYt.calldata_guessR,
   );
-  await actionSwapSyForYt.wait(3);
+  await actionSwapSyForYt.wait();
   console.log("successfully swap 0.01sy for yt");
 
   //-----swap exact 0.01pt for yt -----//
@@ -540,7 +549,7 @@ async function main() {
     res_swapPtForYt.calldata0,
     res_swapPtForYt.calldata_guessR,
   );
-  await actionSwapPtForYt.wait(3);
+  await actionSwapPtForYt.wait();
   console.log("successfully swap 0.01pt for yt");
 
   //--------------swap 1yt for pt--------------//
@@ -562,7 +571,7 @@ async function main() {
     res_swapYtForPt.calldata0,
     res_swapYtForPt.calldata_guessR,
   );
-  await actionSwapYtForPt.wait(3);
+  await actionSwapYtForPt.wait();
   console.log("successfully swap 1yt for pt");
 
   //---------try remove liquidity-------------//
@@ -574,7 +583,7 @@ async function main() {
       0,
       0,
     );
-  await removeLiquidityDual.wait(3);
+  await removeLiquidityDual.wait();
   console.log("successfully remove the liquidity dualSyAndPt");
 
   // add liquidity single sy 10
@@ -595,7 +604,7 @@ async function main() {
       res_liquidityAdd.calldata0,
       res_liquidityAdd.calldata_guessR,
     );
-  await addLiquiditySingle.wait(3);
+  await addLiquiditySingle.wait();
   console.log("successfully added the liquidity single sy for 10");
 
   // remove liquidity single sy 10
@@ -615,7 +624,7 @@ async function main() {
       0,
       res_liquidityRemove.calldata_guessR,
     );
-  await removeLiquiditySingle.wait(3);
+  await removeLiquiditySingle.wait();
   console.log("successfully removed the liquidity single for 10");
 }
 
@@ -932,6 +941,6 @@ async function mineBlocks(signer: Signer, n: number) {
       data: "0x",
     });
     await delay(100);
-    await res.wait(3);
+    await res.wait();
   }
 }

@@ -2,17 +2,17 @@
 pragma solidity 0.8.17;
 
 import "../SYBase.sol";
-import "../../../interfaces/Lybra/IEUSD.sol";
+import "../../../interfaces/Lido/ISTETH.sol";
 
-contract FractleEUSDSY is SYBase {
-    address public immutable eUSD;
+contract FractleSTETHSY is SYBase {
+    address public immutable stETH;
 
     constructor(
         string memory _name,
         string memory _symbol,
-        address _eUSD
-    ) SYBase(_name, _symbol, _eUSD) {
-        eUSD = _eUSD;
+        address _stETH
+    ) SYBase(_name, _symbol, _stETH) {
+        stETH = _stETH;
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ contract FractleEUSDSY is SYBase {
         address /*tokenIn*/,
         uint256 amountDeposited
     ) internal virtual override returns (uint256 /*amountSharesOut*/) {
-        return IEUSD(eUSD).getSharesByMintedEUSD(amountDeposited);
+        return ISTETH(stETH).getSharesByMintedEUSD(amountDeposited);
     }
 
     function _redeem(
@@ -31,7 +31,7 @@ contract FractleEUSDSY is SYBase {
         address /*tokenOut*/,
         uint256 amountSharesToRedeem
     ) internal virtual override returns (uint256 /*amountTokenOut*/) {
-        return IEUSD(eUSD).transferShares(receiver, amountSharesToRedeem);
+        return ISTETH(stETH).transferShares(receiver, amountSharesToRedeem);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ contract FractleEUSDSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function exchangeRate() public view virtual override returns (uint256) {
-        return IEUSD(eUSD).getMintedEUSDByShares(1e18);
+        return ISTETH(stETH).getMintedEUSDByShares(1e18);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -50,14 +50,14 @@ contract FractleEUSDSY is SYBase {
         address /*tokenIn*/,
         uint256 amountTokenToDeposit
     ) internal view override returns (uint256 /*amountSharesOut*/) {
-        return IEUSD(eUSD).getSharesByMintedEUSD(amountTokenToDeposit);
+        return ISTETH(stETH).getSharesByMintedEUSD(amountTokenToDeposit);
     }
 
     function _previewRedeem(
         address /*tokenOut*/,
         uint256 amountSharesToRedeem
     ) internal view override returns (uint256 /*amountTokenOut*/) {
-        return IEUSD(eUSD).getMintedEUSDByShares(amountSharesToRedeem);
+        return ISTETH(stETH).getMintedEUSDByShares(amountSharesToRedeem);
     }
 
     function getTokensIn()
@@ -68,7 +68,7 @@ contract FractleEUSDSY is SYBase {
         returns (address[] memory res)
     {
         res = new address[](1);
-        res[0] = eUSD;
+        res[0] = stETH;
     }
 
     function getTokensOut()
@@ -79,19 +79,19 @@ contract FractleEUSDSY is SYBase {
         returns (address[] memory res)
     {
         res = new address[](1);
-        res[0] = eUSD;
+        res[0] = stETH;
     }
 
     function isValidTokenIn(
         address token
     ) public view virtual override returns (bool) {
-        return token == eUSD;
+        return token == stETH;
     }
 
     function isValidTokenOut(
         address token
     ) public view virtual override returns (bool) {
-        return token == eUSD;
+        return token == stETH;
     }
 
     function assetInfo()
@@ -100,7 +100,7 @@ contract FractleEUSDSY is SYBase {
         returns (AssetType assetType, address assetAddress, uint8 assetDecimals)
     {
         assetType = AssetType.TOKEN;
-        assetAddress = eUSD;
+        assetAddress = stETH;
         assetDecimals = 18;
     }
 }

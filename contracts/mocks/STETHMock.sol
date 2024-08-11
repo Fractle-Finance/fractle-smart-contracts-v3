@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: BUSL-1.1
-
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -7,8 +6,13 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "../interfaces/Iconfigurator.sol";
 
+import "../router/base/ActionBaseMintRedeem.sol";
+import "../interfaces/IPActionMintRedeem.sol";
+
+import "hardhat/console.sol";
+
 /**
- * @title Interest-bearing ERC20-like token for Lybra protocol.
+ * @title Interest-bearing ERC20-like token for Lido protocol.
  *
  * This contract is abstract.
  *
@@ -36,11 +40,13 @@ import "../interfaces/Iconfigurator.sol";
  * pooled Ether increases, no `Transfer` events are generated: doing so would require
  * emitting an event for each token holder and thus running an unbounded loop.
  */
-contract EUSDMock is IERC20, Context {
+contract STETHMock is IERC20, Context {
     using SafeMath for uint256;
     Iconfigurator public immutable configurator;
     uint256 private _totalShares;
     uint256 private _totalSupply;
+    address private actionMintAndRedeem;
+    uint256 constant public UNIT = 1e18;
 
     /**
      * @dev EUSD balances are dynamic and are calculated based on the accounts' shares
@@ -102,7 +108,8 @@ contract EUSDMock is IERC20, Context {
         _;
     }
 
-    constructor(address _config) {
+    constructor(address _config, address _actionMintAndRedeem) {
+        actionMintAndRedeem = _actionMintAndRedeem;
         configurator = Iconfigurator(_config);
         _totalShares = 1e24;
         shares[msg.sender] = 1e24;
@@ -113,7 +120,7 @@ contract EUSDMock is IERC20, Context {
      * @return the name of the token.
      */
     function name() public pure returns (string memory) {
-        return "eUSD";
+        return "stETH";
     }
 
     /**
@@ -121,7 +128,7 @@ contract EUSDMock is IERC20, Context {
      * name.
      */
     function symbol() public pure returns (string memory) {
-        return "eUSD";
+        return "stETH";
     }
 
     /**
@@ -359,7 +366,7 @@ contract EUSDMock is IERC20, Context {
         if (_totalShares == 0) {
             return 0;
         } else {
-            return _sharesAmount.mul(_totalSupply).div(_totalShares);
+            return _sharesAmount.mul(_totalSupply).div(_totalShares).mul((block.timestamp) - uint(117096491)).div(1529717628);
         }
     }
 
@@ -464,6 +471,20 @@ contract EUSDMock is IERC20, Context {
         shares[_recipient] = shares[_recipient].add(_sharesAmount);
     }
 
+    function mintAndWrap(
+        address _stETHSy,
+        address _recipient
+    ) external {
+        TokenInput memory ti = TokenInput({
+            tokenIn: address(this),
+            netTokenIn: UNIT,
+            tokenMintSy: address(this)
+        });
+        approve(actionMintAndRedeem, type(uint256).max);
+        mint(_recipient);
+        IPActionMintRedeem(actionMintAndRedeem).mintSyFromToken(_recipient, _stETHSy, 0, ti);
+    }
+
     /**
      * @notice Creates `_sharesAmount` shares and assigns them to `_recipient`, increasing the total amount of shares.
      * @dev This doesn't increase the token total supply.
@@ -474,20 +495,15 @@ contract EUSDMock is IERC20, Context {
      * - the contract must not be paused.
      */
     function mint(
-        address _recipient,
-        uint256 _mintAmount
-    ) external returns (uint256 newTotalShares) {
+        address _recipient
+    ) public returns (uint256 newTotalShares) {
         require(minted[_recipient] == false, "ALREADY_MINTED");
-        require(
-            _mintAmount <= 1000000000000000000000,
-            "MAX_MINT_AMOUNT_EXCEEDED"
-        );
         require(_recipient != address(0), "MINT_TO_THE_ZERO_ADDRESS");
 
-        uint256 sharesAmount = getSharesByMintedEUSD(_mintAmount);
+        uint256 sharesAmount = getSharesByMintedEUSD(UNIT);
         if (sharesAmount == 0) {
             //EUSD totalSupply is 0: assume that shares correspond to EUSD 1-to-1
-            sharesAmount = _mintAmount;
+            sharesAmount = UNIT;
         }
 
         newTotalShares = _totalShares.add(sharesAmount);
@@ -495,11 +511,11 @@ contract EUSDMock is IERC20, Context {
 
         shares[_recipient] = shares[_recipient].add(sharesAmount);
 
-        _totalSupply += _mintAmount;
+        _totalSupply += UNIT;
 
         minted[_recipient] = true;
 
-        emit Transfer(address(0), _recipient, _mintAmount);
+        emit Transfer(address(0), _recipient, UNIT);
     }
 
     /**

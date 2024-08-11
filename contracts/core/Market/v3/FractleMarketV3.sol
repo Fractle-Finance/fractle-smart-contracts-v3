@@ -6,6 +6,8 @@ import "../../../interfaces/IPMarketFactory.sol";
 import "../../../interfaces/IPMarketSwapCallback.sol";
 import "../../erc20/FractleERC20.sol";
 
+import "hardhat/console.sol";
+
 import "./FractleGaugeV2.sol";
 import "../OracleLib.sol";
 import "../../../router/base/MarketApproxLib.sol";
@@ -138,7 +140,6 @@ contract FractleMarketV3 is FractleERC20, FractleGaugeV2, IPMarket {
         _mint(receiver, netLpOut);
 
         _writeState(market);
-
         if (_selfBalance(SY) < market.totalSy.Uint())
             revert Errors.MarketInsufficientSyReceived(
                 _selfBalance(SY),

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-interface IEUSD {
+interface ISTETH {
     function transferShares(
         address _recipient,
         uint256 _sharesAmount

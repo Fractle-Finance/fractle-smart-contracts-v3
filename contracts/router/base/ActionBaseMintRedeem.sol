@@ -5,6 +5,7 @@ import "../../core/libraries/TokenHelper.sol";
 import "../../interfaces/IStandardizedYield.sol";
 import "../../interfaces/IPYieldToken.sol";
 import "../../core/libraries/Errors.sol";
+import "hardhat/console.sol";
 
 struct TokenInput {
     // Token/Sy data
@@ -31,7 +32,7 @@ abstract contract ActionBaseMintRedeem is TokenHelper {
         TokenInput calldata inp
     ) internal returns (uint256 netSyOut) {
         uint256 netTokenMintSy;
-        _transferIn(inp.tokenIn, msg.sender, inp.netTokenIn);
+        _transferIn(inp.tokenIn, receiver, inp.netTokenIn);
         netTokenMintSy = inp.netTokenIn;
         netSyOut = __mintSy(receiver, SY, netTokenMintSy, minSyOut, inp);
     }
