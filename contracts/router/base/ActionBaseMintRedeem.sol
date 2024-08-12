@@ -5,8 +5,6 @@ import "../../core/libraries/TokenHelper.sol";
 import "../../interfaces/IStandardizedYield.sol";
 import "../../interfaces/IPYieldToken.sol";
 import "../../core/libraries/Errors.sol";
-import "hardhat/console.sol";
-
 struct TokenInput {
     // Token/Sy data
     address tokenIn;

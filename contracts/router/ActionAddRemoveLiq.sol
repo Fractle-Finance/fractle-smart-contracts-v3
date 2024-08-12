@@ -6,8 +6,6 @@ import "../interfaces/IPActionAddRemoveLiq.sol";
 import "../interfaces/IPMarket.sol";
 import "../core/libraries/Errors.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @dev If market is expired, all actions will revert, except for the following:
  * - removeLiquidityDualSyAndPt()

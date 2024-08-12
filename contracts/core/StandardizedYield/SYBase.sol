@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 import "../../interfaces/IStandardizedYield.sol";
 
-import "hardhat/console.sol";
 import "../erc20/FractleERC20Permit.sol";
 
 import "../libraries/math/PMath.sol";

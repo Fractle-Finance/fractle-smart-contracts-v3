@@ -6,8 +6,6 @@ import "../../../interfaces/IPMarketFactory.sol";
 import "../../../interfaces/IPMarketSwapCallback.sol";
 import "../../erc20/FractleERC20.sol";
 
-import "hardhat/console.sol";
-
 import "./FractleGaugeV2.sol";
 import "../OracleLib.sol";
 import "../../../router/base/MarketApproxLib.sol";

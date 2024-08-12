@@ -9,8 +9,6 @@ import "../interfaces/Iconfigurator.sol";
 import "../router/base/ActionBaseMintRedeem.sol";
 import "../interfaces/IPActionMintRedeem.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @title Interest-bearing ERC20-like token for Lido protocol.
  *

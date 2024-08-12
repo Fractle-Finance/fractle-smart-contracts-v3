@@ -9,8 +9,6 @@ import "../libraries/MiniHelpers.sol";
 import "../libraries/Errors.sol";
 import "../../router/base/MarketApproxLib.sol";
 
-import "hardhat/console.sol";
-
 struct MarketState {
     int256 totalPt;
     int256 totalSy;
@@ -498,15 +496,11 @@ library MarketMathCore {
             ++iter
         ) {
             uint256 guess = nextGuessImpliedRate(guessNewImpliedRate, iter);
-            console.log("new implied rate");
-            console.log(guess);
             int256 exchangeRateFromImpliedRate = _getFPTExchangeRateFromImpliedRate(
                     guess,
                     sAPR,
                     timeToExpiry
                 );
-            console.log("new exchangeRate from impliedRate");
-            console.logInt(exchangeRateFromImpliedRate);
 
             if (exchangeRateFromImpliedRate.Uint() >= exchangeRate.Uint()) {
                 if (
@@ -634,13 +628,7 @@ library MarketMathCore {
         /// ------------------------------------------------------------
         /// WRITE
         /// ------------------------------------------------------------
-        console.logInt(market.totalPt);
-        console.logInt(totalAsset);
-        console.logInt(rateScalar);
-        console.logInt(initialAnchor);
         // console.log(guessInitialImpliedRate);
-        console.logUint(sAPR);
-        console.logUint(timeToExpiry);
         market.lastLnImpliedRate = _getLnImpliedRate(
             market.totalPt,
             totalAsset,
