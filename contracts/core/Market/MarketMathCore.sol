@@ -207,12 +207,9 @@ library MarketMathCore {
             syUsed = syDesired;
             ptUsed = ptDesired;
         } else {
-            int256 netLpByPt = (ptDesired * market.totalLp).rawDivUp(
-                market.totalPt
-            );
-            int256 netLpBySy = (syDesired * market.totalLp).rawDivUp(
-                market.totalSy
-            );
+            int256 netLpByPt = (ptDesired * market.totalLp) / market.totalPt;
+            int256 netLpBySy = (syDesired * market.totalLp) / market.totalSy;
+
             if (netLpByPt < netLpBySy) {
                 lpToAccount = netLpByPt;
                 ptUsed = ptDesired;
